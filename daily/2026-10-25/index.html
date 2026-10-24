@@ -1,0 +1,236 @@
+<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI 前沿情報日刊｜2026-10-25</title><meta name="color-scheme" content="light dark"><meta name="robots" content="noindex">
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--muted:#5b636e;--card:#ffffff;--line:#e6e2d9;--accent:#b4531f;--fact:#1f7a4d;--ana:#2457a6;--hyp:#a1650a;--chip:#f2eee6;--player:#fffdf8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--fact:#4cc38a;--ana:#7aa7ff;--hyp:#f0b44c;--chip:#262a31;--player:#1c1f24ee}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:740px;margin:0 auto;padding:0 18px 80px}
+header.top{padding:26px 0 8px}.kicker{font-size:.8rem;color:var(--muted);letter-spacing:.12em}
+h1{font-size:1.7rem;line-height:1.35;margin:.2em 0 .3em}h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.12rem;line-height:1.5;margin:0 0 .4em}
+.meta{color:var(--muted);font-size:.92rem;line-height:1.7}.meta b{color:var(--fg);font-weight:600}
+.player{position:sticky;top:0;z-index:10;background:var(--player);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+.player .wrap{padding-bottom:0}.prow{display:flex;align-items:center;gap:8px}
+.pbtn{flex:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:42px;min-width:42px;padding:0 10px;font-size:.9rem;cursor:pointer}
+.pbtn.play{background:var(--accent);color:#fff;border-color:var(--accent);min-width:54px;font-size:1.1rem}
+.seek{flex:1;display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:6px}
+.seek input{flex:1;accent-color:var(--accent)}
+select.speed{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;height:34px;font-size:.85rem}
+.ptitle{font-size:.82rem;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.loop{font-size:.75rem;color:var(--muted)}
+.trend{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+.trend p{margin:.3em 0 0}
+ol.toc{padding-left:1.4em}ol.toc li{margin:.35em 0}ol.toc .sc{color:var(--muted);font-size:.85rem;margin-left:.3em}
+article.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin:22px 0;box-shadow:0 1px 2px #0000000a}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chip{background:var(--chip);border-radius:999px;padding:1px 10px;font-size:.78rem;color:var(--muted)}
+.chip.score{background:var(--accent);color:#fff;font-weight:700}
+.take{font-size:1.02rem;font-weight:500;border-left:4px solid var(--accent);padding:2px 0 2px 12px;margin:10px 0 14px}
+.sec{margin:14px 0}.lbl{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#fff;border-radius:6px;padding:1px 8px;margin-bottom:4px}
+.sec.fact .lbl{background:var(--fact)}.sec.ana .lbl{background:var(--ana)}.sec.hyp .lbl{background:var(--hyp)}.sec.next .lbl{background:var(--accent)}
+.sec ul{margin:.2em 0;padding-left:1.2em}.sec li{margin:.3em 0}
+.sec.fact{border-left:3px solid var(--fact);padding-left:12px}.sec.ana{border-left:3px solid var(--ana);padding-left:12px}.sec.hyp{border-left:3px solid var(--hyp);padding-left:12px}
+.k{color:var(--muted);font-weight:600}
+.src{font-size:.88rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px;word-break:break-word}
+.src a{margin-right:10px}
+.quote{font-size:.88rem;color:var(--muted);font-style:italic}
+.issues a{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0;text-decoration:none;color:var(--fg)}
+.issues .d{font-weight:700;font-size:1.1rem}.issues .s{color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.82rem;margin-top:40px}
+.totop{display:inline-block;font-size:.82rem;margin-top:4px}
+.seg{transition:box-shadow .35s ease,background-color .35s ease;border-radius:16px}
+.seg.now{box-shadow:0 0 0 3px var(--accent),0 6px 18px #0000001a}
+header.top.seg,section.seg{padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+header.top.seg.now,section.seg.now{background:var(--chip)}
+.prow2{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:30px}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:30px;padding:0 10px;font-size:.78rem;cursor:pointer;flex:none}
+.mini[aria-pressed="false"]{color:var(--muted)}
+.mini.back{background:var(--accent);color:#fff;border-color:var(--accent)}
+.segname{flex:1;min-width:0;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segplay{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;font-size:.75rem;padding:0 9px;height:24px;cursor:pointer;line-height:22px}
+.trend h3{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.seg{transition:none}}
+</style></head><body><div class="player" role="region" aria-label="語音簡報播放器"><div class="wrap">
+<div class="ptitle"><span>🎧 今日雙主持 Podcast 13:45</span><span class="loop">🔁 循環播放已開啟</span></div>
+<audio id="aud" src="2026-10-25-briefing-duo.mp3?v=4952540" preload="metadata" loop></audio>
+<div class="prow"><button class="pbtn" id="rw" aria-label="倒轉 15 秒">⟲15</button><button class="pbtn play" id="pp" aria-label="播放">▶</button><button class="pbtn" id="ff" aria-label="快轉 15 秒">15⟳</button>
+<select class="speed" id="spd" aria-label="播放速度"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select></div>
+<div class="seek"><span id="cur">0:00</span><input type="range" id="seek" min="0" max="100" step="1" value="0" aria-label="播放進度"><span id="dur">--:--</span></div>
+<div class="prow2"><button class="mini" id="follow" aria-pressed="true">📍 自動跟隨：開</button><button class="mini back" id="back" hidden>↧ 回到播放位置</button><span class="segname" id="segname"></span></div>
+</div></div><main class="wrap"><header class="top seg" id="top"><div class="kicker">AI FRONTIER DAILY ・ <a href="../../">所有期數</a></div>
+<h1>AI 前沿情報日刊｜2026-10-25</h1>
+<div class="meta"><div><b>採集時段</b>　2026-10-22 06:00 至 2026-10-25 06:00（72 小時，台北時間）。過去 24 小時（10-24 週六）只有約 3 則合格情報，故擴充至 72 小時；已排除 10-24 期已報導項目，以來源標示的發布時間判定。</div><div><b>執行狀態</b>　success　・　候選 27 → 篩選後 13 → 採用 8</div>
+<div><b>產生時間</b>　2026-10-25 06:17（台北時間）</div></div></header>
+<h2 id="trends">今日趨勢</h2>
+<div class="trend seg" id="trend-1"><h3><span>長期記憶回歸「保留原始證據」</span><button class="segplay" data-seg="trend-1" aria-label="從這段開始播放">▶ 播放</button></h3><p>Raw-RAG 論文顯示：只對原始對話做向量檢索加重排序，就在七組設定中的六組勝過十多種代理式記憶系統；同週 Google ADK 2.13 也推出不需要 embedding、以關鍵字回憶的 MongoDB 記憶服務。先把原始資料留好、檢索做紮實，再談萃取與圖譜。</p></div>
+<div class="trend seg" id="trend-2"><h3><span>MCP 從「呼叫工具」走向「代理作業介面」</span><button class="segplay" data-seg="trend-2" aria-label="從這段開始播放">▶ 播放</button></h3><p>Claude Code 開始支援 MCP Tasks（長任務先回 task id、背景執行）與 Elicitations（工具中途向使用者提問）；官方 TypeScript SDK 2.4.0 則加入 Skills over MCP，讓伺服器發布並校驗技能資料夾。MCP 正在補上長流程、人機確認與能力分發三塊。</p></div>
+<div class="trend seg" id="trend-3"><h3><span>語音代理走向全雙工與端側</span><button class="segplay" data-seg="trend-3" aria-label="從這段開始播放">▶ 播放</button></h3><p>Block 發表只用人類語音訓練、可在 MacBook M4 Max 本地執行的全雙工模型 Dessa；sherpa-onnx 2.0.0 持續強化離線 ASR／TTS 跨平台部署；ADK 2.13 的 Live 音訊加入插話（barge-in）。語音不再只是「ASR→LLM→TTS」三段式。</p></div>
+<div class="trend seg" id="trend-4"><h3><span>AI 的價值開始被要求「可證明」</span><button class="segplay" data-seg="trend-4" aria-label="從這段開始播放">▶ 播放</button></h3><p>技術面，Anthropic 與 Theorem 用 Claude 在 123 個開源函式庫的二進位層級產生可機器檢查的證明；商業面，Apollo 首席經濟學家指出科技業以外的企業還看不到 AI 帶來的營收與利潤率改善。不論是程式正確性還是 ROI，都進入要拿證據說話的階段。</p></div>
+<h2 id="toc">目錄</h2><ol class="toc"><li><a href="#arxiv-2610.30755-v1">Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統</a><span class="sc">89 分</span></li><li><a href="#anthropic-formal-verification-2026-10-22">Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明</a><span class="sc">84 分</span></li><li><a href="#block-dessa-2026-10-23">Block 發表 Dessa：只用人類語音訓練、可本地執行的全雙工語音模型</a><span class="sc">80 分</span></li><li><a href="#claude-code-mcp-tasks-elicitations-2026-10-23">Claude Code 支援 MCP Tasks 與 Elicitations：工具可背景長跑、也能中途問你</a><span class="sc">74 分</span></li><li><a href="#github-mcp-typescript-sdk-2.4.0">MCP 官方 TypeScript SDK 2.4.0：加入 Skills over MCP（SEP-2640）</a><span class="sc">72 分</span></li><li><a href="#github-google-adk-python-2.13.0">Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶</a><span class="sc">66 分</span></li><li><a href="#github-k2-fsa-sherpa-onnx-v2.0.0">sherpa-onnx 2.0.0：離線 ASR／TTS 工具鏈升級主版本，擴大跨平台與 HLG 解碼支援</a><span class="sc">58 分</span></li><li><a href="#apollo-ai-payoff-outside-tech-2026-10-24">Apollo 首席經濟學家：科技業以外，還看不到 AI 帶來的營收與利潤改善</a><span class="sc">48 分</span></li></ol>
+<h2 id="items">情報（依總分排序）</h2>
+<article class="card seg" id="arxiv-2610.30755-v1">
+<div class="chips"><span class="chip score">89 分</span><span class="chip">03 RAG、檢索、長期記憶、知識圖譜</span><span class="chip">發布 2026-10-22</span><button class="segplay" data-seg="arxiv-2610.30755-v1" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>1. Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統</h3>
+<div class="take">把原始對話切成 256 token 視窗、向量取 128 筆再用 cross-encoder 選 15 筆，這個「樸素 RAG」在 4 個記憶基準 7 組設定中 6 組排第一。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>Raw-RAG 不做 LLM 萃取、摘要、建圖或改寫：對話帶時間戳記切成 256 token、重疊 32 token 的視窗，向量檢索 128 筆，cross-encoder 重排後取前 15 筆交給閱讀模型。</li><li>在 LoCoMo、LongMemEval、MEME、MemoryAgentBench 四個基準、七組「基準×模型」設定中，有六組在受比較的記憶系統裡排第一，領先最強代理式記憶系統 0.13～5.53 分。</li><li>對 Mem0 的稽核：UPDATE 與 DELETE 只占 LoCoMo 寫入決策的 4.39%、LongMemEval 的 2.46%；把更新改成只新增，LoCoMo 準確率由 67.36% 升到 69.42%。</li><li>消融：拿掉重排序器總分降 3.92 分；加上原子事實萃取降 19.62 分、加摘要降 5.81 分、加圖譜擴展降 5.78 分。</li><li>效率：在 MEME 10 段對話、110 題上，Raw-RAG 建索引＋檢索共 305.91 秒，比次快系統快 5.1 倍、比 EverMemOS 快 30.4 倍。</li><li>作者自承限制：只測離線、公開基準上的對話，不代表互動式、多模態或實際營運場景；保存原始歷史也帶來儲存與隱私問題。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>把「證據覆蓋率」與「閱讀模型利用率」拆開量測，證明系統間差距主要來自能不能把足夠證據（含依賴路徑）送到閱讀模型前，而不是讀完後會不會答。</li><li><span class="k">差異：</span>多數記憶系統在寫入時就萃取、合併、改寫，等於提早丟資訊；Raw-RAG 把狀態推理留給閱讀時的強模型。論文也指出過去評測中 RAG 基線常用過粗的切塊、過淺的檢索或沒有重排序。</li>
+<li><span class="k">結果與限制：</span>結果依賴強閱讀模型（GPT-4.1-mini、DeepSeek-V4-Flash 等）；在 PersonaMem-v2 只排第三；MEME 的 cascade、deletion 類題目分數仍很低。皆為作者自述，未獨立重現。</li><li><span class="k">與你的關聯：</span>對你規劃的個人代理／會議助理記憶層是直接的設計指引：先做「原始證據可回溯」的檢索基線（含重排序），任何知識圖譜或摘要層都必須證明能勝過它。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>記憶系統評測可能會把「調校良好的 Raw-RAG」列為必比基線，部分記憶新創的差異化敘事會受挑戰。</li><li>圖譜與摘要的價值可能轉向「省 token、可解釋、權限與刪除管理」，而不是準確率。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>用你自己的會議或對話紀錄，照論文參數（256/32、top-128→rerank top-15）做一個 Raw-RAG 基線，再拿目前的記憶或圖譜方案對比。</li></ul></div>
+<div class="src"><div>arXiv 首次提交 2026-10-22（v1）；Hugging Face Daily Papers 10-23 收錄。</div><div class="quote">&quot;These findings challenge the necessity of complex agentic memory for the evaluated conversation tasks and establish naive RAG as an essential baseline.&quot;</div>
+<div>來源：<a href="https://arxiv.org/abs/2610.30755" target="_blank" rel="noopener">arxiv.org</a><a href="https://arxiv.org/html/2610.30755" target="_blank" rel="noopener">arxiv.org</a><a href="https://huggingface.co/papers/2610.30755" target="_blank" rel="noopener">huggingface.co</a><a href="https://github.com/Litmeb/RAW-RAG" target="_blank" rel="noopener">github.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="anthropic-formal-verification-2026-10-22">
+<div class="chips"><span class="chip score">84 分</span><span class="chip">12 AI 安全、治理、政策與產業生態</span><span class="chip">發布 2026-10-22</span><button class="segplay" data-seg="anthropic-formal-verification-2026-10-22" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>2. Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明</h3>
+<div class="take">把 OSS-Fuzz 的模糊測試入口改寫成規格，讓 Claude 證明「64MB 以內任何輸入都不會當機」，共 239 個入口、約 1.8 億行 Rocq 證明。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>Claude 為 123 個 OSS-Fuzz 函式庫的 239 個模糊測試入口，證明在 RISC-V 編譯後的二進位上，任何小於 64MB 的輸入都不會觸發記憶體安全錯誤或斷言失敗。</li><li>證明約 1.8 億行 Rocq，典型一份約 60 萬行，對應中位數約 18,000 條 RISC-V 指令；由 Rocq 證明檢查器機械驗證。</li><li>前提假設：單執行緒、靜態連結 musl、固定記憶體預算、Linux 行為以模型描述；尚未涵蓋 x86／ARM 與動態連結 glibc。</li><li>過程中找到並修補模糊測試難以發現的錯誤，例如需約 20MB 特殊輸入才觸發的越界寫入，並重新發現 libexpat 的 CVE-2026-56132。</li><li>Opus 5.5 在 36 個小型驗證任務上，證完一半所需 token 比 Opus 5 少約 40%；共享證明工作區讓代理少用 17% token。</li><li>公開子集證明與 RISC-V／OS 語意；Theorem 提供替其他開源專案跑同一流程，並發布 Claude skill。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>不要求人寫規格，而是把既有測試（fuzz entry point）自動轉成「永不當機」規格，再讓代理在機器碼層級寫證明、由證明檢查器把關。</li><li><span class="k">差異：</span>傳統形式化驗證（如 seL4）要數十人年；這裡把規格來源換成現有測試、把證明工作交給代理，並靠證明重用攤提成本。</li>
+<li><span class="k">結果與限制：</span>只證明模型化環境下的特定性質，不等於無錯誤；ASan 也抓不到所有記憶體問題；證明要上億 token，成本仍高。數據為 Anthropic 自述。</li><li><span class="k">與你的關聯：</span>對做 AI 產品的你，重點是「代理輸出可被機器驗證」的工作模式：讓代理做大量苦工，但最終由確定性檢查器裁決，這也適用於資料管線、規則引擎等場景。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>關鍵開源依賴（如 OpenSSL、curl）可能出現「已證明」標章，成為供應鏈安全的新指標。</li><li>「代理＋確定性驗證器」可能成為高風險領域導入代理的標準架構。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得立即學習</span><ul><li>讀原文的 Limitations 與證明重用章節，思考你的產品中哪些環節可以用確定性檢查器（測試、schema、規則）裁決代理輸出。</li></ul></div>
+<div class="src"><div>Anthropic Frontier Red Team 研究文章發表日 2026-10-22（台北時間約 10-23）。</div><div class="quote">&quot;“Formally verified” does not mean “bug-free.”&quot;</div>
+<div>來源：<a href="https://www.anthropic.com/research/formal-verification" target="_blank" rel="noopener">anthropic.com</a><a href="https://github.com/theorem-labs" target="_blank" rel="noopener">github.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="block-dessa-2026-10-23">
+<div class="chips"><span class="chip score">80 分</span><span class="chip">04 多模態、語音、影片與生成式媒體</span><span class="chip">發布 2026-10-23</span><button class="segplay" data-seg="block-dessa-2026-10-23" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>3. Block 發表 Dessa：只用人類語音訓練、可本地執行的全雙工語音模型</h3>
+<div class="take">Dessa 沒有文字、沒有預訓練模型，從零只聽人類對話學會即時聊天，能同時聽與說，並在 MacBook Pro M4 Max 上本地跑。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>Dessa 是語音進、語音出的全雙工模型，能邊聽邊說，會插話與附和（例如「嗯」「對」）。</li><li>官方稱從零只用人類對話語音訓練，不用文字與預訓練模型；訓練只用一套 NVIDIA GB200 NVL72。</li><li>推論快於即時，可在 MacBook Pro M4 Max 或更高等級電腦本地執行。</li><li>目前沒有公開權重或 API；先開放少數 AI 安全研究者早期測試。</li><li>官方稱所學單字量比 LLM 少數百倍，但未公布正式評測數據。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>直接以音訊為建模單位，讓情緒、語氣、停頓、插話時機都留在同一個模型裡，而不是經過文字轉換。</li><li><span class="k">差異：</span>主流做法是 ASR→LLM→TTS 串接或以文字驅動語音；Dessa 主張文字會丟掉語氣資訊，因此完全不經文字。</li>
+<li><span class="k">結果與限制：</span>只有官方示範錄音、沒有基準測試；知識完全來自語音資料，事實正確性與工具使用能力未知；尚無法取得。</li><li><span class="k">與你的關聯：</span>你關注 ASR／TTS 與會議助理：Dessa 代表「端側、能聽懂情緒」的方向；但短期內實務仍是串接架構，可把它當研究標竿與產品體驗參考。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>全雙工純語音模型可能先在陪伴、客服、點餐等「閒聊比知識重要」的場景落地。</li><li>語音模型能聽出情緒，也會帶來語音詐騙與操縱等新的安全議題，這正是官方先找安全研究者的原因。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・商業觀察</span><ul><li>聽官網的示範錄音，記下插話、附和、情緒轉折的時間點，作為你未來語音代理體驗設計的對照標準。</li></ul></div>
+<div class="src"><div>Block 與 Jack Dorsey 於美國時間 2026-10-23 公布（台北 10-24）；TechCrunch 報導 10-24。</div><div class="quote">&quot;We trained Dessa from scratch on nothing but human conversation.&quot;</div>
+<div>來源：<a href="https://block.xyz/dessa" target="_blank" rel="noopener">block.xyz</a><a href="https://techcrunch.com/2026/10/24/blocks-new-voice-model-sounds-eerily-human/" target="_blank" rel="noopener">techcrunch.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="claude-code-mcp-tasks-elicitations-2026-10-23">
+<div class="chips"><span class="chip score">74 分</span><span class="chip">02 Agentic AI、工具使用、Multi-Agent</span><span class="chip">發布 2026-10-23</span><button class="segplay" data-seg="claude-code-mcp-tasks-elicitations-2026-10-23" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>4. Claude Code 支援 MCP Tasks 與 Elicitations：工具可背景長跑、也能中途問你</h3>
+<div class="take">慢工具先回一個 task id，Claude Code 繼續做事並輪詢結果；工具也能跳出表單問使用者「要部署到 staging 嗎？」。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>MCP Tasks 為公開測試版，需 Claude Code v2.1.304 以上，適用終端機互動、Agent SDK 與 GitHub Actions；VS Code 擴充與桌面版尚未支援。</li><li>Tasks 來自 MCP 2026-07-28 版的 Tasks 擴充：伺服器先回 task 控制代碼，客戶端以 tasks/get 輪詢，可取消。</li><li>Elicitation 讓 MCP 伺服器在任務中途向使用者發問，Claude Code 以小表單呈現；非互動模式會請伺服器取消需要輸入的任務。</li><li>主對話中執行超過兩分鐘的 MCP 呼叫會被自動移到背景。</li><li>官方表示 Tasks 與 Elicitations 會擴展到更多 Claude 產品。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>把工具呼叫從「同步請求」改成「非同步任務＋中途人機確認」，讓代理能委派深度研究、部署這類長流程。</li><li><span class="k">差異：</span>過去 MCP 工具若跑很久只能阻塞或逾時，需要確認時只能結束再重來；現在協定層就有任務生命週期與提問機制。</li>
+<li><span class="k">結果與限制：</span>仍是 beta，子代理、一次性 claude -p 執行不適用；Upstash 文章是第三方實作經驗。</li><li><span class="k">與你的關聯：</span>你設計的個人任務管理、會議後續追蹤代理，正需要「背景長任務＋關鍵步驟請使用者確認」，可直接依這個協定設計 MCP 伺服器。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>Elicitation 可能成為代理執行高風險動作（付款、寄信、刪除）前的標準確認介面。</li><li>長任務協定成熟後，「代理排程器」可能變成 MCP 生態的新產品類別。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>寫一個最小 MCP 伺服器：一個會跑 30 秒的報告工具（回 task id）＋一個執行前用 elicitation 要求確認的工具，在 Claude Code 測試。</li></ul></div>
+<div class="src"><div>MCP 共同作者 David Soria Parra 於 10-22 AGNTCon + MCPCon 主題演講宣布；@ClaudeDevs 於 10-23 公布 CLI 可用。官方文件已更新。</div><div class="quote">&quot;MCP tasks are in public beta in the Claude Code CLI and require Claude Code v2.1.304 or later.&quot;</div>
+<div>來源：<a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">code.claude.com</a><a href="https://upstash.com/blog/claude-code-mcp-tasks" target="_blank" rel="noopener">upstash.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="github-mcp-typescript-sdk-2.4.0">
+<div class="chips"><span class="chip score">72 分</span><span class="chip">06 開源專案、GitHub、框架與工具</span><span class="chip">發布 2026-10-23</span><button class="segplay" data-seg="github-mcp-typescript-sdk-2.4.0" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>5. MCP 官方 TypeScript SDK 2.4.0：加入 Skills over MCP（SEP-2640）</h3>
+<div class="take">伺服器可用 loadSkills(folder) 發布一整個技能資料夾，客戶端 SkillsClient 會校驗大小、雜湊與 SKILL.md frontmatter。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>新增 Skills 擴充（SEP-2640）：伺服器提供 skills/list、skills/get 與 skill:// 資源，客戶端可列出、讀取並驗證技能。</li><li>讀取時會驗證檔案大小、摘要（digest）與 SKILL.md frontmatter，不符時拋出 SkillVerificationError。</li><li>同時支援 2025-11-25 與 2026-07-28 協定版本；attach 介面標為 experimental。</li><li>升級注意：依 2026-07-28 規格，number 型別參數上的 x-mcp-header 會被拒絕。</li><li>新增 OAuth refresh 可選擇帶 scope，以相容 Microsoft Entra ID。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>把「技能」（說明文件＋腳本）變成可透過 MCP 發布、快取與驗證的資源，而不是各家代理各自的本地資料夾。</li><li><span class="k">差異：</span>過去技能多半隨代理產品綁定；現在可由伺服器集中發布，任何支援 MCP 的客戶端都能取得並校驗完整性。</li>
+<li><span class="k">結果與限制：</span>attach 仍為實驗性，可能在小版本變動；生態系客戶端支援程度未知。</li><li><span class="k">與你的關聯：</span>你若要做企業知識庫或垂直代理，可以把領域 know-how 打包成 skills 經 MCP 發布，搭配上一則的 Tasks 形成完整能力分發。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>企業內部可能出現「技能登錄中心」，以 MCP 統一發布與版本管理代理技能。</li><li>技能的簽章與供應鏈安全可能成為下一個議題。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>把你現有的一份工作流程說明寫成 SKILL.md，用 SDK 2.4.0 的 loadSkills 發布並用 SkillsClient 讀回驗證。</li></ul></div>
+<div class="src"><div>GitHub release v2.4.0 發布於 2026-10-23 18:32 UTC（台北 10-24 02:32）。</div><div class="quote">&quot;Skills over MCP (SEP-2640). A server publishes a folder of skills with loadSkills(folder) and skills.attach(server)&quot;</div>
+<div>來源：<a href="https://github.com/modelcontextprotocol/typescript-sdk/releases" target="_blank" rel="noopener">github.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="github-google-adk-python-2.13.0">
+<div class="chips"><span class="chip score">66 分</span><span class="chip">06 開源專案、GitHub、框架與工具</span><span class="chip">發布 2026-10-23</span><button class="segplay" data-seg="github-google-adk-python-2.13.0" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>6. Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶</h3>
+<div class="take">12 個實驗功能轉穩定，新增 ClassifierNode 路由、Live 語音插話、MongoDB 對話與長期記憶；遙測預設改為 OpenTelemetry GenAI v2（破壞性）。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>新增 BaseClassifier、ClassifierNode 與 TypesafeClassifier，可用 TypeSafe 的 Jev 模型在工作流中做路由；官方稱單次前向計算回傳校準機率，比 LLM 快很多。</li><li>Live 音訊支援 barge-in（插話），並整合 Gemini 語音轉文字與文字轉語音。</li><li>MongoDbSessionService 可跨副本共享對話；MongoDbMemoryService 以關鍵字比對回憶過往對話，不需要向量索引（皆為實驗性）。</li><li>BaseMemoryService 新增 delete_memory API。</li><li>字串模型代理單回合由 20ms 降至 2.5ms；遙測預設改為 OpenTelemetry GenAI semconv 1.44，移除 call_llm span。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>在框架層把「便宜的分類決策」「即時語音」「可刪除的長期記憶」做成標準元件。</li><li><span class="k">差異：</span>與前一期 OpenAI Decisions API 同一方向：路由交給專用小模型；記憶方面則提供不依賴 embedding 的最簡方案。</li>
+<li><span class="k">結果與限制：</span>效能數字為官方自述；MongoDB 記憶為實驗功能，關鍵字回憶的召回品質未知；遙測變更需調整既有監控。</li><li><span class="k">與你的關聯：</span>做多代理或語音代理原型時可直接利用；delete_memory 對個人資料刪除權（隱私合規）也很實用。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>「分類器節點」可能成為各代理框架的標配，LLM 只在必要時被呼叫。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>若使用 ADK，升級前先檢查 OpenTelemetry 監控；試用 ClassifierNode 把意圖路由從 LLM 移出並量測延遲。</li></ul></div>
+<div class="src"><div>版本日期 2026-10-22；GitHub release 發布於 2026-10-23 18:08 UTC（台北 10-24 02:08）。</div><div class="quote">&quot;Add long-term memory without an embedding model using MongoDbMemoryService, which recalls past turns by keyword match&quot;</div>
+<div>來源：<a href="https://github.com/google/adk-python/releases/tag/v2.13.0" target="_blank" rel="noopener">github.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="github-k2-fsa-sherpa-onnx-v2.0.0">
+<div class="chips"><span class="chip score">58 分</span><span class="chip">04 多模態、語音、影片與生成式媒體</span><span class="chip">發布 2026-10-23</span><button class="segplay" data-seg="github-k2-fsa-sherpa-onnx-v2.0.0" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>7. sherpa-onnx 2.0.0：離線 ASR／TTS 工具鏈升級主版本，擴大跨平台與 HLG 解碼支援</h3>
+<div class="take">不需網路的語音辨識、合成、VAD、說話人工具包推出 2.0：離線 CTC 支援 HLG 解碼、Windows ARM64、Python 3.15，並移除 espeak-ng 依賴。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>離線 CTC 模型在 C、C++、JNI／Kotlin／Java、WASM API 支援 HLG 解碼。</li><li>串流 NeMo transducer 支援帶熱詞（hotwords）的 modified_beam_search。</li><li>新增 Qwen3 ASR、Doubao ASR 的字幕產生範例，與 Kokoro 多語 TTS 的 WASM 示範。</li><li>Flutter 與 Node.js 支援 Windows ARM64；提供 Python 3.15 wheels。</li><li>移除 espeak-ng 與 piper-phonemize 依賴；修正長串流 VAD 的 SIGSEGV 等多項錯誤。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>以 onnxruntime 統一推論，讓各家 ASR／TTS 模型能在手機、嵌入式、瀏覽器離線執行。</li><li><span class="k">差異：</span>相較雲端語音 API，重點在隱私與離線；2.0 版主要是平台覆蓋、解碼能力與穩定性的累積升級。</li>
+<li><span class="k">結果與限制：</span>release notes 未提供效能數據；主版本號可能伴隨 API 變動，升級需測試。</li><li><span class="k">與你的關聯：</span>做會議助理或端側語音產品時，這是可直接採用的開源底座；熱詞偏置對專有名詞（人名、產品名）辨識特別有用。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>端側 ASR／TTS 開源工具成熟，可能讓「會議內容不出裝置」成為產品賣點。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>用 sherpa-onnx 2.0 搭配一個中文 ASR 模型與熱詞清單，測你自己的會議錄音，比較專有名詞辨識率。</li></ul></div>
+<div class="src"><div>GitHub release 發布於 2026-10-23 12:49 UTC（台北 10-23 20:49）。</div><div class="quote">&quot;Support HLG decoding for offline CTC models in the C, CXX, JNI/Kotlin/Java and WASM APIs&quot;</div>
+<div>來源：<a href="https://github.com/k2-fsa/sherpa-onnx/releases/tag/v2.0.0" target="_blank" rel="noopener">github.com</a><a href="https://pypi.org/project/sherpa-onnx/" target="_blank" rel="noopener">pypi.org</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<article class="card seg" id="apollo-ai-payoff-outside-tech-2026-10-24">
+<div class="chips"><span class="chip score">48 分</span><span class="chip">08 企業 AI 商業應用與實際案例</span><span class="chip">發布 2026-10-24</span><button class="segplay" data-seg="apollo-ai-payoff-outside-tech-2026-10-24" aria-label="從這段開始播放">▶ 播放</button></div>
+<h3>8. Apollo 首席經濟學家：科技業以外，還看不到 AI 帶來的營收與利潤改善</h3>
+<div class="take">Mag 7 的每員工營收與利潤率上升，S&amp;P 493 則持平；主流企業開始把 token 支出視為壓縮利潤的成本，而非成長投資。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>每員工營收：Mag 7 上升，S&amp;P 493 持平；利潤率同樣呈現此對比。</li><li>以舊金山聯準會的 TFP 數據看，尚未出現 AI 推升生產力的跡象。</li><li>VC 支持的公司 token 支出持續增加，但主流企業不需要最新模型、也不願付費。</li><li>作者認為只要代理式 AI 與 token 支出集中在經濟的一小部分，總體影響就有限。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>以總體與財報指標（每員工營收、利潤率、TFP、企業 AI 支出）觀察 AI 擴散。</li><li><span class="k">差異：</span>與廠商案例的「某流程快幾倍」不同，這是看整體財務結果是否改善。</li>
+<li><span class="k">結果與限制：</span>屬觀點型短評，圖表未附完整方法；生產力效果可能有時間落差；作者立場偏審慎。</li><li><span class="k">與你的關聯：</span>對你的 AI 產品商業化：賣點要從「更聰明」轉向「可量測的營收或毛利改善」，並設計 ROI 證明機制。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>企業 AI 採購可能更偏向按成果計價與小模型，以壓低 token 成本。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・商業觀察</span><ul><li>為你規劃的 AI 產品寫一頁 ROI 假設：用哪個指標證明客戶營收或成本改善、多久能量測到。</li></ul></div>
+<div class="src"><div>Apollo The Daily Spark，2026-10-24；同日登上 Hacker News 首頁。</div><div class="quote">&quot;the AI story will be decided in the S&amp;P 493, not the Mag 7&quot;</div>
+<div>來源：<a href="https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector" target="_blank" rel="noopener">apollo.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<section class="seg" id="next"><h2>下一步 <button class="segplay" data-seg="next" aria-label="從這段開始播放">▶ 播放</button></h2>
+<div class="trend"><h3>值得立即學習</h3><ul><li>讀原文的 Limitations 與證明重用章節，思考你的產品中哪些環節可以用確定性檢查器（測試、schema、規則）裁決代理輸出。 <a href="#anthropic-formal-verification-2026-10-22">（Anthropic × Theore…）</a></li></ul></div>
+<div class="trend"><h3>值得實驗</h3><ul><li>用你自己的會議或對話紀錄，照論文參數（256/32、top-128→rerank top-15）做一個 Raw-RAG 基線，再拿目前的記憶或圖譜方案對比。 <a href="#arxiv-2610.30755-v1">（Raw-RAG：只對原始對話做檢索＋…）</a></li><li>寫一個最小 MCP 伺服器：一個會跑 30 秒的報告工具（回 task id）＋一個執行前用 elicitation 要求確認的工具，在 Claude Code 測試。 <a href="#claude-code-mcp-tasks-elicitations-2026-10-23">（Claude Code 支援 MCP…）</a></li><li>把你現有的一份工作流程說明寫成 SKILL.md，用 SDK 2.4.0 的 loadSkills 發布並用 SkillsClient 讀回驗證。 <a href="#github-mcp-typescript-sdk-2.4.0">（MCP 官方 TypeScript …）</a></li><li>若使用 ADK，升級前先檢查 OpenTelemetry 監控；試用 ClassifierNode 把意圖路由從 LLM 移出並量測延遲。 <a href="#github-google-adk-python-2.13.0">（Google ADK Python …）</a></li><li>用 sherpa-onnx 2.0 搭配一個中文 ASR 模型與熱詞清單，測你自己的會議錄音，比較專有名詞辨識率。 <a href="#github-k2-fsa-sherpa-onnx-v2.0.0">（sherpa-onnx 2.0.0：…）</a></li></ul></div>
+<div class="trend"><h3>商業觀察</h3><ul><li>聽官網的示範錄音，記下插話、附和、情緒轉折的時間點，作為你未來語音代理體驗設計的對照標準。 <a href="#block-dessa-2026-10-23">（Block 發表 Dessa：只用人…）</a></li><li>為你規劃的 AI 產品寫一頁 ROI 假設：用哪個指標證明客戶營收或成本改善、多久能量測到。 <a href="#apollo-ai-payoff-outside-tech-2026-10-24">（Apollo 首席經濟學家：科技業以…）</a></li></ul></div>
+</section>
+<section class="seg" id="limits"><h2>限制與待查事項 <button class="segplay" data-seg="outro" aria-label="從這段開始播放">▶ 播放</button></h2><ul><li>過去 24 小時（10-24 週六）合格情報僅約 3 則，採集時段擴充為 72 小時（10-22 06:00～10-25 06:00 台北時間），以來源標示的發布時間判定。</li><li>評分為啟發式主觀判斷，非客觀研究指標。</li><li>多數效能數據為廠商或作者自述，本報告未做獨立重現；Dessa 尚無公開評測。</li><li>本次未直接涵蓋 X、YouTube、Reddit；技術論壇視角主要來自 Hacker News 首頁。</li><li>Raw-RAG 與形式化驗證兩篇僅精讀正文與主要表格，未逐一核對附錄。</li></ul>
+<h3>失敗或受限來源</h3><ul><li>https://huggingface.co/papers/date/2026-10-24：日期頁回傳與 10-23 相同清單（週末無新列表），改以 arXiv 原文查核日期</li><li>https://x.com/：未直接搜尋 X；@ClaudeDevs、@jack 貼文僅透過官方文件與媒體轉述取得</li><li>https://www.reddit.com/r/MachineLearning/：前次 HTTP 403，本次未使用</li><li>https://www.youtube.com/：本次未搜尋影音來源</li></ul></section>
+<footer>本頁由 Grok Bot 自動產生。內容為公開來源整理；FACT 以原始來源為準，ANALYSIS／HYPOTHESIS 為推論，評分為啟發式判斷。正式存檔位於 Google Drive。</footer></main><script id="timeline" type="application/json">[{"id":"intro","anchor":"top","label":"開場","start":0.0,"end":42.584,"l":[[0.0,"曉晨"],[5.334,"雲哲"],[10.177,"曉晨"],[13.462,"雲哲"],[28.129,"曉晨"],[33.009,"雲哲"],[39.378,"曉晨"]]},{"id":"trend-1","anchor":"trend-1","label":"趨勢1｜長期記憶回歸「保留原始證據」","start":42.584,"end":85.681,"l":[[42.584,"曉晨"],[52.335,"雲哲"],[66.655,"雲哲"],[73.292,"曉晨"],[74.428,"雲哲"]]},{"id":"trend-2","anchor":"trend-2","label":"趨勢2｜MCP 從「呼叫工具」走向「代理作業介面」","start":85.681,"end":123.054,"l":[[85.681,"曉晨"],[95.008,"雲哲"],[111.396,"曉晨"],[115.046,"雲哲"]]},{"id":"trend-3","anchor":"trend-3","label":"趨勢3｜語音代理走向全雙工與端側","start":123.054,"end":156.23,"l":[[123.054,"曉晨"],[128.695,"雲哲"],[140.359,"雲哲"],[145.142,"曉晨"],[149.647,"雲哲"]]},{"id":"trend-4","anchor":"trend-4","label":"趨勢4｜AI 的價值開始被要求「可證明」","start":156.23,"end":186.525,"l":[[156.23,"曉晨"],[161.959,"雲哲"],[178.085,"曉晨"],[182.127,"雲哲"]]},{"id":"arxiv-2610.30755-v1","anchor":"arxiv-2610.30755-v1","label":"第1則｜Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統","start":186.525,"end":316.523,"l":[[186.525,"曉晨"],[194.168,"曉晨"],[200.914,"雲哲"],[217.706,"曉晨"],[222.478,"雲哲"],[234.762,"曉晨"],[237.797,"雲哲"],[255.48,"曉晨"],[260.847,"雲哲"],[273.225,"曉晨"],[274.23,"雲哲"],[280.558,"曉晨"],[283.733,"雲哲"],[302.106,"曉晨"],[304.921,"雲哲"]]},{"id":"anthropic-formal-verification-2026-10-22","anchor":"anthropic-formal-verification-2026-10-22","label":"第2則｜Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明","start":316.523,"end":417.665,"l":[[316.523,"曉晨"],[325.851,"雲哲"],[338.953,"曉晨"],[341.94,"雲哲"],[359.079,"曉晨"],[362.494,"雲哲"],[369.601,"曉晨"],[371.311,"雲哲"],[380.888,"曉晨"],[384.56,"雲哲"],[401.313,"曉晨"],[404.363,"雲哲"]]},{"id":"block-dessa-2026-10-23","anchor":"block-dessa-2026-10-23","label":"第3則｜Block 發表 Dessa：只用人類語音訓練、可本地執行的全雙工語音模型","start":417.665,"end":508.565,"l":[[417.665,"曉晨"],[425.558,"雲哲"],[436.621,"曉晨"],[439.662,"雲哲"],[457.412,"曉晨"],[459.942,"雲哲"],[471.57,"曉晨"],[474.592,"雲哲"],[486.898,"曉晨"],[491.729,"雲哲"]]},{"id":"claude-code-mcp-tasks-elicitations-2026-10-23","anchor":"claude-code-mcp-tasks-elicitations-2026-10-23","label":"第4則｜Claude Code 支援 MCP Tasks 與 Elicitations：工具可背景長跑、也能中途問你","start":508.565,"end":573.338,"l":[[508.565,"曉晨"],[515.803,"雲哲"],[524.797,"雲哲"],[531.009,"曉晨"],[534.967,"雲哲"],[544.108,"曉晨"],[545.815,"雲哲"],[556.587,"曉晨"],[560.299,"雲哲"]]},{"id":"github-mcp-typescript-sdk-2.4.0","anchor":"github-mcp-typescript-sdk-2.4.0","label":"第5則｜MCP 官方 TypeScript SDK 2.4.0：加入 Skills over MCP（SEP-2640）","start":573.338,"end":624.608,"l":[[573.338,"曉晨"],[583.781,"雲哲"],[595.732,"曉晨"],[597.863,"雲哲"],[605.363,"曉晨"],[607.162,"雲哲"],[616.596,"雲哲"]]},{"id":"github-google-adk-python-2.13.0","anchor":"github-google-adk-python-2.13.0","label":"第6則｜Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶","start":624.608,"end":674.325,"l":[[624.608,"曉晨"],[630.415,"雲哲"],[640.124,"曉晨"],[644.318,"雲哲"],[661.587,"曉晨"],[664.236,"雲哲"]]},{"id":"github-k2-fsa-sherpa-onnx-v2.0.0","anchor":"github-k2-fsa-sherpa-onnx-v2.0.0","label":"第7則｜sherpa-onnx 2.0.0：離線 ASR／TTS 工具鏈升級主版本，擴大跨平台與 HLG 解碼支援","start":674.325,"end":715.368,"l":[[674.325,"曉晨"],[681.67,"雲哲"],[697.166,"曉晨"],[698.509,"雲哲"],[705.658,"曉晨"],[707.262,"雲哲"]]},{"id":"apollo-ai-payoff-outside-tech-2026-10-24","anchor":"apollo-ai-payoff-outside-tech-2026-10-24","label":"第8則｜Apollo 首席經濟學家：科技業以外，還看不到 AI 帶來的營收與利潤改善","start":715.368,"end":760.25,"l":[[715.368,"曉晨"],[722.754,"雲哲"],[733.708,"雲哲"],[739.495,"曉晨"],[742.537,"雲哲"],[754.551,"曉晨"]]},{"id":"next","anchor":"next","label":"下一步","start":760.25,"end":789.497,"l":[[760.25,"曉晨"],[763.713,"雲哲"],[769.534,"曉晨"],[780.551,"雲哲"],[784.214,"曉晨"]]},{"id":"outro","anchor":"limits","label":"限制與結語","start":789.497,"end":825.322,"l":[[789.497,"雲哲"],[799.271,"雲哲"],[806.255,"曉晨"],[811.717,"雲哲"],[817.457,"曉晨"],[823.415,"雲哲"]]}]</script><script>
+const a=document.getElementById('aud'),pb=document.getElementById('pp'),sk=document.getElementById('seek'),cur=document.getElementById('cur'),dur=document.getElementById('dur');
+a.loop=true;
+const f=t=>{if(!isFinite(t))return'--:--';t=Math.floor(t);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+const ui=()=>{pb.textContent=a.paused?'▶':'❚❚';pb.setAttribute('aria-label',a.paused?'播放':'暫停')};
+pb.onclick=()=>a.paused?a.play():a.pause();
+document.getElementById('rw').onclick=()=>a.currentTime=Math.max(0,a.currentTime-15);
+document.getElementById('ff').onclick=()=>a.currentTime=Math.min(a.duration||0,a.currentTime+15);
+document.getElementById('spd').onchange=e=>{a.playbackRate=+e.target.value;localStorage.setItem('afd-rate',e.target.value)};
+const r=localStorage.getItem('afd-rate');if(r){a.playbackRate=+r;document.getElementById('spd').value=r}
+a.addEventListener('loadedmetadata',()=>{sk.max=a.duration;dur.textContent=f(a.duration)});
+a.addEventListener('timeupdate',()=>{if(!sk.dragging)sk.value=a.currentTime;cur.textContent=f(a.currentTime)});
+a.addEventListener('play',ui);a.addEventListener('pause',ui);
+sk.addEventListener('input',()=>{sk.dragging=true;cur.textContent=f(+sk.value)});
+sk.addEventListener('change',()=>{a.currentTime=+sk.value;sk.dragging=false});
+if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:document.title,artist:'AI 前沿情報日刊'});
+navigator.mediaSession.setActionHandler('seekbackward',()=>a.currentTime=Math.max(0,a.currentTime-15));
+navigator.mediaSession.setActionHandler('seekforward',()=>a.currentTime=Math.min(a.duration||0,a.currentTime+15));}
+ui();
+// ---- follow-along: highlight + auto-scroll to the segment being spoken ----
+const TL=JSON.parse((document.getElementById('timeline')||{}).textContent||'[]');
+if(TL.length){
+const RM=window.matchMedia('(prefers-reduced-motion: reduce)'),P=document.querySelector('.player');
+const fb=document.getElementById('follow'),bk=document.getElementById('back'),sn=document.getElementById('segname');
+let follow=localStorage.getItem('afd-follow')!=='0',holdUntil=0,cur=null;
+const segAt=t=>{for(let i=TL.length-1;i>=0;i--)if(t>=TL[i].start-0.05)return TL[i];return TL[0]};
+const elOf=s=>document.getElementById(s.anchor);
+const spk=(s,t)=>{if(!s.l)return'';let n=s.l[0][1];for(const x of s.l){if(t>=x[0]-0.05)n=x[1];else break}return n};
+const go=(s,instant)=>{const el=elOf(s);if(!el)return;const y=el.getBoundingClientRect().top+window.scrollY-P.getBoundingClientRect().height-10;
+ window.scrollTo({top:Math.max(0,y),behavior:(instant||RM.matches)?'auto':'smooth'})};
+const inView=s=>{const el=elOf(s);if(!el)return true;const r=el.getBoundingClientRect(),ph=P.getBoundingClientRect().height;return r.bottom>ph+40&&r.top<window.innerHeight-40};
+const fbUI=()=>{fb.setAttribute('aria-pressed',follow);fb.textContent=follow?'📍 自動跟隨：開':'📍 自動跟隨：關'};
+const backUI=()=>{bk.hidden=!(cur&&!a.paused&&!inView(cur))};
+const sync=force=>{const s=segAt(a.currentTime);if(!cur||s.id!==cur.id){
+  document.querySelectorAll('.seg.now').forEach(e=>e.classList.remove('now'));const el=elOf(s);if(el)el.classList.add('now');
+  cur=s;force=true}
+ const who=spk(s,a.currentTime),txt=(who?'🎙 '+who+'｜':'')+'▸ '+s.label;if(sn.textContent!==txt)sn.textContent=txt;
+ if(force&&follow&&Date.now()>holdUntil)go(s);backUI()};
+a.addEventListener('timeupdate',()=>sync(false));a.addEventListener('seeked',()=>sync(false));
+a.addEventListener('play',()=>{if(cur&&follow&&Date.now()>holdUntil&&!inView(cur))go(cur);backUI()});a.addEventListener('pause',backUI);
+const hold=e=>{if(e.target&&e.target.closest&&e.target.closest('.player'))return;holdUntil=Date.now()+8000;setTimeout(backUI,50)};
+['wheel','touchstart','touchmove'].forEach(ev=>window.addEventListener(ev,hold,{passive:true}));
+window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(e.key))hold(e)});
+window.addEventListener('scroll',()=>{if(!bk._t){bk._t=setTimeout(()=>{bk._t=0;backUI()},250)}},{passive:true});
+fb.onclick=()=>{follow=!follow;localStorage.setItem('afd-follow',follow?'1':'0');fbUI();if(follow&&cur){holdUntil=0;go(cur)}};
+bk.onclick=()=>{holdUntil=0;if(cur)go(cur)};
+document.querySelectorAll('.segplay').forEach(b=>b.onclick=()=>{const s=TL.find(x=>x.id===b.dataset.seg);if(!s)return;
+ a.currentTime=s.start+0.01;holdUntil=0;cur=null;a.play();sync(true)});
+const jump=d=>{const i=TL.indexOf(segAt(a.currentTime))+d;const s=TL[Math.max(0,Math.min(TL.length-1,i))];a.currentTime=s.start+0.01};
+if('mediaSession' in navigator){try{navigator.mediaSession.setActionHandler('previoustrack',()=>jump(-1));navigator.mediaSession.setActionHandler('nexttrack',()=>jump(1));
+ navigator.mediaSession.setActionHandler('seekto',e=>{a.currentTime=e.seekTime})}catch(e){}}
+fbUI();
+}
+</script></body></html>
