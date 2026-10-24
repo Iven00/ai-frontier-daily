@@ -39,6 +39,18 @@ article.card{background:var(--card);border:1px solid var(--line);border-radius:1
 .issues .d{font-weight:700;font-size:1.1rem}.issues .s{color:var(--muted);font-size:.9rem}
 footer{color:var(--muted);font-size:.82rem;margin-top:40px}
 .totop{display:inline-block;font-size:.82rem;margin-top:4px}
+.seg{transition:box-shadow .35s ease,background-color .35s ease;border-radius:16px}
+.seg.now{box-shadow:0 0 0 3px var(--accent),0 6px 18px #0000001a}
+header.top.seg,section.seg{padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+header.top.seg.now,section.seg.now{background:var(--chip)}
+.prow2{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:30px}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:30px;padding:0 10px;font-size:.78rem;cursor:pointer;flex:none}
+.mini[aria-pressed="false"]{color:var(--muted)}
+.mini.back{background:var(--accent);color:#fff;border-color:var(--accent)}
+.segname{flex:1;min-width:0;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segplay{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;font-size:.75rem;padding:0 9px;height:24px;cursor:pointer;line-height:22px}
+.trend h3{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.seg{transition:none}}
 </style></head><body><main class="wrap"><header class="top"><div class="kicker">AI FRONTIER DAILY</div><h1>AI 前沿情報日刊</h1><div class="meta">每日全球 AI 情報整理，含語音簡報。最新一期在最上方。</div></header><div class="issues">
 <a href="daily/2026-10-24/"><div class="d">2026-10-24</div><div class="s">10 則・代理的「執行環境隔離」成為基礎設施主戰場</div></a>
 </div><footer>由 Grok Bot 自動產生。</footer></main></body></html>
