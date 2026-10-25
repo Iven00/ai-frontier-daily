@@ -1,0 +1,30 @@
+{
+  "method": "og:image",
+  "source_page": "https://cloud.google.com/blog/topics/ai-infrastructure/introducing-agent-compute-engine-and-expanded-agent-governance",
+  "image_url": "https://storage.googleapis.com/gweb-cloudblog-publish/images/ACE_hero.max-2600x2600.png",
+  "publisher": "Google Cloud Blog",
+  "article_id": "gcp-agent-compute-engine-2026-10-22",
+  "article_title": "Google Cloud 發表 Agent Compute Engine：每個代理一台硬體隔離 microVM",
+  "src_w": 2550,
+  "src_h": 1420,
+  "entropy": 3.57,
+  "rejected": [
+    {
+      "page": "https://openai.com/index/securing-our-frontier-model-training-environment",
+      "reason": "page fetch blocked (HTTP 403)"
+    },
+    {
+      "page": "https://www.investing.com/news/stock-market-news/openai-resumes-frontier-ai-training-with-enhanced-security-no-internet-access-4970304",
+      "reason": "page fetch blocked (HTTP 403)"
+    }
+  ],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 668,
+  "bytes": 57684,
+  "thumb_w": 480,
+  "thumb_h": 267,
+  "thumb_bytes": 9300,
+  "picked_at": "2026-10-25T22:37:46+08:00"
+}

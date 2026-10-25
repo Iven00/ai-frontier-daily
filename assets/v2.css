@@ -169,3 +169,17 @@ blockquote{margin:8px 0;padding:8px 14px;border-left:3px solid #E3CBA8;backgroun
 .v2-nav .links{overflow:hidden}
 @media (min-width:761px) and (max-width:1023px){.v2-nav .wrap{gap:10px}.v2-share .tx{display:none}.v2-share{padding-left:11px;padding-right:11px}.logo small{display:none}.links a{padding:7px 6px;font-size:.84rem}}
 @media (min-width:761px) and (max-width:899px){.v2-nav .links a:first-child{display:none}.v2-nav .links a{font-size:.8rem;padding:7px 3px}.v2-nav .links{gap:0}} /* 首頁 = the logo link; frees room so 往期 isn't cut */
+/* hero image (2026-10-25): representative picture per issue — big on the issue header + homepage today block, thumbnail on cards */
+.hfig,.ifig{margin:0;min-width:0}
+.hfig>a{display:block}
+.hfig img,.ifig img{display:block;width:100%;height:auto;border-radius:18px;border:1px solid var(--line);box-shadow:var(--sh);background:var(--bg2)}
+.hfig figcaption,.ifig figcaption{font-size:.76rem;color:var(--muted);margin-top:6px;line-height:1.4;overflow-wrap:anywhere}
+.hfig figcaption a,.ifig figcaption a{color:var(--muted)}
+.ibg{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,34vw,440px);grid-template-areas:"t f" "p f";gap:0 32px;align-items:start}
+.ibg>.ibt{grid-area:t;min-width:0}.ibg>.ifig{grid-area:f;margin-top:4px}.ibg>.ibp{grid-area:p;min-width:0}
+.icard .ithumb{display:block;margin:-18px -18px 2px;aspect-ratio:1.91/1;overflow:hidden;border-radius:var(--r) var(--r) 0 0;background:var(--bg2);border-bottom:1px solid var(--line)}
+.icard .ithumb img{display:block;width:100%;height:100%;object-fit:cover}
+@media (max-width:860px){
+ .hero .cv .hfig,.hero .cv .hfig~.hosts{grid-column:1/-1}.hero .cv .hfig img{border-radius:14px;aspect-ratio:1.91/1;object-fit:cover}
+ .ibg{grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "f" "p";gap:0}.ibg>.ifig{margin:2px 0 14px}.ifig img{border-radius:14px}
+}

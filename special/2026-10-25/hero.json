@@ -1,0 +1,21 @@
+{
+  "method": "og:image",
+  "source_page": "https://www.npr.org/2026/10/23/nx-s1-6012298/fired-openai-researchers-give-their-first-interview-since-their-dramatic-dismissal",
+  "image_url": "https://npr.brightspotcdn.com/dims3/default/strip/false/crop/3377x1900+0+0/resize/1400/quality/85/format/webp/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Fef%2F12%2F4e6f45c84239b8e65ff49b471ee5%2F2cc2b710-5722-4f79-a61f-7750d96f787b.jpg",
+  "publisher": "NPR",
+  "article_id": "npr-machine-gods-balesni-korbak",
+  "article_title": "被解僱的 OpenAI 安全研究員首次受訪：外部稽核、可監控性與「無法自證清白」",
+  "src_w": 1400,
+  "src_h": 788,
+  "entropy": 7.17,
+  "rejected": [],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 675,
+  "bytes": 139935,
+  "thumb_w": 480,
+  "thumb_h": 270,
+  "thumb_bytes": 17274,
+  "picked_at": "2026-10-25T22:37:47+08:00"
+}

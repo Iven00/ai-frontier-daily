@@ -171,6 +171,23 @@
   // ---------- subscribe (one shared state; every [data-afd-sub] box mirrors it) ----------
   var FULL_MSG = '目前是試營運版，訂閱名額已滿（上限 400 人），暫時無法訂閱。名額增加時，要我們通知你嗎？';
   var gisP = null, gisInit = false, credFn = null, acctCred = null, ACCT_OPEN = false;
+  // GIS allows ONE initialize() config per page, so there is ONE callback (gisDispatch). Each rendered button reports its intent
+  // through renderButton's click_listener ('login' | 'sub' | 'wait'); the credential is routed by the intent of the button actually clicked.
+  var GIS_INTENT = '', GIS_HANDLERS = {};
+  // Latest ID token: memory + sessionStorage (this tab only) until its exp (~1 h) — lets a signed-in visitor subscribe in one click.
+  // Never in localStorage. The server verifies it on every use.
+  var IDT_K = 'afd-idt', IDT = null;
+  function idtSave(c) { try { var p = JSON.parse(b64u(String(c).split('.')[1])); if (!p || !p.exp || !p.email) return; IDT = { c: c, exp: p.exp, email: p.email }; sessionStorage.setItem(IDT_K, JSON.stringify(IDT)); } catch (e) {} }
+  function idtGet() { var o = IDT; if (!o) try { o = JSON.parse(sessionStorage.getItem(IDT_K) || 'null'); } catch (e) {} return o && o.exp * 1000 - Date.now() > 90e3 ? o : null; }
+  function idtClear() { IDT = null; try { sessionStorage.removeItem(IDT_K); } catch (e) {} }
+  function gisDispatch(r) {
+    var cred = r && r.credential; if (!cred) return; idtSave(cred);
+    var it = GIS_INTENT || (ACCT_OPEN ? 'login' : 'sub'); GIS_INTENT = ''; gisTry = 0;
+    ev('gis_cred', it);
+    var f = GIS_HANDLERS[it] || (it === 'login' ? null : GIS_HANDLERS.sub);
+    if (it === 'login' || !f) { acctLoginDone(cred); return; }
+    f(cred);
+  }
   function loadGIS() {
     if (gisP) return gisP;
     gisP = new Promise(function (ok, no) { var x = document.createElement('script'); x.src = 'https://accounts.google.com/gsi/client'; x.async = true; x.onload = ok; x.onerror = function () { gisP = null; no(); }; document.head.appendChild(x); });
@@ -190,14 +207,16 @@
   window.addEventListener('focus', gisBack); document.addEventListener('visibilitychange', gisBack);
   function gisButton(el, onCred, text, login) {
     if (INAPP) { el.innerHTML = inappHTML(login ? 'login' : 'sub'); ev(login ? 'inapp_login_view' : 'inapp_sub_view', INAPP); return Promise.resolve(); }
-    if (login) acctCred = function (c) { gisTry = 0; onCred(c); }; else credFn = function (c) { gisTry = 0; onCred(c); };
+    var intent = login ? 'login' : (text === 'continue_with' ? 'wait' : 'sub');
+    GIS_HANDLERS[intent] = onCred; if (login) acctCred = onCred; else credFn = onCred;
     var RD = !!(C.gisRedirect && (IOS || ANDROID)); // redirect sign-in (no popup return needed); needs Apps Script login_uri support — off until deployed
     return loadGIS().then(function () {
       if (RD && login) { el.innerHTML = '<div class="note">手機版登入即將開放，請先用電腦登入。</div>'; return; } // redirect mode posts to the subscribe endpoint — never use it for login
       if (RD && !gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, ux_mode: 'redirect', login_uri: API, auto_select: false }); }
-      if (!gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, callback: function (r) { var f = ACCT_OPEN ? acctCred : credFn; if (f) f(r.credential); }, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true }); }
+      if (!gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, callback: gisDispatch, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true }); }
       var w = Math.max(200, Math.min(320, Math.floor((el.parentNode && el.parentNode.clientWidth) || 280)));
-      el.innerHTML = ''; google.accounts.id.renderButton(el, { type: 'standard', theme: 'outline', size: 'large', shape: 'pill', text: text || 'signup_with', locale: 'zh-TW', logo_alignment: 'left', width: w });
+      el.innerHTML = ''; google.accounts.id.renderButton(el, { type: 'standard', theme: 'outline', size: 'large', shape: 'pill', text: text || 'signup_with', locale: 'zh-TW', logo_alignment: 'left', width: w,
+        click_listener: function () { GIS_INTENT = intent; ev('gis_click', intent); if (login) acctWatch(); } });
     });
   }
   function consentGiven() { s('afd-consent', '1'); }
@@ -213,6 +232,14 @@
     if (SUB.html) { ui.innerHTML = SUB.html; return; }
     if (SUB.st === 'loading') { ui.innerHTML = '<div class="note">載入 Google 訂閱按鈕…</div>'; return; }
     if (SUB.st === 'error') { ui.innerHTML = '<div class="note">訂閱服務暫時連不上，請稍後再試。</div>'; return; }
+    if (SUB.st === 'ready' && acctGet() && !box._swap && C.clientId && !INAPP) {
+      var a1 = acctGet();
+      ui.innerHTML = '<div class="afd-one"><button class="btn pri primary lg" type="button" data-afd-sub1>用 <span>' + escH(a1.email) + '</span> 訂閱</button>'
+        + '<button type="button" class="afd-swap" data-afd-swap>換帳號</button></div>' + (EU && !strip ? '<div class="note">你所在地區適用歐盟規範：登入訂閱前，本站不記錄你的閱讀行為。</div>' : '') + '<div class="msg" role="status"></div>';
+      $('[data-afd-sub1]', ui).onclick = function () { ev('subscribe_oneclick'); subSignedIn(); };
+      $('[data-afd-swap]', ui).onclick = function () { BOXES.forEach(function (x) { x._swap = true; }); paintAll(); };
+      return;
+    }
     if (SUB.st === 'ready') {
       ui.innerHTML = '<div class="gb"></div>' + (EU && !strip ? '<div class="note">你所在地區適用歐盟規範：登入訂閱前，本站不記錄你的閱讀行為。</div>' : '') + '<div class="msg" role="status"></div>';
       gisButton($('.gb', ui), onCred).catch(function () { ui.innerHTML = '<div class="note">無法載入 Google 登入，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。</div>'; });
@@ -229,6 +256,22 @@
     }
   }
   function paintAll() { BOXES.forEach(paint); }
+  // one-click subscribe for a signed-in visitor: stored token if still valid; else ask Google silently (auto_select) for a fresh one;
+  // only if that fails, show the Google button again
+  function subSignedIn() {
+    var a = acctGet(), t = idtGet();
+    if (t && a && t.email === a.email) { onCred(t.c); return; }
+    msgAll('正在向 Google 確認你的帳號…');
+    var done = false, fall = function (why) { if (done) return; done = true; ev('subscribe_silent_fail', why || ''); GIS_INTENT = '';
+      BOXES.forEach(function (x) { x._swap = true; }); paintAll(); msgAll('請再按一次 Google 按鈕確認帳號（登入已逾時）。'); };
+    GIS_HANDLERS.sub = function (c) { done = true; onCred(c); }; credFn = GIS_HANDLERS.sub;
+    loadGIS().then(function () {
+      gisInit = true; GIS_INTENT = 'sub';
+      google.accounts.id.initialize({ client_id: C.clientId, callback: gisDispatch, ux_mode: 'popup', auto_select: true, cancel_on_tap_outside: true, use_fedcm_for_button: true, use_fedcm_for_prompt: true });
+      google.accounts.id.prompt(function (n) { try { if ((n.isNotDisplayed && n.isNotDisplayed()) || (n.isSkippedMoment && n.isSkippedMoment()) || (n.isDismissedMoment && n.isDismissedMoment() && n.getDismissedReason && n.getDismissedReason() !== 'credential_returned')) fall('prompt'); } catch (e) {} });
+      setTimeout(function () { fall('timeout'); }, 15000);
+    }, function () { fall('gis_load'); });
+  }
   function setHTML(h) { SUB.html = h; paintAll(); }
   function msgAll(t) { BOXES.forEach(function (box) { var m = $('.afd-sub-ui .msg', box); if (m) m.textContent = t; }); }
   function sendWait(c) {
@@ -242,7 +285,8 @@
     post({ action: 'subscribe', credential: cred, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0, page: PAGE })
       .then(function (r) {
         if (r.ok) { acctSet(cred); s('afd-subscribed', '1'); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
-          setHTML('<div class="msg">✅ 訂閱成功！' + (r.already ? '（你之前就訂閱了）' : '') + '明天早上 6 點（台北時間）起，晨報會寄到 ' + (r.email || '你的信箱') + '。</div>'); }
+          setHTML(r.already ? '<div class="msg">✅ 你已訂閱，晨報每天早上 6 點（台北時間）寄到 ' + escH(r.email || '你的信箱') + '。</div>'
+            : '<div class="msg">✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到 ' + escH(r.email || '你的信箱') + '。</div>'); }
         else if (r.state === 'full') { SUB.st = 'full'; SUB.wcred = cred; paintAll(); }
         else msgAll(r.message || '訂閱失敗，請稍後再試。');
       }).catch(function () { msgAll('連線失敗，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。'); });
@@ -429,18 +473,31 @@
   // LINE link: mobile → line.me/R/share?text= (LINE's URL scheme; opens the LINE app straight to the chat picker, works inside LINE's own browser);
   //            desktop → social-plugins.line.me/lineit/share?url= (web page; works without the LINE app installed, lets the visitor log in and pick a chat).
   var MOB = IOS || ANDROID;
+  function lineAppHref() { return 'line://msg/text/' + encodeURIComponent(document.title + '\n' + shareUrl()); }
+  // try the LINE desktop app's URL scheme; if nothing takes focus within ~1.5 s, say so (the scheme does not work everywhere)
+  function lineApp() {
+    var gone = false, on = function () { gone = true; }; window.addEventListener('blur', on, { once: true });
+    location.href = lineAppHref();
+    setTimeout(function () { window.removeEventListener('blur', on); if (!gone && document.visibilityState === 'visible') { var t = toast('<span>沒有打開 LINE App？請改用「複製連結，貼到 LINE」</span>'); if (t) setTimeout(function () { t.remove(); }, 4500); ev('share', 'line_app_fail'); } }, 1500);
+  }
   function lineHref() { var u = shareUrl(); return MOB ? 'https://line.me/R/share?text=' + encodeURIComponent(document.title + '\n' + u) : 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(u); }
   function shareData() { var md = $('meta[name=description]'); return { title: document.title, text: md ? md.content : document.title, url: shareUrl() }; }
   var SHS = null;
   function shareSheet() {
     if (!SHS) {
       SHS = document.createElement('div'); SHS.className = 'afd-shs'; SHS.hidden = true; SHS.setAttribute('role', 'dialog'); SHS.setAttribute('aria-label', '分享');
-      SHS.innerHTML = '<div class="in"><b>分享這一頁</b><a class="ln" target="_blank" rel="noopener">分享到 LINE</a><button type="button" data-cp>複製連結</button>'
+      // desktop: LINE's web share page forces a LINE web login, so lead with copy-and-paste, then the LINE app scheme, web share last
+      SHS.innerHTML = '<div class="in"><b>分享這一頁</b>' + (MOB
+          ? '<a class="ln" target="_blank" rel="noopener">分享到 LINE</a><button type="button" data-cp>複製連結</button>'
+          : '<button type="button" class="lc" data-cp="line">複製連結，貼到 LINE</button><a class="la" data-lapp href="#">用 LINE App 開啟</a>'
+            + '<a class="lw" target="_blank" rel="noopener">LINE 網頁分享（需登入）</a>')
         + (navigator.share ? '<button type="button" data-more>更多…（系統分享）</button>' : '') + '<button type="button" class="x" aria-label="關閉">✕</button></div>';
       document.body.appendChild(SHS);
-      SHS.addEventListener('click', function (e) { if (e.target === SHS || e.target.closest('.x')) SHS.hidden = true; if (e.target.closest('.ln')) { ev('share', 'line'); SHS.hidden = true; } });
+      SHS.addEventListener('click', function (e) { if (e.target === SHS || e.target.closest('.x')) SHS.hidden = true; if (e.target.closest('.ln,.lw')) { ev('share', MOB ? 'line' : 'line_web'); SHS.hidden = true; }
+        var la = e.target.closest('[data-lapp]'); if (la) { e.preventDefault(); ev('share', 'line_app'); SHS.hidden = true; lineApp(); } });
       $('[data-cp]', SHS).onclick = function () {
-        var u = shareUrl(), ok = function () { SHS.hidden = true; var t = toast('<span>已複製</span>'); if (t) setTimeout(function () { t.remove(); }, 2000); ev('share', 'copy'); };
+        var forLine = this.getAttribute('data-cp') === 'line';
+        var u = shareUrl(), ok = function () { SHS.hidden = true; var t = toast('<span>' + (forLine ? '已複製，到 LINE 對話框按 Ctrl+V（Mac ⌘V）貼上' : '已複製') + '</span>'); if (t) setTimeout(function () { t.remove(); }, forLine ? 4500 : 2000); ev('share', forLine ? 'copy_line' : 'copy'); };
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok, function () { prompt('複製這個連結：', u); });
         else prompt('複製這個連結：', u);
       };
@@ -450,13 +507,14 @@
       st.textContent = '.afd-shs{position:fixed;inset:0;z-index:65;background:#0003}.afd-shs[hidden]{display:none}'
         + '.afd-shs .in{position:absolute;right:max(12px,calc(50vw - 538px));top:calc(var(--navh,56px) + 8px);width:min(300px,calc(100vw - 24px));box-sizing:border-box;background:var(--card,var(--paper,#fff));color:var(--fg,#222);border:1px solid var(--line,#ddd);border-radius:16px;box-shadow:0 12px 32px #0003;padding:14px;display:flex;flex-direction:column;gap:8px}'
         + '.afd-shs .in>a,.afd-shs .in>button[data-cp],.afd-shs .in>button[data-more]{display:block;text-align:center;border-radius:999px;padding:11px 14px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}'
-        + '.afd-shs .ln{background:#06C755;color:#fff}.afd-shs [data-cp],.afd-shs [data-more]{border:1px solid var(--line,#ddd);background:var(--card,var(--paper,#fff));color:var(--fg,#222)}'
+        + '.afd-shs .ln,.afd-shs .lc{background:#06C755;color:#fff;border:0}.afd-shs [data-cp]:not(.lc),.afd-shs [data-more],.afd-shs .la,.afd-shs .lw{border:1px solid var(--line,#ddd);background:var(--card,var(--paper,#fff));color:var(--fg,#222)}'
+        + '.afd-shs .la{border-color:#06C755}.afd-shs .lw{font-weight:600!important;font-size:.88rem;color:var(--muted,#666)}'
         + '.afd-shs .x{position:absolute;right:8px;top:6px;border:0;background:transparent;color:inherit;font-size:1rem;cursor:pointer;padding:4px 6px}'
         + '@media (max-width:760px){.afd-shs .in{top:auto;right:12px;left:12px;width:auto;bottom:calc(var(--tabh,58px) + var(--sab,0px) + 10px)}}';
       document.head.appendChild(st);
     }
-    $('.ln', SHS).href = lineHref();
-    SHS.hidden = false; try { $('.ln', SHS).focus({ preventScroll: true }); } catch (e) {}
+    if (MOB) $('.ln', SHS).href = lineHref(); else { $('.lw', SHS).href = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(shareUrl()); $('[data-lapp]', SHS).href = lineAppHref(); }
+    SHS.hidden = false; try { $(MOB ? '.ln' : '.lc', SHS).focus({ preventScroll: true }); } catch (e) {}
   }
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-afd-share]'); if (!b) return; e.preventDefault();
@@ -518,15 +576,27 @@
       inn.innerHTML = '<button type="button" class="x" aria-label="關閉">✕</button><b>登入</b><p class="note">用 Google 帳號登入。登入只用來辨識你（之後用於跨裝置同步收聽進度），<b>不會自動訂閱晨報</b>；登入資料只存在這台裝置的瀏覽器。</p><div class="gb"><div class="note">載入中…</div></div>';
       var gb = $('.gb', inn);
       if (!C.clientId) gb.innerHTML = '<div class="note">登入功能尚未開放。</div>';
-      else gisButton(gb, function (c) { var o = acctSet(c); acctClose(); if (o) { var t = toast('<span>已登入：' + escH(o.name || o.email) + '</span>'); if (t) setTimeout(function () { t.remove(); }, 2500); ev('login'); } }, 'signin_with', true)
+      else gisButton(gb, acctLoginDone, 'signin_with', true)
         .catch(function () { gb.innerHTML = '<div class="note">無法載入 Google 登入，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。</div>'; });
     }
     var r = ACB ? ACB.getBoundingClientRect() : { bottom: 56, right: innerWidth - 12 };
     inn.style.top = Math.max(8, r.bottom + 8) + 'px'; inn.style.right = Math.max(12, innerWidth - r.right) + 'px';
     ACP.hidden = false; ACCT_OPEN = true; if (ACB) ACB.setAttribute('aria-expanded', 'true');
   }
+  function acctLoginDone(c) {
+    ACW = 0; var o = acctSet(c); BOXES.forEach(function (x) { x._swap = false; }); if (o && SUB.st === 'ready') paintAll();
+    if (!o) { if (ACP && !ACP.hidden) { var m = $('.in .gb', ACP); if (m) m.insertAdjacentHTML('afterend', '<p class="note">登入沒有完成，請再試一次。</p>'); } return; }
+    if (ACP && !ACP.hidden) acctOpen(ACB); // repaint the open panel as signed in: avatar, name, email, 登出
+    var t = toast('<span>已登入：' + escH(o.name || o.email) + '</span>'); if (t) setTimeout(function () { t.remove(); }, 2500); ev('login');
+  }
+  // watchdog: the visitor clicked the Google button in the panel but no credential came back (popup closed / blocked / third-party sign-in off)
+  var ACW = 0;
+  function acctWatch() { var t0 = ACW = Date.now();
+    setTimeout(function () { if (ACW !== t0 || acctGet() || !ACP || ACP.hidden) return; var gb = $('.in .gb', ACP);
+      if (gb && !$('.in [data-acw]', ACP)) gb.insertAdjacentHTML('afterend', '<p class="note" data-acw>還沒登入成功嗎？請確認 Google 登入視窗沒有被瀏覽器擋下，然後再按一次上面的按鈕；也可以重新整理頁面再試。</p>');
+      ev('login_no_return'); }, 25000); }
   function acctLogout() {
-    if (LS) LS.removeItem(AK); acctPaint(); acctClose(); ev('logout');
+    if (LS) LS.removeItem(AK); idtClear(); BOXES.forEach(function (x) { x._swap = false; }); if (SUB.st === 'ready') paintAll(); acctPaint(); acctClose(); ev('logout');
     var t = toast('<span>已登出</span>'); if (t) setTimeout(function () { t.remove(); }, 2000);
     var off = function () { try { google.accounts.id.disableAutoSelect(); } catch (e) {} };
     if (window.google && google.accounts && google.accounts.id) off(); else if (C.clientId) loadGIS().then(off, function () {});
@@ -535,6 +605,8 @@
     st.textContent = '.afd-acct{flex:none;position:relative;width:38px;height:38px;padding:0;border-radius:999px;border:1px solid var(--line,#ddd);background:var(--card,var(--paper,#fff));color:var(--fg,#222);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}'
       + '.afd-acct:hover{background:var(--chip,var(--bg2,#f3f3f3))}.afd-acct img{width:100%;height:100%;border-radius:999px;object-fit:cover;display:block}'
       + '.afd-acct.in{color:var(--accent,var(--pri,#b5532a))}.afd-acct .dot{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#2E9D5B;border:2px solid var(--card,var(--paper,#fff))}'
+      + '.afd-one{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;min-width:0;max-width:100%}.afd-one [data-afd-sub1]{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+      + '.afd-swap{border:0;background:transparent;color:var(--muted,#777);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;padding:4px 2px}'
       + '@media (max-width:760px){.afd-acct{width:34px;height:34px}.afd-acct svg{width:18px;height:18px}}';
     document.head.appendChild(st); })();
   acctPaint();

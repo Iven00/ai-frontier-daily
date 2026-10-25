@@ -1,0 +1,36 @@
+{
+  "method": "twitter:image",
+  "source_page": "https://huggingface.co/papers/2610.30755",
+  "image_url": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2610.30755/gradient.png",
+  "publisher": "Hugging Face",
+  "article_id": "arxiv-2610.30755-v1",
+  "article_title": "Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統",
+  "src_w": 1200,
+  "src_h": 648,
+  "entropy": 5.77,
+  "rejected": [
+    {
+      "page": "https://arxiv.org/abs/2610.30755",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png",
+      "reason": "logo-like image URL"
+    },
+    {
+      "page": "https://arxiv.org/abs/2610.30755",
+      "image": "https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png",
+      "reason": "logo-like image URL"
+    },
+    {
+      "page": "https://arxiv.org/html/2610.30755",
+      "reason": "no og:image / twitter:image"
+    }
+  ],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 648,
+  "bytes": 121613,
+  "thumb_w": 480,
+  "thumb_h": 259,
+  "thumb_bytes": 23030,
+  "picked_at": "2026-10-25T22:37:46+08:00"
+}

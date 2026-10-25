@@ -1,0 +1,37 @@
+{
+ "v": 1,
+ "generated_at": "2026-10-25T22:55:51+08:00",
+ "latest": "2026-10-25",
+ "issues": [
+  {
+   "key": "2026-10-25",
+   "kind": "daily",
+   "date": "2026-10-25",
+   "no": 2,
+   "label": "第 2 期・10/25（週日）",
+   "subject": "Mirakee Signal｜AI 前沿情報站 2026-10-25",
+   "headline": "長期記憶回歸「保留原始證據」",
+   "path": "email/2026-10-25.json"
+  },
+  {
+   "key": "2026-10-25-special",
+   "kind": "special",
+   "date": "2026-10-25",
+   "no": null,
+   "label": "特刊・10/25（週日）",
+   "subject": "AI 名人講話與訪談特刊 2026-10-25",
+   "headline": "被 OpenAI 解僱的安全研究員首次受訪：第三方稽核與「可監控性」",
+   "path": "email/2026-10-25-special.json"
+  },
+  {
+   "key": "2026-10-24",
+   "kind": "daily",
+   "date": "2026-10-24",
+   "no": 1,
+   "label": "第 1 期・10/24（週六）",
+   "subject": "Mirakee Signal｜AI 前沿情報站 2026-10-24",
+   "headline": "代理的「執行環境隔離」成為基礎設施主戰場",
+   "path": "email/2026-10-24.json"
+  }
+ ]
+}
