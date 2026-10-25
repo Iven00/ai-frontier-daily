@@ -1,2 +1,2 @@
 /* 公開設定，由 scripts/site_hub.py 依 scripts/site_config.json 產生；api 空白＝後端功能未啟用 */
-window.AFD_CONFIG={"api": "", "clientId": "668389261134-bau1ll94sncfm5d8li7782mdkam0qq27.apps.googleusercontent.com", "consentVersion": "2026-10-25", "base": "https://iven00.github.io/ai-frontier-daily"};
+window.AFD_CONFIG={"api": "https://script.google.com/macros/s/AKfycbzpv9b8ZXYfZZeut8BwM8XpSkMC4mYF4uPtQ9_jR3C2CP2MAEJRa2_oFA1mcTcy4cT9/exec", "clientId": "668389261134-bau1ll94sncfm5d8li7782mdkam0qq27.apps.googleusercontent.com", "consentVersion": "2026-10-25", "base": "https://iven00.github.io/ai-frontier-daily"};
