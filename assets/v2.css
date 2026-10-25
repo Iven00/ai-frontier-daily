@@ -164,3 +164,8 @@ blockquote{margin:8px 0;padding:8px 14px;border-left:3px solid #E3CBA8;backgroun
 .afdl-tap{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:rgba(58,48,42,.35)}.afdl-tap button{font:inherit;font-size:1.15rem;font-weight:800;border:0;border-radius:999px;padding:18px 30px;background:var(--pri);color:#fff;box-shadow:var(--sh);cursor:pointer}.afdl-tap small{display:block;font-weight:500;font-size:.85rem;opacity:.9}
 @media (max-width:1023px){.igrid{grid-template-columns:minmax(0,1fr);gap:16px;margin-top:16px}.igrid>.itoc,.igrid>.imain{grid-column:1;grid-row:auto}.itoc{position:static;max-height:none}.itoc details:not([open]) summary::after{content:" ▾"}.trends{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:560px){.pn{grid-template-columns:minmax(0,1fr)}.pn .nx{text-align:left}.art{padding:16px}.player{padding:14px}}
+
+/* desktop nav 761–1023px: keep 分享・免費訂閱・帳號 fully visible (links never paint over them) */
+.v2-nav .links{overflow:hidden}
+@media (min-width:761px) and (max-width:1023px){.v2-nav .wrap{gap:10px}.v2-share .tx{display:none}.v2-share{padding-left:11px;padding-right:11px}.logo small{display:none}.links a{padding:7px 6px;font-size:.84rem}}
+@media (min-width:761px) and (max-width:899px){.v2-nav .links a:first-child{display:none}.v2-nav .links a{font-size:.8rem;padding:7px 3px}.v2-nav .links{gap:0}} /* 首頁 = the logo link; frees room so 往期 isn't cut */

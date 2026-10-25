@@ -145,22 +145,22 @@
     if (IOS && /AppleWebKit/.test(UA) && !/Safari\//.test(UA) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(UA)) return 'App 內建瀏覽器'; // iOS WKWebView (no "Safari/" token)
     return '';
   })();
-  function subUrl() { var u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); u.searchParams.set('sub', '1'); u.hash = ''; return u.toString(); }
-  function escapeHref() {
-    var u = subUrl();
+  function subUrl(k) { var u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); u.searchParams.delete('sub'); u.searchParams.delete('login'); u.searchParams.set(k === 'login' ? 'login' : 'sub', '1'); u.hash = ''; return u.toString(); }
+  function escapeHref(k) {
+    var u = subUrl(k);
     if (INAPP === 'LINE') { var x = new URL(u); x.searchParams.set('openExternalBrowser', '1'); return x.toString(); }
     if (ANDROID) { var p = new URL(u); return 'intent://' + p.host + p.pathname + p.search + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(u) + ';end'; }
     return '';
   }
-  function inappHTML() {
-    var h = escapeHref(), br = INAPP === 'LINE' ? '外部瀏覽器' : ANDROID ? 'Chrome' : (IOS ? 'Safari' : '一般瀏覽器');
-    return '<div class="afd-inapp" role="note"><div><b>' + (INAPP === 'App 內建瀏覽器' ? '你正在 App 的內建瀏覽器裡。' : '你正在「' + INAPP + '」的內建瀏覽器裡。') + '</b>Google 不允許在這裡登入，請改用 ' + br + ' 開啟本站再訂閱（打開後會直接跳出訂閱視窗）。</div>'
-      + (h ? '<a class="btn primary" data-afd-escape href="' + h.replace(/"/g, '&quot;') + '">用 ' + (INAPP === 'LINE' ? '預設瀏覽器' : 'Chrome') + ' 開啟並訂閱</a>' : '<div class="note">' + (IOS ? '點畫面右上角（或右下角）的「⋯」→ 選「用 Safari 開啟」；或複製網址貼到 Safari。' : '點選單「⋯」→「用瀏覽器開啟」；或複製網址貼到瀏覽器。') + '</div>')
-      + '<button class="btn" type="button" data-afd-copy>複製網址</button><span class="note" data-afd-copied role="status"></span></div>';
+  function inappHTML(k) {
+    var L = k === 'login', h = escapeHref(k), br = INAPP === 'LINE' ? '外部瀏覽器' : ANDROID ? 'Chrome' : (IOS ? 'Safari' : '一般瀏覽器');
+    return '<div class="afd-inapp" role="note"><div><b>' + (INAPP === 'App 內建瀏覽器' ? '你正在 App 的內建瀏覽器裡。' : '你正在「' + INAPP + '」的內建瀏覽器裡。') + '</b>Google 不允許在這裡登入，請改用 ' + br + ' 開啟本站再' + (L ? '登入（打開後會直接跳出登入視窗）' : '訂閱（打開後會直接跳出訂閱視窗）') + '。</div>'
+      + (h ? '<a class="btn primary" data-afd-escape href="' + h.replace(/"/g, '&quot;') + '">用 ' + (INAPP === 'LINE' ? '預設瀏覽器' : 'Chrome') + ' 開啟並' + (L ? '登入' : '訂閱') + '</a>' : '<div class="note">' + (IOS ? '點畫面右上角（或右下角）的「⋯」→ 選「用 Safari 開啟」；或複製網址貼到 Safari。' : '點選單「⋯」→「用瀏覽器開啟」；或複製網址貼到瀏覽器。') + '</div>')
+      + '<button class="btn" type="button" data-afd-copy="' + (L ? 'login' : 'sub') + '">複製網址</button><span class="note" data-afd-copied role="status"></span></div>';
   }
   document.addEventListener('click', function (e) {
     var c = e.target.closest && e.target.closest('[data-afd-copy]'); if (!c) return;
-    var u = subUrl(), out = c.parentNode.querySelector('[data-afd-copied]');
+    var u = subUrl(c.getAttribute('data-afd-copy')), out = c.parentNode.querySelector('[data-afd-copied]');
     var done = function () { if (out) out.textContent = '已複製，請貼到 ' + (IOS ? 'Safari' : 'Chrome') + ' 的網址列。'; ev('inapp_copy', INAPP); };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(done, function () { prompt('複製這個網址：', u); });
     else { prompt('複製這個網址：', u); }
@@ -170,7 +170,7 @@
 
   // ---------- subscribe (one shared state; every [data-afd-sub] box mirrors it) ----------
   var FULL_MSG = '目前是試營運版，訂閱名額已滿（上限 400 人），暫時無法訂閱。名額增加時，要我們通知你嗎？';
-  var gisP = null, gisInit = false, credFn = null;
+  var gisP = null, gisInit = false, credFn = null, acctCred = null, ACCT_OPEN = false;
   function loadGIS() {
     if (gisP) return gisP;
     gisP = new Promise(function (ok, no) { var x = document.createElement('script'); x.src = 'https://accounts.google.com/gsi/client'; x.async = true; x.onload = ok; x.onerror = function () { gisP = null; no(); }; document.head.appendChild(x); });
@@ -188,13 +188,14 @@
     }, 4000);
   }
   window.addEventListener('focus', gisBack); document.addEventListener('visibilitychange', gisBack);
-  function gisButton(el, onCred, text) {
-    if (INAPP) { el.innerHTML = inappHTML(); ev('inapp_sub_view', INAPP); return Promise.resolve(); }
-    credFn = function (c) { gisTry = 0; onCred(c); };
+  function gisButton(el, onCred, text, login) {
+    if (INAPP) { el.innerHTML = inappHTML(login ? 'login' : 'sub'); ev(login ? 'inapp_login_view' : 'inapp_sub_view', INAPP); return Promise.resolve(); }
+    if (login) acctCred = function (c) { gisTry = 0; onCred(c); }; else credFn = function (c) { gisTry = 0; onCred(c); };
     var RD = !!(C.gisRedirect && (IOS || ANDROID)); // redirect sign-in (no popup return needed); needs Apps Script login_uri support — off until deployed
     return loadGIS().then(function () {
+      if (RD && login) { el.innerHTML = '<div class="note">手機版登入即將開放，請先用電腦登入。</div>'; return; } // redirect mode posts to the subscribe endpoint — never use it for login
       if (RD && !gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, ux_mode: 'redirect', login_uri: API, auto_select: false }); }
-      if (!gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, callback: function (r) { if (credFn) credFn(r.credential); }, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true }); }
+      if (!gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, callback: function (r) { var f = ACCT_OPEN ? acctCred : credFn; if (f) f(r.credential); }, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true }); }
       var w = Math.max(200, Math.min(320, Math.floor((el.parentNode && el.parentNode.clientWidth) || 280)));
       el.innerHTML = ''; google.accounts.id.renderButton(el, { type: 'standard', theme: 'outline', size: 'large', shape: 'pill', text: text || 'signup_with', locale: 'zh-TW', logo_alignment: 'left', width: w });
     });
@@ -240,7 +241,7 @@
     msgAll('處理中…'); consentGiven(); ev('subscribe_start');
     post({ action: 'subscribe', credential: cred, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0, page: PAGE })
       .then(function (r) {
-        if (r.ok) { s('afd-subscribed', '1'); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
+        if (r.ok) { acctSet(cred); s('afd-subscribed', '1'); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
           setHTML('<div class="msg">✅ 訂閱成功！' + (r.already ? '（你之前就訂閱了）' : '') + '明天早上 6 點（台北時間）起，晨報會寄到 ' + (r.email || '你的信箱') + '。</div>'); }
         else if (r.state === 'full') { SUB.st = 'full'; SUB.wcred = cred; paintAll(); }
         else msgAll(r.message || '訂閱失敗，請稍後再試。');
@@ -422,13 +423,20 @@
   // restore the play label with the resume time
   $$('[data-afd-play]').forEach(function (b) { var r = resumeAt(b.getAttribute('data-afd-play')); if (r != null) { b._lab = b.textContent; b.textContent = '▶ 從 ' + mmss(r) + ' 繼續聽'; } });
   // ---------- share (every page): canonical URL + ?openExternalBrowser=1 (so LINE opens it in the external browser) ----------
-  try { if (qs.has('openExternalBrowser') && !qs.has('sub')) { qs.delete('openExternalBrowser'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } } catch (e) {}
+  try { if (qs.has('openExternalBrowser') && !qs.has('sub') && !qs.has('login')) { qs.delete('openExternalBrowser'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } } catch (e) {}
   function shareUrl() { var c = $('link[rel=canonical]'), u = new URL(c ? c.href : location.href.split('#')[0]); u.search = ''; u.hash = ''; u.searchParams.set('openExternalBrowser', '1'); return u.toString(); }
+  // Share sheet: clicking 分享 ALWAYS opens this sheet first (Windows/macOS system share sheets have no LINE target).
+  // LINE link: mobile → line.me/R/share?text= (LINE's URL scheme; opens the LINE app straight to the chat picker, works inside LINE's own browser);
+  //            desktop → social-plugins.line.me/lineit/share?url= (web page; works without the LINE app installed, lets the visitor log in and pick a chat).
+  var MOB = IOS || ANDROID;
+  function lineHref() { var u = shareUrl(); return MOB ? 'https://line.me/R/share?text=' + encodeURIComponent(document.title + '\n' + u) : 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(u); }
+  function shareData() { var md = $('meta[name=description]'); return { title: document.title, text: md ? md.content : document.title, url: shareUrl() }; }
   var SHS = null;
   function shareSheet() {
     if (!SHS) {
       SHS = document.createElement('div'); SHS.className = 'afd-shs'; SHS.hidden = true; SHS.setAttribute('role', 'dialog'); SHS.setAttribute('aria-label', '分享');
-      SHS.innerHTML = '<div class="in"><b>分享這一頁</b><a class="ln" target="_blank" rel="noopener">分享到 LINE</a><button type="button" data-cp>複製連結</button><button type="button" class="x" aria-label="關閉">✕</button></div>';
+      SHS.innerHTML = '<div class="in"><b>分享這一頁</b><a class="ln" target="_blank" rel="noopener">分享到 LINE</a><button type="button" data-cp>複製連結</button>'
+        + (navigator.share ? '<button type="button" data-more>更多…（系統分享）</button>' : '') + '<button type="button" class="x" aria-label="關閉">✕</button></div>';
       document.body.appendChild(SHS);
       SHS.addEventListener('click', function (e) { if (e.target === SHS || e.target.closest('.x')) SHS.hidden = true; if (e.target.closest('.ln')) { ev('share', 'line'); SHS.hidden = true; } });
       $('[data-cp]', SHS).onclick = function () {
@@ -436,24 +444,107 @@
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok, function () { prompt('複製這個連結：', u); });
         else prompt('複製這個連結：', u);
       };
+      var more = $('[data-more]', SHS);
+      if (more) more.onclick = function () { var d = shareData(); SHS.hidden = true; navigator.share(d).then(function () { ev('share', 'native'); }, function () {}); };
       var st = document.createElement('style');
       st.textContent = '.afd-shs{position:fixed;inset:0;z-index:65;background:#0003}.afd-shs[hidden]{display:none}'
-        + '.afd-shs .in{position:absolute;right:max(12px,calc(50vw - 538px));top:calc(var(--navh,56px) + 8px);width:min(300px,calc(100vw - 24px));box-sizing:border-box;background:var(--card,#fff);color:var(--fg,#222);border:1px solid var(--line,#ddd);border-radius:16px;box-shadow:0 12px 32px #0003;padding:14px;display:flex;flex-direction:column;gap:8px}'
-        + '.afd-shs .in>a,.afd-shs .in>button[data-cp]{display:block;text-align:center;border-radius:999px;padding:11px 14px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}'
-        + '.afd-shs .ln{background:var(--accent,#b5532a);color:#fff}.afd-shs [data-cp]{border:1px solid var(--line,#ddd);background:var(--card,#fff);color:var(--fg,#222)}'
+        + '.afd-shs .in{position:absolute;right:max(12px,calc(50vw - 538px));top:calc(var(--navh,56px) + 8px);width:min(300px,calc(100vw - 24px));box-sizing:border-box;background:var(--card,var(--paper,#fff));color:var(--fg,#222);border:1px solid var(--line,#ddd);border-radius:16px;box-shadow:0 12px 32px #0003;padding:14px;display:flex;flex-direction:column;gap:8px}'
+        + '.afd-shs .in>a,.afd-shs .in>button[data-cp],.afd-shs .in>button[data-more]{display:block;text-align:center;border-radius:999px;padding:11px 14px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}'
+        + '.afd-shs .ln{background:#06C755;color:#fff}.afd-shs [data-cp],.afd-shs [data-more]{border:1px solid var(--line,#ddd);background:var(--card,var(--paper,#fff));color:var(--fg,#222)}'
         + '.afd-shs .x{position:absolute;right:8px;top:6px;border:0;background:transparent;color:inherit;font-size:1rem;cursor:pointer;padding:4px 6px}'
         + '@media (max-width:760px){.afd-shs .in{top:auto;right:12px;left:12px;width:auto;bottom:calc(var(--tabh,58px) + var(--sab,0px) + 10px)}}';
       document.head.appendChild(st);
     }
-    $('.ln', SHS).href = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(shareUrl());
-    SHS.hidden = false;
+    $('.ln', SHS).href = lineHref();
+    SHS.hidden = false; try { $('.ln', SHS).focus({ preventScroll: true }); } catch (e) {}
   }
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-afd-share]'); if (!b) return; e.preventDefault();
-    var md = $('meta[name=description]'), data = { title: document.title, text: md ? md.content : document.title, url: shareUrl() };
-    if (navigator.share && (!navigator.canShare || navigator.canShare(data))) navigator.share(data).then(function () { ev('share', 'native'); }, function (err) { if (!err || err.name !== 'AbortError') shareSheet(); });
-    else shareSheet();
+    shareSheet(); ev('share_open');
   });
+
+  // ---------- account: sign in / sign out (separate from subscribing) ----------
+  // Session lives only in this browser: the ID token's claims {name, email, picture, exp} + sign-in time. The raw token is never stored.
+  // The ID token itself expires in ~1 h; this local profile is display-only (not a credential), kept 30 days. Anything server-side
+  // (batch 2 progress sync) must get a fresh ID token and verify it on the server.
+  var AK = 'afd-acct', ACCT_MS = 30 * 864e5;
+  var SVG_O = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>';
+  var SVG_F = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3.5 21.5c0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5z"/></svg>';
+  function escH(x) { return String(x || '').replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+  function b64u(x) { x = x.replace(/-/g, '+').replace(/_/g, '/'); while (x.length % 4) x += '='; var bin = atob(x);
+    try { return decodeURIComponent(Array.prototype.map.call(bin, function (c) { return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2); }).join('')); } catch (e) { return bin; } }
+  function acctSet(cred) {
+    try { var c = JSON.parse(b64u(String(cred).split('.')[1])); if (!c || !c.email) return null;
+      var o = { name: c.name || '', email: c.email, picture: /^https:\/\//.test(c.picture || '') ? c.picture : '', exp: c.exp || 0, since: Date.now() };
+      s(AK, JSON.stringify(o)); acctPaint(); return o; } catch (e) { return null; }
+  }
+  function acctGet() { try { var o = JSON.parse(g(AK) || 'null'); if (o && o.email && Date.now() - (o.since || 0) < ACCT_MS) return o; if (o && LS) LS.removeItem(AK); } catch (e) {} return null; }
+  function acctPaint() {
+    var a = acctGet();
+    $$('[data-afd-acct]').forEach(function (b) {
+      b.classList.toggle('in', !!a);
+      b.setAttribute('aria-label', a ? '帳號：' + (a.name || a.email) + '（已登入）' : '登入');
+      b.innerHTML = a ? ((a.picture ? '<img alt="" referrerpolicy="no-referrer" src="' + escH(a.picture) + '">' : SVG_F) + '<span class="dot" aria-hidden="true"></span>') : SVG_O;
+      var im = $('img', b); if (im) im.onerror = function () { im.outerHTML = SVG_F; };
+    });
+  }
+  var ACP = null, ACB = null;
+  function acctClose() { if (ACP) ACP.hidden = true; ACCT_OPEN = false; if (ACB) ACB.setAttribute('aria-expanded', 'false'); }
+  function acctOpen(btn) {
+    ACB = btn || $('[data-afd-acct]');
+    if (!ACP) {
+      ACP = document.createElement('div'); ACP.className = 'afd-acp'; ACP.hidden = true; ACP.setAttribute('role', 'dialog'); ACP.setAttribute('aria-label', '帳號');
+      ACP.innerHTML = '<div class="in"></div>'; document.body.appendChild(ACP);
+      ACP.addEventListener('click', function (e) {
+        if (e.target === ACP || e.target.closest('.x')) acctClose();
+        if (e.target.closest('[data-out]')) acctLogout();
+      });
+      var st = document.createElement('style');
+      st.textContent = '.afd-acp{position:fixed;inset:0;z-index:66;background:#0002}.afd-acp[hidden]{display:none}'
+        + '.afd-acp .in{position:absolute;width:min(320px,calc(100vw - 24px));box-sizing:border-box;background:var(--card,var(--paper,#fff));color:var(--fg,#222);border:1px solid var(--line,#ddd);border-radius:16px;box-shadow:0 12px 32px #0003;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:.92rem;line-height:1.55}'
+        + '.afd-acp .x{position:absolute;right:8px;top:6px;border:0;background:transparent;color:inherit;font-size:1rem;cursor:pointer;padding:4px 6px}'
+        + '.afd-acp .note{color:var(--muted,#777);font-size:.82rem;margin:0}.afd-acp .gb{min-height:44px;max-width:100%;overflow:hidden}'
+        + '.afd-acp .who{display:flex;gap:12px;align-items:center;padding-right:24px}.afd-acp .who img,.afd-acp .who .ph{width:44px;height:44px;border-radius:999px;flex:none;object-fit:cover;background:var(--chip,var(--bg2,#eee));display:flex;align-items:center;justify-content:center}'
+        + '.afd-acp .who div{min-width:0}.afd-acp .who b,.afd-acp .who span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.afd-acp .who span{color:var(--muted,#777);font-size:.84rem}'
+        + '.afd-acp [data-out]{border:1px solid var(--line,#ddd);background:transparent;color:inherit;font:inherit;font-weight:700;border-radius:999px;padding:10px 14px;cursor:pointer}';
+      document.head.appendChild(st);
+    }
+    var a = acctGet(), inn = $('.in', ACP);
+    if (a) {
+      inn.innerHTML = '<button type="button" class="x" aria-label="關閉">✕</button><div class="who">' + (a.picture ? '<img alt="" referrerpolicy="no-referrer" src="' + escH(a.picture) + '">' : '<span class="ph">' + SVG_F + '</span>')
+        + '<div><b>' + escH(a.name || '已登入') + '</b><span>' + escH(a.email) + '</span></div></div><button type="button" data-out>登出</button>';
+      var mi = $('.who img', inn); if (mi) mi.onerror = function () { mi.outerHTML = '<span class="ph">' + SVG_F + '</span>'; };
+    } else {
+      inn.innerHTML = '<button type="button" class="x" aria-label="關閉">✕</button><b>登入</b><p class="note">用 Google 帳號登入。登入只用來辨識你（之後用於跨裝置同步收聽進度），<b>不會自動訂閱晨報</b>；登入資料只存在這台裝置的瀏覽器。</p><div class="gb"><div class="note">載入中…</div></div>';
+      var gb = $('.gb', inn);
+      if (!C.clientId) gb.innerHTML = '<div class="note">登入功能尚未開放。</div>';
+      else gisButton(gb, function (c) { var o = acctSet(c); acctClose(); if (o) { var t = toast('<span>已登入：' + escH(o.name || o.email) + '</span>'); if (t) setTimeout(function () { t.remove(); }, 2500); ev('login'); } }, 'signin_with', true)
+        .catch(function () { gb.innerHTML = '<div class="note">無法載入 Google 登入，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。</div>'; });
+    }
+    var r = ACB ? ACB.getBoundingClientRect() : { bottom: 56, right: innerWidth - 12 };
+    inn.style.top = Math.max(8, r.bottom + 8) + 'px'; inn.style.right = Math.max(12, innerWidth - r.right) + 'px';
+    ACP.hidden = false; ACCT_OPEN = true; if (ACB) ACB.setAttribute('aria-expanded', 'true');
+  }
+  function acctLogout() {
+    if (LS) LS.removeItem(AK); acctPaint(); acctClose(); ev('logout');
+    var t = toast('<span>已登出</span>'); if (t) setTimeout(function () { t.remove(); }, 2000);
+    var off = function () { try { google.accounts.id.disableAutoSelect(); } catch (e) {} };
+    if (window.google && google.accounts && google.accounts.id) off(); else if (C.clientId) loadGIS().then(off, function () {});
+  }
+  (function () { var st = document.createElement('style');
+    st.textContent = '.afd-acct{flex:none;position:relative;width:38px;height:38px;padding:0;border-radius:999px;border:1px solid var(--line,#ddd);background:var(--card,var(--paper,#fff));color:var(--fg,#222);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}'
+      + '.afd-acct:hover{background:var(--chip,var(--bg2,#f3f3f3))}.afd-acct img{width:100%;height:100%;border-radius:999px;object-fit:cover;display:block}'
+      + '.afd-acct.in{color:var(--accent,var(--pri,#b5532a))}.afd-acct .dot{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#2E9D5B;border:2px solid var(--card,var(--paper,#fff))}'
+      + '@media (max-width:760px){.afd-acct{width:34px;height:34px}.afd-acct svg{width:18px;height:18px}}';
+    document.head.appendChild(st); })();
+  acctPaint();
+  window.addEventListener('storage', function (e) { if (e.key === AK) acctPaint(); });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-afd-acct]'); if (!b) return; e.preventDefault();
+    if (ACP && !ACP.hidden) acctClose(); else acctOpen(b);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ACCT_OPEN) acctClose(); });
+  if (qs.get('login') === '1') { qs.delete('login'); qs.delete('openExternalBrowser'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {} setTimeout(function () { if (!acctGet()) acctOpen(); }, 300); }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && SHS) SHS.hidden = true; });
   // after most of the episode: gentle subscribe nudge (once per session, never for subscribers)
   if (AUD && API) AUD.addEventListener('timeupdate', function () {
