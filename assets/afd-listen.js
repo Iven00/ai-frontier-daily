@@ -158,7 +158,7 @@
   }
   setInterval(function () { if (P.a && !P.a.paused) persist(); }, 5000);
   // single-issue page: 本期目錄 starts collapsed on phones so the content comes first
-  if (window.matchMedia && matchMedia('(max-width:900px)').matches) $$('.itoc details').forEach(function (d) { d.open = false; });
+  if (window.matchMedia && matchMedia('(max-width:1023px)').matches) $$('.itoc details').forEach(function (d) { d.open = false; });
   window.AFDL = { state: function () { return ST; }, beadFrac: beadFrac, data: DATA };
   paintBeads();
 })();
