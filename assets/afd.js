@@ -92,7 +92,9 @@
     fetch(API + (API.indexOf('?') >= 0 ? '&' : '?') + 'action=stats', { redirect: 'follow' }).then(function (r) { return r.json(); }).then(function (j) {
       if (!j || !j.ok || typeof j.total !== 'number' || typeof j.today !== 'number') return;
       STATBOX.forEach(function (b) {
-        $$('[data-afd-stat]', b).forEach(function (x) { x.textContent = Number(j[x.getAttribute('data-afd-stat')]).toLocaleString('zh-TW'); });
+        $$('[data-afd-stat]', b).forEach(function (x) { var v = j[x.getAttribute('data-afd-stat')]; if (typeof v === 'number') x.textContent = v.toLocaleString('zh-TW'); });
+        // subscriber count only appears once the backend sends it (older deployments omit the field → part stays hidden)
+        $$('[data-afd-subpart]', b).forEach(function (x) { x.hidden = typeof j.subscribers !== 'number' || j.subscribers < 0; });
         b.hidden = false;
       });
     }).catch(function () {});

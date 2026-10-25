@@ -1,0 +1,48 @@
+/* readstate.css — DESIGN PREVIEW ONLY (/preview/readstate/). Per-item read/listen states, issue progress, 收聽 sheet, 歷史觀看.
+ * Colours: muted warm brown family — not terracotta (primary actions) and not teal (verified/source marks).
+ * Light: bar #9C7F62 (3.73:1 on #FFF, 3.50:1 on #FBF7F1); chip text #6F563E on #F3ECE4 (5.83:1).
+ * Dark : bar #B79E84 (5.65:1 on #262A31); chip text #E2D2C0 on #3A3229 (8.52:1).
+ * Every state element is absolutely positioned or uses space reserved in all states → no reflow, card height never changes. */
+:root{--rs-bar:#9C7F62;--rs-chip-bg:#F3ECE4;--rs-chip-fg:#6F563E;--rs-track:#EADFD2}
+@media (prefers-color-scheme:dark){:root{--rs-bar:#B79E84;--rs-chip-bg:#3A3229;--rs-chip-fg:#E2D2C0;--rs-track:#3A3F47}}
+.rs-card{position:relative}
+.rs-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--r,16px) 0 0 var(--r,16px);background:transparent}
+.rs-card.rs-done::before,.rs-card.rs-read::before,.rs-card.rs-part::before{background:var(--rs-bar)}
+.rs-chip{position:absolute;top:-11px;right:14px;border:1px solid var(--line);box-shadow:var(--sh-s);z-index:1;font-size:.74rem;line-height:1.5;padding:1px 9px;border-radius:999px;background:var(--rs-chip-bg);color:var(--rs-chip-fg);font-weight:600;white-space:nowrap;pointer-events:none}
+.rs-chip:empty{display:none}
+.rs-line{position:absolute;left:4px;right:0;bottom:0;height:3px;background:transparent;border-radius:0 0 var(--r,16px) 0;overflow:hidden;pointer-events:none}
+.rs-part .rs-line{background:var(--rs-track)}
+.rs-part .rs-line::after{content:"";display:block;height:100%;width:var(--p,0%);background:var(--rs-bar)}
+.rs-done .take,.rs-read .take{color:var(--muted)}   /* summary muted; title untouched */
+/* issue cards (home / archive / history) */
+.rs-ic .ithumb{position:relative}
+.rs-ichip{position:absolute;top:8px;right:8px;font-size:.74rem;line-height:1.5;padding:1px 9px;border-radius:999px;background:var(--rs-chip-bg);color:var(--rs-chip-fg);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.18);pointer-events:none}
+.rs-iseg{position:absolute;left:8px;right:8px;bottom:8px;height:5px;display:flex;gap:3px;pointer-events:none}
+.rs-iseg i{flex:1;border-radius:3px;background:rgba(255,255,255,.72);box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;position:relative;overflow:hidden}
+.rs-iseg i.d{background:var(--rs-bar)}
+.rs-iseg i.p::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,50%);background:var(--rs-bar)}
+.rs-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:.8rem;color:var(--muted);margin:0 0 12px}
+.rs-legend .rs-chip{position:static;box-shadow:none}
+.rs-legend button{margin-left:auto;border:0;background:transparent;color:var(--muted);cursor:pointer;font:inherit;text-decoration:underline}
+/* 收聽 sheet (mobile) */
+.rs-sheet{position:fixed;left:8px;right:8px;bottom:calc(var(--tabh,60px) + var(--sab,0px) + 8px);z-index:41;background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.22);padding:14px;max-height:min(70vh,560px);overflow:auto;font-size:.92rem}
+.rs-sheet h3{margin:0 0 8px;font-size:.95rem}
+.rs-sheet .rs-sec{margin:0 0 12px}
+.rs-sheet .rs-lbl{font-size:.76rem;color:var(--muted);margin:0 0 4px;font-weight:600}
+.rs-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.rs-row:first-of-type{border-top:0}
+.rs-row .rs-t{flex:1;min-width:0}
+.rs-row .rs-t a{color:var(--fg);text-decoration:none;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rs-row .rs-t small{color:var(--muted);display:block}
+.rs-row .btn{flex:none}
+.rs-links{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+.rs-links a{flex:1;min-width:130px;text-align:center;padding:8px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--fg);font-weight:600}
+@media (min-width:900px){.rs-sheet{left:auto;right:24px;width:380px}}
+/* history page */
+.rs-hmeta{font-size:.8rem;color:var(--muted);margin:2px 0 6px}
+.rs-hbtns{display:flex;gap:8px;flex-wrap:wrap}
+.rs-empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.rs-empty p{margin:0 0 12px}
+.rs-htools{display:flex;justify-content:flex-end;margin:0 0 12px}
+.rs-banner{background:#3A302A;color:#FBF7F1;font-size:.8rem;padding:6px 12px;text-align:center;line-height:1.6}
+.rs-banner a{color:#F6E3D8;margin:0 6px}

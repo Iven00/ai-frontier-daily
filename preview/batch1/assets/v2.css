@@ -184,3 +184,5 @@ blockquote{margin:8px 0;padding:8px 14px;border-left:3px solid #E3CBA8;backgroun
  .hero .cv .hfig,.hero .cv .hfig~.hosts{grid-column:1/-1}.hero .cv .hfig img{border-radius:14px;aspect-ratio:1.91/1;object-fit:cover}
  .ibg{grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "f" "p";gap:0}.ibg>.ifig{margin:2px 0 14px}.ifig img{border-radius:14px}
 }
+/* stats pill: one pill; on narrow screens it wraps between whole segments (each segment never breaks inside) */
+.v2-stats{white-space:normal;flex-wrap:wrap;gap:0;max-width:100%;justify-content:center;text-align:center}.v2-stats .sg{white-space:nowrap}
