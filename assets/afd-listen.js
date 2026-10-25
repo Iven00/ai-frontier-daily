@@ -98,7 +98,7 @@
     // play() is called synchronously inside the click (iOS Safari requires that); the resume seek happens once metadata is known
     var seek = function () { if (at != null && Math.abs(a.currentTime - at) > 1) { try { a.currentTime = at; } catch (e) {} } paintBeads(); };
     if (a.readyState >= 1) seek(); else { a.preload = 'auto'; a.addEventListener('loadedmetadata', seek, { once: true }); }
-    var p = a.play(); if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError' && D.href) location.href = D.href + '?play=1' + (at ? '&t=' + Math.floor(at) : ''); });
+    var p = a.play(); if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError' && a === PAGE_AUD) { tapToPlay(a); return; } if (err && err.name === 'NotAllowedError' && D.href) location.href = D.href + '?play=1' + (at ? '&t=' + Math.floor(at) : ''); });
     paintBeads();
   }
   document.addEventListener('click', function (e) {
@@ -118,8 +118,29 @@
       var n = $$('[data-afdl-card]').filter(function (c) { return !c.hidden; }).length, em = $('[data-afdl-empty]'); if (em) em.hidden = n > 0;
     });
   });
+  function tapToPlay(a) {
+    if ($('.afdl-tap')) return;
+    var o = document.createElement('div'); o.className = 'afdl-tap';
+    o.innerHTML = '<button type="button">▶ 點一下開始播放<small>' + (a.currentTime > 1 ? '從 ' + f(a.currentTime) + ' 開始' : '從頭開始聽整期') + '</small></button>';
+    document.body.appendChild(o);
+    o.addEventListener('click', function () { var p = a.play(); if (p && p.catch) p.catch(function () {}); o.remove(); });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-afdl-from]');
+    if (b) { e.preventDefault(); start(b.getAttribute('data-afdl-from'), parseFloat(b.getAttribute('data-t')) || 0); }
+  });
+  // play intent from another page: ?play=1 (resume or start) | ?play=<segment id> | &t=<sec>  → play now (one-tap overlay if the browser refuses)
+  var QS = new URLSearchParams(location.search), QP = QS.get('play'), QT = parseFloat(QS.get('t'));
+  if (QP) { QS.delete('play'); QS.delete('t'); try { history.replaceState(null, '', location.pathname + (QS.toString() ? '?' + QS : '') + location.hash); } catch (e) {} }
   // issue page: bind existing player, resume prompt at saved-15s
-  if (PAGE_AUD) {
+  if (PAGE_AUD && QP) {
+    var KQ = PAGE_AUD.getAttribute('data-afdl-key'), atQ = null;
+    if (isFinite(QT) && QT > 0) atQ = QT;
+    else if (QP !== '1' && DATA[KQ]) DATA[KQ].beads.forEach(function (bd) { bd.segs.forEach(function (sg) { if (sg[0] === QP) atQ = sg[1] + 0.01; }); });
+    if (atQ == null) atQ = resumeAt(KQ);
+    start(KQ, atQ);
+    setInterval(function () { if (!PAGE_AUD.paused) persist(); }, 5000);
+  } else if (PAGE_AUD) {
     var K = PAGE_AUD.getAttribute('data-afdl-key'); bind(PAGE_AUD, K);
     var r0 = resumeAt(K);
     if (r0 != null) {
@@ -136,6 +157,8 @@
     setInterval(function () { if (!PAGE_AUD.paused) persist(); }, 5000);
   }
   setInterval(function () { if (P.a && !P.a.paused) persist(); }, 5000);
+  // single-issue page: 本期目錄 starts collapsed on phones so the content comes first
+  if (window.matchMedia && matchMedia('(max-width:900px)').matches) $$('.itoc details').forEach(function (d) { d.open = false; });
   window.AFDL = { state: function () { return ST; }, beadFrac: beadFrac, data: DATA };
   paintBeads();
 })();
