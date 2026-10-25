@@ -1,3 +1,4 @@
+:root{color-scheme:only light}
 /* v2.css — Batch 1 preview: warm Mira sub-brand palette. Terracotta = primary actions only; teal = verified/source marks only. */
 :root{--bg:#FBF7F1;--bg2:#F5EEE4;--paper:#FFFFFF;--line:#E8DCCB;--fg:#3A302A;--muted:#7A6E65;--pri:#C2643C;--pri-d:#A9532F;--pri-l:#F6E3D8;--teal:#2F6F6A;--teal-l:#E7F0EE;
 --sh:0 4px 24px -4px rgba(58,48,42,.08);--sh-s:0 1px 3px rgba(58,48,42,.06);--r:16px;--navh:64px;--tabh:60px;--sab:env(safe-area-inset-bottom,0px)}
@@ -89,8 +90,8 @@ h1,h2,h3,p,li,a,span,b,small,div{overflow-wrap:anywhere}
 .faq summary:after{content:"+";color:var(--pri);font-weight:800;font-size:1.2rem;line-height:1}.faq details[open] summary:after{content:"–"}
 .faq p{margin:8px 0 0;color:#5E5249;font-size:.95rem}
 /* footer */
-.v2-foot{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;color:var(--muted);font-size:.84rem;background:var(--bg2)}
-.v2-foot a{color:var(--muted);margin-right:14px}.v2-foot div{margin:4px 0}
+.v2-foot{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;text-align:center;color:var(--muted);font-size:.84rem;background:var(--bg2)}
+.v2-foot a{color:var(--muted);margin:0 7px;display:inline-block}.v2-foot div{margin:4px 0}
 /* mini player */
 .afdl-mini{position:fixed;z-index:50;left:50%;transform:translateX(-50%);bottom:18px;width:min(720px,calc(100vw - 24px));display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 40px -8px rgba(58,48,42,.25);padding:10px 12px}
 .afdl-mini[hidden]{display:none}

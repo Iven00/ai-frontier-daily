@@ -220,13 +220,18 @@
     });
   }
   function consentGiven() { s('afd-consent', '1'); }
-  var SUB = { st: g('afd-subscribed') === '1' ? 'done' : 'loading', html: '', wcred: null };
+  // Subscribed flag on this device = a hint only (2026-10-26 fix): trusted for 12 h, then re-checked. The backend (action=sub_status, by ID token) is the
+  // source of truth when a fresh Google token is available; 「訂閱成功」 is shown only right after a real subscribe in this page session.
+  var SUB_TTL = 12 * 3600e3, SS_K = 'afd-substat';
+  function subFlag() { return g('afd-subscribed') === '1' && Date.now() - (+g('afd-sub-ts') || 0) < SUB_TTL; }
+  function subMark(on) { s('afd-subscribed', on ? '1' : '0'); s('afd-sub-ts', String(Date.now())); try { sessionStorage.removeItem(SS_K); } catch (e) {} }
+  var SUB = { st: subFlag() ? 'done' : 'loading', html: '', wcred: null };
   var BOXES = $$('[data-afd-sub]');
   function visible(box) { return !box.hasAttribute('data-afd-lazy') || box.closest('dialog[open]'); }
   function paint(box) {
     var ui = $('.afd-sub-ui', box); if (!ui || !API) return;
     var strip = box.hasAttribute('data-afd-strip');
-    if (strip) box.classList.toggle('afd-done', SUB.st === 'done' && g('afd-subscribed') === '1' && !box._justDone);
+    if (strip) box.classList.toggle('afd-done', SUB.st === 'done' && subFlag() && !box._justDone);
     if (!visible(box)) { box._dirty = true; return; } box._dirty = false;
     if (SUB.st === 'done' && !SUB.html) {
       ui.innerHTML = '<div class="msg">' + (SUB.doneMsg || '✅ 你已訂閱晨報，每天早上 6 點（台北時間）見。') + '</div>' + (strip ? '' : unsubCtl());
@@ -263,12 +268,12 @@
   // ---------- in-site unsubscribe (signed-in subscribers): confirm dialog with retention text + required reasons ----------
   var UR = [['freq', '信太多/太頻繁'], ['irrelevant', '內容跟我的工作不太相關'], ['deep', '內容太深或太技術'], ['shallow', '內容太淺'], ['notime', '沒時間聽或看'],
     ['long', 'Podcast 太長'], ['timing', '寄送時間不適合'], ['othersrc', '改用其他資訊來源'], ['trial', '只是想先試試看'], ['other', '其他']];
-  function reasonsHTML() { return '<fieldset class="afd-ur"><legend>可以告訴我們原因嗎？（可複選）</legend>' + UR.map(function (r) { return '<label><input type="checkbox" value="' + r[0] + '"> ' + r[1] + '</label>'; }).join('')
+  function reasonsHTML() { return '<fieldset class="afd-ur"><legend>取消原因（至少勾選一個，可複選）</legend>' + UR.map(function (r) { return '<label><input type="checkbox" value="' + r[0] + '"> ' + r[1] + '</label>'; }).join('')
       + '<textarea maxlength="200" rows="2" placeholder="其他原因（選填，200 字內）" hidden></textarea></fieldset>'; }
   function reasonsGet(root) { var L = $$('.afd-ur input:checked', root).map(function (x) { return x.value; }), t = $('.afd-ur textarea', root); return { reasons: L, other: L.indexOf('other') >= 0 && t ? t.value.trim().slice(0, 200) : '' }; }
   function reasonsBind(root, onChange) { $$('.afd-ur input', root).forEach(function (x) { x.onchange = function () { var t = $('.afd-ur textarea', root), o = $('.afd-ur input[value=other]', root); if (t) t.hidden = !o.checked; onChange && onChange(reasonsGet(root).reasons.length); }; }); }
   function unsubCtl() { return acctGet() && C.clientId ? '<button type="button" class="afd-unsub" data-afd-unsub>取消訂閱</button>' : '<div class="note">想取消的話，點任何一封晨報信最下方的「取消訂閱」就好。</div>'; }
-  (function () { var st = document.createElement('style'); st.textContent = '.afd-unsub{display:inline-block;border:0;background:transparent;color:var(--muted,#7A6D62);font:inherit;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px 0 2px;margin:0}.afd-unsub:hover{color:var(--ink,#3A302A)}'; document.head.appendChild(st); })();
+  (function () { var st = document.createElement('style'); st.textContent = '.afd-unsub{display:inline-block;border:0;background:transparent;color:var(--muted,#7A6D62);font:inherit;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px 0 2px;margin:0}.afd-unsub:hover{color:var(--ink,var(--fg,#3A302A))}'; document.head.appendChild(st); })();
   var UCF = null;
   function unsubOpen() {
     ev('unsub_open');
@@ -306,7 +311,7 @@
   function unsubPost(cred, R, msg, go) {
     post({ action: 'unsub_web', credential: cred, reasons: R.reasons, other: R.other, vid: vid(), page: PAGE }).then(function (r) {
       if (r && r.ok) {
-        s('afd-subscribed', '0'); SUB.st = 'ready'; SUB.doneMsg = ''; BOXES.forEach(function (x) { x._justDone = false; }); setHTML(''); ucfClose(); ev('unsub_web_done');
+        subMark(false); SUB.st = 'ready'; SUB.doneMsg = ''; BOXES.forEach(function (x) { x._justDone = false; }); setHTML(''); ucfClose(); ev('unsub_web_done');
         BOXES.forEach(function (x) { var u = $('.afd-sub-ui', x); if (u && visible(x)) u.insertAdjacentHTML('afterbegin', '<div class="msg afd-unsub-done">已取消訂閱，之後不會再寄晨報給你。想回來時，按下面的按鈕就能再訂閱。</div>'); });
         var t = toast('<span>已取消訂閱</span>'); if (t) setTimeout(function () { t.remove(); }, 3000); return;
       }
@@ -354,28 +359,49 @@
     msgAll('處理中…'); consentGiven(); ev('subscribe_start');
     post({ action: 'subscribe', credential: cred, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0, page: PAGE })
       .then(function (r) {
-        if (r.ok) { acctSet(cred); s('afd-subscribed', '1'); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
+        if (r.ok) { acctSet(cred); subMark(true); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
           SUB.doneMsg = r.already ? '✅ 你已訂閱，晨報每天早上 6 點（台北時間）寄到 ' + escH(r.email || '你的信箱') + '。'
             : '✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到 ' + escH(r.email || '你的信箱') + '。'; setHTML(''); }
         else if (r.state === 'full') { SUB.st = 'full'; SUB.wcred = cred; paintAll(); }
         else msgAll(r.message || '訂閱失敗，請稍後再試。');
       }).catch(function () { msgAll('連線失敗，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。'); });
   }
+  // re-sync the panel: local flag (other tabs / the email page) + backend status by ID token (cached 10 min per tab)
+  function subApply(on) {
+    if (on) { if (SUB.st !== 'done') { SUB.st = 'done'; SUB.doneMsg = ''; SUB.html = ''; } }
+    else if (SUB.st === 'done' || SUB.st === 'loading') { SUB.st = 'ready'; SUB.doneMsg = ''; SUB.html = ''; BOXES.forEach(function (x) { x._justDone = false; }); }
+    paintAll();
+  }
+  function subSync() {
+    if (!API || !BOXES.length) return;
+    if (SUB.st === 'done' && !subFlag()) subApply(false);
+    var t = idtGet(), a = acctGet(); if (!t || !a || t.email !== a.email) return;
+    var c = null; try { c = JSON.parse(sessionStorage.getItem(SS_K) || 'null'); } catch (e) {}
+    if (c && c.email === t.email && Date.now() - c.t < 600e3) return;
+    post({ action: 'sub_status', credential: t.c }).then(function (r) {
+      if (!r || !r.ok || !r.state) return; // backend without sub_status (older deploy) → keep the 12 h local rule
+      try { sessionStorage.setItem(SS_K, JSON.stringify({ email: t.email, state: r.state, t: Date.now() })); } catch (e) {}
+      var on = r.state === 'active'; s('afd-subscribed', on ? '1' : '0'); s('afd-sub-ts', String(Date.now())); subApply(on);
+    }).catch(function () {});
+  }
+  window.addEventListener('storage', function (e) { if (e.key === 'afd-subscribed' || e.key === 'afd-sub-ts') subApply(subFlag()); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') subSync(); });
   if (API && BOXES.length) {
     BOXES.forEach(function (box) {
       var seen = false;
       if ('IntersectionObserver' in window && !box.hasAttribute('data-afd-lazy')) new IntersectionObserver(function (es) { if (!seen && es[0].isIntersecting) { seen = true; ev('subscribe_view', box.hasAttribute('data-afd-strip') ? 'strip' : 'box'); } }).observe(box);
     });
     paintAll();
-    if (SUB.st !== 'done') getStatus().then(function (r) { SUB.st = (r && r.state === 'full') ? 'full' : 'ready'; paintAll(); })
-      .catch(function () { SUB.st = 'error'; paintAll(); });
+    if (SUB.st !== 'done') getStatus().then(function (r) { if (SUB.st === 'done') return; SUB.st = (r && r.state === 'full') ? 'full' : 'ready'; paintAll(); })
+      .catch(function () { if (SUB.st !== 'done') { SUB.st = 'error'; paintAll(); } });
+    subSync();
   }
 
   // ---------- shared shell: subscribe dialog, category sheet, listen tab, sidebar TOC, ?play= ----------
   var DLG = $('#afd-subdlg');
   function openSub(src) {
     ev('subscribe_open', src || '');
-    if (DLG && DLG.showModal) { if (!DLG.open) DLG.showModal(); var bx = $('[data-afd-sub]', DLG); if (bx && (bx._dirty || !$('.afd-sub-ui', bx).children.length || /載入中/.test($('.afd-sub-ui', bx).textContent))) paint(bx); }
+    if (DLG && DLG.showModal) { subSync(); if (!DLG.open) DLG.showModal(); var bx = $('[data-afd-sub]', DLG); if (bx && (bx._dirty || !$('.afd-sub-ui', bx).children.length || /載入中/.test($('.afd-sub-ui', bx).textContent))) paint(bx); }
     else { var t = $('#subscribe') || $('[data-afd-sub]'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
   }
   document.addEventListener('click', function (e) {
@@ -690,14 +716,14 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && SHS) SHS.hidden = true; });
   // after most of the episode: gentle subscribe nudge (once per session, never for subscribers)
   if (AUD && API) AUD.addEventListener('timeupdate', function () {
-    if (AUD._nudged || !AUD.duration || g('afd-subscribed') === '1' || AUD.currentTime / AUD.duration < 0.9) return; AUD._nudged = true;
+    if (AUD._nudged || !AUD.duration || subFlag() || AUD.currentTime / AUD.duration < 0.9) return; AUD._nudged = true;
     var t = toast('<span>聽完了？明早 6 點把下一期寄給你</span><button type="button" data-afd-open-sub="nudge">📬 訂閱</button>', 'afd-nudge'); if (t) ev('subscribe_nudge');
   });
-  if (qs.get('sub') === '1') { qs.delete('sub'); qs.delete('openExternalBrowser'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {} setTimeout(function () { if (g('afd-subscribed') !== '1') openSub('escape'); }, 300); }
+  if (qs.get('sub') === '1') { qs.delete('sub'); qs.delete('openExternalBrowser'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {} setTimeout(function () { if (!subFlag()) openSub('escape'); }, 300); }
   // back from redirect sign-in (Apps Script returns to ?subok=1|already|full|err)
   var SOK = qs.get('subok');
   if (SOK) { qs.delete('subok'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {}
-    if (SOK === '1' || SOK === 'already') { s('afd-subscribed', '1'); SUB.st = 'done'; setHTML('<div class="msg">✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到你的信箱。</div>'); ev('subscribe_success', 'redirect'); }
+    if (SOK === '1' || SOK === 'already') { subMark(true); SUB.st = 'done'; setHTML('<div class="msg">✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到你的信箱。</div>'); ev('subscribe_success', 'redirect'); }
     else if (SOK === 'full') { SUB.st = 'full'; paintAll(); } else msgAll('訂閱沒有完成，請再試一次。'); }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var sh = $('#afd-cats'); if (sh) sh.hidden = true; } });
 
@@ -718,26 +744,39 @@
   if (IS_MANAGE) {
     var uact = qs.get('a') || 'unsub', tok = qs.get('s') || '', A = $('#u-actions'), O = $('#u-out'), T = $('#u-title'), Bd = $('#u-body');
     var TXT = {
-      unsub: ['取消訂閱', '不想再收到晨報了嗎？點下方按鈕就能取消訂閱，不需要登入，也不用填任何理由。日後想再收，隨時回到網站重新訂閱就可以。', '確認取消訂閱'],
+      unsub: ['取消訂閱', '不想再收到晨報了嗎？取消不需要登入。晨報完全免費，每天大約 15 分鐘就能跟上全球 AI 前沿；如果只是最近比較忙，也可以先留著，有空再聽。就算取消了，想回來的時候隨時都能重新訂閱。', '確認取消訂閱'],
       keep: ['繼續訂閱', '謝謝你還想收到晨報！點下方按鈕，我們就會繼續每天寄給你。', '繼續訂閱'],
       resub: ['重新訂閱', '歡迎回來！點下方按鈕重新訂閱；名額足夠時會立刻恢復，名額已滿時會先幫你登記，有名額再通知你。', '重新訂閱']
     }[uact];
     if (tok && TXT && API) {
+      if (uact === 'unsub') subMark(false); // visiting the unsubscribe link: stop trusting this device's 'subscribed' flag
       T.textContent = TXT[0]; Bd.innerHTML = '<p>' + TXT[1] + '</p>';
-      A.innerHTML = '<button class="btn primary" type="button">' + TXT[2] + '</button>' + (uact === 'unsub' ? '<a class="btn" href="../">我再想想，回首頁</a>' : '');
+      var U = uact === 'unsub';
+      if (U) { // reasons FIRST; 確認取消訂閱 only after ≥1 reason; stay option is the primary (terracotta) button, same as the in-site dialog
+        if (!$('style[data-ur]')) { var st2 = document.createElement('style'); st2.setAttribute('data-ur', '');
+          st2.textContent = '.afd-ur{border:1px solid #EADFD0;border-radius:14px;margin:10px 0 6px;padding:8px 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;min-width:0;background:#FFFDF9}.afd-ur legend{font-weight:700;font-size:.9rem;padding:0 4px}'
+            + '.afd-ur label{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;padding:5px 0;min-width:0;cursor:pointer}.afd-ur input{accent-color:#2F6F6A;width:17px;height:17px;flex:none;margin:3px 0 0}'
+            + '.afd-ur textarea{grid-column:1/-1;box-sizing:border-box;width:100%;font:inherit;font-size:.9rem;border:1px solid #E0D2BF;border-radius:10px;padding:8px;background:#fff;color:inherit;resize:vertical}'
+            + '#u-actions .u-hint{font-size:.82rem;color:#8C7F73;margin:4px 0 0}#u-actions .u-go:disabled{opacity:.45;cursor:not-allowed}'
+            + '@media (max-width:420px){.afd-ur{grid-template-columns:1fr}#u-actions .btn{display:flex;justify-content:center;width:100%;box-sizing:border-box;margin:8px 0 0}}';
+          document.head.appendChild(st2); }
+        Bd.insertAdjacentHTML('beforeend', reasonsHTML());
+        A.innerHTML = '<a class="btn primary" href="../">我再想想，回首頁</a><button class="btn u-go" type="button" disabled>' + TXT[2] + '</button><p class="u-hint">請先勾選至少一個原因，再按「確認取消訂閱」。</p>';
+        var go = $('.u-go', A), hint = $('.u-hint', A);
+        reasonsBind(Bd, function (n) { go.disabled = !n; hint.hidden = !!n; });
+      } else A.innerHTML = '<button class="btn primary" type="button">' + TXT[2] + '</button>';
       $('button', A).onclick = function () {
-        O.textContent = '處理中…'; this.disabled = true;
-        post({ action: uact, token: tok, vid: vid() }).then(function (r) {
+        var R = U ? reasonsGet(Bd) : null; if (U && !R.reasons.length) return;
+        O.textContent = '處理中…'; this.disabled = true; var btn = this;
+        var body = { action: uact, token: tok, vid: vid() }; if (U) { body.from = 'page'; body.reasons = R.reasons; body.other = R.other; }
+        post(body).then(function (r) {
+          if (!r.ok) { O.textContent = r.message || '處理失敗，請稍後再試，或寄信到 rooteric@gmail.com。'; btn.disabled = false; return; }
           A.innerHTML = '';
-          if (!r.ok) { O.textContent = r.message || '處理失敗，請稍後再試，或寄信到 rooteric@gmail.com。'; return; }
-          if (uact === 'unsub') { s('afd-subscribed', '0'); O.innerHTML = '已取消訂閱，之後不會再寄晨報給你。想再收時，<a href="?a=resub&s=' + encodeURIComponent(tok) + '">點這裡重新訂閱</a>。'
-              + '<div class="afd-urwrap" style="margin-top:14px"><p style="margin:0 0 4px">（選填）方便的話，告訴我們原因，幫助我們做得更好：</p>' + reasonsHTML() + '<button class="btn" type="button" data-ur-send disabled>送出原因</button><span class="note" data-ur-msg></span></div>';
-            var W = $('.afd-urwrap', O), sb = $('[data-ur-send]', W); if (!$('style[data-ur]')) { var st2 = document.createElement('style'); st2.setAttribute('data-ur', ''); st2.textContent = '.afd-ur{border:1px solid #EADFD0;border-radius:14px;margin:6px 0 10px;padding:8px 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;min-width:0}.afd-ur legend{font-weight:700;font-size:.88rem;padding:0 4px}.afd-ur label{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;padding:4px 0;min-width:0}.afd-ur input{accent-color:#2F6F6A;flex:none;margin-top:4px}.afd-ur textarea{grid-column:1/-1;box-sizing:border-box;width:100%;font:inherit;border:1px solid #E0D2BF;border-radius:10px;padding:8px}@media (max-width:420px){.afd-ur{grid-template-columns:1fr}}'; document.head.appendChild(st2); }
-            reasonsBind(W, function (n) { sb.disabled = !n; });
-            sb.onclick = function () { var R = reasonsGet(W); sb.disabled = true; post({ action: 'unsub_reason', token: tok, reasons: R.reasons, other: R.other }).then(function (q) { $('[data-ur-msg]', W).textContent = q && q.ok ? ' 謝謝你告訴我們！' : ' 目前無法送出，謝謝你。'; if (q && q.ok) $('.afd-ur', W).disabled = true; }, function () { $('[data-ur-msg]', W).textContent = ' 連線失敗。'; sb.disabled = false; }); }; }
-          else if (uact === 'keep') O.textContent = '✅ 已確認，晨報會繼續寄給你。';
-          else O.textContent = r.state === 'waitlist' ? '目前名額已滿，已幫你登記；名額增加時會寄信通知你。' : '✅ 已重新訂閱，明天早上 6 點（台北時間）起恢復寄送。';
-        }).catch(function () { O.textContent = '連線失敗，請稍後再試。'; A.querySelector('button') && (A.querySelector('button').disabled = false); });
+          if (U) { subMark(false); var f = $('.afd-ur', Bd); if (f) f.remove(); Bd.innerHTML = '';
+            O.innerHTML = '已取消訂閱，之後不會再寄晨報給你。謝謝你告訴我們原因！想再收時，<a href="?a=resub&s=' + encodeURIComponent(tok) + '">點這裡重新訂閱</a>。'; }
+          else if (uact === 'keep') { subMark(true); O.textContent = '✅ 已確認，晨報會繼續寄給你。'; }
+          else { if (r.state !== 'waitlist') subMark(true); O.textContent = r.state === 'waitlist' ? '目前名額已滿，已幫你登記；名額增加時會寄信通知你。' : '✅ 已重新訂閱，明天早上 6 點（台北時間）起恢復寄送。'; }
+        }).catch(function () { O.textContent = '連線失敗，請稍後再試。'; btn.disabled = false; });
       };
     } else if (tok && !API) { O.textContent = '這項功能即將開放；目前請寄信到 rooteric@gmail.com 處理。'; }
   }
