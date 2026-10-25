@@ -1,8 +1,28 @@
 {
  "v": 1,
- "generated_at": "2026-10-26T02:50:48+08:00",
- "latest": "2026-10-25",
+ "generated_at": "2026-10-26T04:47:32+08:00",
+ "latest": "2026-10-26",
  "issues": [
+  {
+   "key": "2026-10-26",
+   "kind": "daily",
+   "date": "2026-10-26",
+   "no": 3,
+   "label": "第 3 期・10/26（週一）",
+   "subject": "Mirakee Signal｜AI 前沿情報站 2026-10-26",
+   "headline": "自報分數滿天飛，獨立驗證跟不上",
+   "path": "email/2026-10-26.json"
+  },
+  {
+   "key": "2026-10-26-special",
+   "kind": "special",
+   "date": "2026-10-26",
+   "no": null,
+   "label": "特刊・10/26（週一）",
+   "subject": "AI 名人講話與訪談特刊 2026-10-26",
+   "headline": "Interconnects 對談：Kimi 口碑落差、資安新現實與代理實用心得",
+   "path": "email/2026-10-26-special.json"
+  },
   {
    "key": "2026-10-25",
    "kind": "daily",

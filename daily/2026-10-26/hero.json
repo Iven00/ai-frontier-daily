@@ -1,0 +1,21 @@
+{
+  "method": "twitter:image",
+  "source_page": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+  "image_url": "https://cdn-thumbnails.huggingface.co/social-thumbnails/models/Nanbeige/Nanbeige4.3-33B.png",
+  "publisher": "Hugging Face",
+  "article_id": "social-topic-nanbeige43-2026-10-26",
+  "article_title": "BOSS 直聘旗下 Nanbeige 開源 33B，跑分亮眼但社群等實測",
+  "src_w": 1200,
+  "src_h": 648,
+  "entropy": 6.85,
+  "rejected": [],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 648,
+  "bytes": 36852,
+  "thumb_w": 480,
+  "thumb_h": 259,
+  "thumb_bytes": 5124,
+  "picked_at": "2026-10-26T04:47:31+08:00"
+}

@@ -18,6 +18,17 @@
 - [前沿論文](https://iven00.github.io/ai-frontier-daily/topics/paper/)：值得一讀的 AI 論文，白話解析方法與限制
 
 ## 最近各期
+- [2026-10-26 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/)：自報分數滿天飛，獨立驗證跟不上
+  - [BOSS 直聘旗下 Nanbeige 開源 33B，跑分亮眼但社群等實測](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/social-topic-nanbeige43-2026-10-26/)
+  - [每 token 便宜不等於每任務便宜：DeepSeek 與 Kimi 實測比拚](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/social-topic-token-cost-per-task-2026-10-26/)
+  - [r/opensource 版規禁 AI 專案與非英語者，社群反彈另開新版](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/social-topic-r-opensource-ai-ban-2026-10-26/)
+  - [Nanbeige4.3-33B 開放權重：33B 稠密教師模型，自報代理寫程式分數領先同級](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/nanbeige43-33b-2026-10-25/)
+  - [皮膚科醫師實測：訓練 20 分鐘的小型 CNN，皮膚病灶診斷正確率勝過 GPT-6 Astra 與 Claude Fable 5.1](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/lynchlab-skin-cancer-cnn-vs-llm-2026-10-25/)
+  - [賓州簽署 AI 欺騙性廣告法：造成誤認的 AI 生成或大幅修改廣告必須明確標示](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/pennsylvania-ai-ad-label-law-2026-10-22/)
+  - [SCOPE：把自然語言政策編譯成「神經謂詞程式」，讓小模型也能穩定審查代理行為](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31062-v1/)
+  - [IQuest-Q1：320B 總參數、15B 啟用的開源 MoE 模型，專攻命令列代理](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.30949-v1/)
+  - [TTR-Compressor：把序列壓縮看成即時回歸問題，少用 55.6% 視覺 token 仍維持效果](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31574-v1/)
+  - [RIDAR：自動研究代理 99.7% 的執行軌跡都有研究誠信問題，即時介入可減少 36.8%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31372-v1/)
 - [2026-10-25 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/)：長期記憶回歸「保留原始證據」
   - [Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/arxiv-2610.30755-v1/)
   - [Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/anthropic-formal-verification-2026-10-22/)
@@ -38,4 +49,5 @@
   - [Anthropic 推出 Claude Duet 研究預覽：會主動晨報、背景執行的專業人士代理](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/anthropic-claude-duet-2026-10-21/)
   - [1Password for Agents：代理可登入，但永遠看不到密碼](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/1password-for-agents-2026-10-22/)
   - [Microsoft Agent Framework Python 1.23.0：導入 MCP 2.x 相容層（破壞性更新）](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/github-microsoft-agent-framework-python-1.23.0/)
+- [2026-10-26 特別版：名人講話與訪談](https://iven00.github.io/ai-frontier-daily/special/2026-10-26/)：Interconnects 對談：Kimi 口碑落差、資安新現實與代理實用心得
 - [2026-10-25 特別版：名人講話與訪談](https://iven00.github.io/ai-frontier-daily/special/2026-10-25/)：被 OpenAI 解僱的安全研究員首次受訪：第三方稽核與「可監控性」
