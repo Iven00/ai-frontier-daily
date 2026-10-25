@@ -1,0 +1,29 @@
+{
+ "name": "Mirakee Signal｜AI 前沿情報站",
+ "short_name": "Mirakee Signal",
+ "description": "每天整理全球 AI 前沿情報（繁體中文），附雙主持 Podcast。",
+ "lang": "zh-Hant-TW",
+ "start_url": "/ai-frontier-daily/",
+ "scope": "/ai-frontier-daily/",
+ "display": "standalone",
+ "background_color": "#FBF7F1",
+ "theme_color": "#FBF7F1",
+ "icons": [
+  {
+   "src": "/ai-frontier-daily/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/ai-frontier-daily/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "/ai-frontier-daily/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
