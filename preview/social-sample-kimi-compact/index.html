@@ -1,0 +1,110 @@
+<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>社群議題精簡版範例｜AI 前沿情報日刊</title><meta name="color-scheme" content="light dark"><meta name="robots" content="noindex">
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--muted:#5b636e;--card:#ffffff;--line:#e6e2d9;--accent:#b4531f;--fact:#1f7a4d;--ana:#2457a6;--hyp:#a1650a;--chip:#f2eee6;--player:#fffdf8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--fact:#4cc38a;--ana:#7aa7ff;--hyp:#f0b44c;--chip:#262a31;--player:#1c1f24ee}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:740px;margin:0 auto;padding:0 18px 80px}
+header.top{padding:26px 0 8px}.kicker{font-size:.8rem;color:var(--muted);letter-spacing:.12em}
+h1{font-size:1.7rem;line-height:1.35;margin:.2em 0 .3em}h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.12rem;line-height:1.5;margin:0 0 .4em}
+.meta{color:var(--muted);font-size:.92rem;line-height:1.7}.meta b{color:var(--fg);font-weight:600}
+.player{position:sticky;top:0;z-index:10;background:var(--player);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+.player .wrap{padding-bottom:0}.prow{display:flex;align-items:center;gap:8px}
+.pbtn{flex:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:42px;min-width:42px;padding:0 10px;font-size:.9rem;cursor:pointer}
+.pbtn.play{background:var(--accent);color:#fff;border-color:var(--accent);min-width:54px;font-size:1.1rem}
+.seek{flex:1;display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:6px}
+.seek input{flex:1;accent-color:var(--accent)}
+select.speed{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;height:34px;font-size:.85rem}
+.ptitle{font-size:.82rem;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.loop{font-size:.75rem;color:var(--muted)}
+.trend{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+.trend p{margin:.3em 0 0}
+ol.toc{padding-left:1.4em}ol.toc li{margin:.35em 0}ol.toc .sc{color:var(--muted);font-size:.85rem;margin-left:.3em}
+article.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin:22px 0;box-shadow:0 1px 2px #0000000a}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chip{background:var(--chip);border-radius:999px;padding:1px 10px;font-size:.78rem;color:var(--muted)}
+.chip.score{background:var(--accent);color:#fff;font-weight:700}
+.take{font-size:1.02rem;font-weight:500;border-left:4px solid var(--accent);padding:2px 0 2px 12px;margin:10px 0 14px}
+.sec{margin:14px 0}.lbl{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#fff;border-radius:6px;padding:1px 8px;margin-bottom:4px}
+.sec.fact .lbl{background:var(--fact)}.sec.ana .lbl{background:var(--ana)}.sec.hyp .lbl{background:var(--hyp)}.sec.next .lbl{background:var(--accent)}
+.sec ul{margin:.2em 0;padding-left:1.2em}.sec li{margin:.3em 0}
+.sec.fact{border-left:3px solid var(--fact);padding-left:12px}.sec.ana{border-left:3px solid var(--ana);padding-left:12px}.sec.hyp{border-left:3px solid var(--hyp);padding-left:12px}
+.k{color:var(--muted);font-weight:600}
+.src{font-size:.88rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px;word-break:break-word}
+.src a{margin-right:10px}
+.quote{font-size:.88rem;color:var(--muted);font-style:italic}
+.issues a{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0;text-decoration:none;color:var(--fg)}
+.issues .d{font-weight:700;font-size:1.1rem}.issues .s{color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.82rem;margin-top:40px}
+.totop{display:inline-block;font-size:.82rem;margin-top:4px}
+.seg{transition:box-shadow .35s ease,background-color .35s ease;border-radius:16px}
+.seg.now{box-shadow:0 0 0 3px var(--accent),0 6px 18px #0000001a}
+header.top.seg,section.seg{padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+header.top.seg.now,section.seg.now{background:var(--chip)}
+.prow2{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:30px}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:30px;padding:0 10px;font-size:.78rem;cursor:pointer;flex:none}
+.mini[aria-pressed="false"]{color:var(--muted)}
+.mini.back{background:var(--accent);color:#fff;border-color:var(--accent)}
+.segname{flex:1;min-width:0;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segplay{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;font-size:.75rem;padding:0 9px;height:24px;cursor:pointer;line-height:22px}
+.trend h3{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.seg{transition:none}}
+
+.cmp .bl{list-style:none;padding:0;margin:.5rem 0}.cmp .bl li{margin:.35rem 0}.cmp .bl b{display:inline-block;min-width:3.2em;color:var(--accent)}
+.cmp .vq{border-left:3px solid var(--line);padding:.1rem 0 .1rem .7rem;margin:.45rem 0}.cmp .vq .en{font-size:.85rem;color:var(--muted);font-style:italic}
+.cmp .vq .by{font-size:.85rem;color:var(--muted)}
+.cmp details{margin-top:.6rem;border-top:1px solid var(--line);padding-top:.4rem}.cmp summary{cursor:pointer;font-weight:600;color:var(--ana)}
+.cmp details ol,.cmp details ul{padding-left:1.2rem}.cmp .t{color:var(--muted);font-variant-numeric:tabular-nums}
+.cmp .note{font-size:.85rem;color:var(--muted)}
+.demo{background:var(--chip);border-radius:8px;padding:.5rem .8rem;font-size:.9rem}
+</style></head><body><main class="wrap"><header class="top seg" id="top"><div class="kicker">AI FRONTIER DAILY ・ 預覽：社群議題「晨報精簡版」排版範例（非正式刊出） ・ <a href="../../">所有期數</a></div>
+<h1>AI 前沿情報日刊｜2026-10-25（排版範例）</h1>
+<div class="meta"><div class="demo">本頁只示範一則社群議題在日報中的樣子：第 1 則是新的精簡格式；第 2、3 則是預覽版 v11 的原有條目，原樣保留作對照。</div></div></header>
+<h2 id="sec-social">社群消息</h2>
+<article class="card seg cmp" id="social-topic-kimi-k31-pro-2026-10-25">
+<div class="chips"><span class="chip score">社群議題</span><span class="chip">X・Reddit・YouTube</span><span class="chip">10/24–10/25</span><span class="chip">🎧 語音收錄</span></div>
+<h3>1. Kimi K3.1 Pro 分數進前四，口碑卻被「疑似隱藏業配」拖累</h3>
+<div class="take">獨立評測 Artificial Analysis 把 Kimi K3.1 Pro 排在所有模型第四。但發布後 48 小時，社群焦點轉向一份疑似要網紅隱藏業配的宣傳簡報，以及「分數漂亮、手感普通」的試用回饋。為什麼重要：大家開始不確定哪些好評能信，而 11/4 開放權重前，社群評價會直接影響開發者要不要採用。</div>
+<ul class="bl"><li><b>共識</b>分數確實強：智慧指數 55、Terminal-Bench 4.0 領先；但 Nathan Lambert 討論串的回覆多半是「好用，但不到 Opus」，額度也用得快。 <a href="https://x.com/ArtificialAnlys/status/2113688085385097251">[1]</a> <a href="https://x.com/natolambert/status/2113961148576063760">[2]</a></li><li><b>爭議</b>創作者 @elshayib_ 公開截圖，指 Kimi 要求稿件先送審、不加付費合作標籤；擁有 76 萬訂閱的 @aisearchio 則說文件看起來是假的。 <a href="https://x.com/elshayib_/status/2113734602032312731">[1]</a> <a href="https://x.com/aisearchio/status/2114103049325338982">[2]</a></li><li><b>未證實</b>簡報真偽未經獨立驗證；截至擷取時，Kimi 官方 X 帳號沒有公開回應。 <a href="https://runtimewire.com/article/kimi-k31-pro-creator-marketing-disclosure-claims">[1]</a></li></ul>
+<div class="vq"><div>「頂級模型的實際好不好用，比 AA 分數差 2 分重要得多……3.1 看起來可能比較接近「沒打中」那一邊。」</div><div class="by">— Nathan Lambert（@natolambert），開放模型研究者，自介為 @trillium_labs 創辦人、前 Ai2 Olmo 共同負責人</div><div class="en">“At the top end of models, real-world usability matters a lot more than +/- 2 points on AA. ... Seems like 3.1 may be closer to the miss side.” <a href="https://x.com/natolambert/status/2113967445727932676">原文</a></div></div><div class="vq"><div>「這次活動反噬得太嚴重，連真心的稱讚都跟著被當成業配。」</div><div class="by">— Da7em（@Da7_Tech），科技創作者（約 1.2 萬追蹤；自介為 @cognition 大使）</div><div class="en">“The campaign backfired so hard it poisoned honest praise along with the paid kind.” <a href="https://x.com/Da7_Tech/status/2114069324566814911">原文</a></div></div>
+<div class="note">相關產業條目：<a href="#kimi-k31-pro-2026-10-23">Kimi K3.1 Pro 發布內容與規格</a></div>
+<details><summary>展開：時間線、更多聲音、來源</summary>
+<h4>時間線（台北時間）</h4><ol><li><span class="t">10-24 01:15</span>　@Kimi_Moonshot 發布 K3.1 Pro（約 2.7 萬讚、311 萬次曝光） <a href="https://x.com/Kimi_Moonshot/status/2113680701770068067">原文</a></li><li><span class="t">10-24 01:44</span>　@ArtificialAnlys 公布評測：GDPval-AA 第三、Terminal-Bench 4.0 所有模型最高 <a href="https://x.com/ArtificialAnlys/status/2113688085385097251">原文</a></li><li><span class="t">10-24 03:14</span>　@elshayib_ 第一則爆料：說 Kimi 用模板找網紅推廣、自己沒參加 <a href="https://x.com/elshayib_/status/2113710752741892476">原文</a></li><li><span class="t">10-24 07:11</span>　@ArtificialAnlys：早期跡象顯示它在 AA-3D（3D 場景）排名會比較低 <a href="https://x.com/ArtificialAnlys/status/2113770240769442012">原文</a></li><li><span class="t">10-24 19:49</span>　@natolambert 問：時間線上正面反應不多，用過的人覺得如何？ <a href="https://x.com/natolambert/status/2113961148576063760">原文</a></li><li><span class="t">10-24 20:26</span>　Reddit r/kimi 貼文：3D 展示其實是呼叫外部 3D 生成工具 <a href="https://www.reddit.com/r/kimi/comments/1xe7cbr/moonshot_fooled_everyone_with_kimi_k31_pros_3d/">原文</a></li><li><span class="t">10-25 05:13</span>　@aisearchio 反駁：沒被找去業配，那份文件看起來是假的 <a href="https://x.com/aisearchio/status/2114103049325338982">原文</a></li></ol>
+<h4>更多聲音</h4><ul><li>「不管它有多刷榜、多不划算、推廣多粗糙，K3.1 Pro 現在仍是最強的中國模型，Moonshot 還有機會，但我偏悲觀。」— @teortaxesTex・長期追蹤中國模型的評論者（約 7.9 萬追蹤，暱稱自稱 DeepSeek 鐵粉） <a href="https://x.com/teortaxesTex/status/2113901321199710460">原文</a><div class="note">“However benchmaxed, cost-inefficient and crudely promoted, K3.1 Pro is right now the strongest Chinese model and Moonshot has a… chance. But I&#x27;m pessimistic”</div></li><li>「K3.1 Pro 真的是好模型，所以才更讓人氣餒——就像本來就很會玩的遊戲還要作弊。」— @Hesamation・AI 工程／研究／開源創作者（約 9.2 萬追蹤） <a href="https://x.com/Hesamation/status/2113923642983690743">原文</a><div class="note">“Kimi K3.1 Pro is genuinely a good model, which makes this even more frustrating. it&#x27;s like cheating in a game you&#x27;re already good at.”</div></li><li>「原來 Kimi 內建一個叫 model3d_generation 的技能，會跑 Python 腳本、透過看起來是外部的 API 產生 3D 模型。」— u/Altruistic_Compote_9・Reddit r/kimi 使用者，自述正在做 3D 遊戲並付費訂閱測試 <a href="https://www.reddit.com/r/kimi/comments/1xe7cbr/moonshot_fooled_everyone_with_kimi_k31_pros_3d/">原文</a><div class="note">“Turns out Kimi has a built-in skill called model3d_generation that runs a Python script to generate 3D models through what appears to be an external API.”</div></li><li>「這不就是外掛工具的一部分嗎？就像你跟 GPT 對話，它也會叫別的模型畫圖。」— u/Durian881・Reddit 留言者 <a href="https://www.reddit.com/r/kimi/comments/1xe7cbr/moonshot_fooled_everyone_with_kimi_k31_pros_3d/19rl278w63w6d/">原文</a><div class="note">“Is it part of scaffolding? It&#x27;s like you can speak to a GPT model that generates images.”</div></li><li>「目前用得滿開心，但他們刻意削弱資安能力，讓我不敢拿它做正經事。」— @benthecarman・開發者（自介 dev @spiral_xyz，約 2.9 萬追蹤） <a href="https://x.com/benthecarman/status/2114116845120659674">原文</a><div class="note">“I&#x27;ve enjoyed it so far but them deliberately nerfing it in cyber makes me not trust it for anything serious”</div></li></ul>
+<h4>你可以做的</h4><p>如果你在評估 K3.1 Pro，先用自己的 3～5 個真實任務，記錄完成率、花費時間與額度消耗，跟目前主力模型比較；開放權重釋出後再看代管業者的價格。</p>
+<h4>本刊沒抓到的部分</h4><ul><li>Lambert 討論串 62 則回覆只讀到 25 則；官方文 2,246 則引用貼文只看了最新 24 則。</li><li>@elshayib_ 附的截圖影像本刊沒有檢視；YouTube 影片只確認標題與上傳時間。</li></ul>
+<p class="note">Reddit 內容經 RSS 讀取，RSS 不提供讚數，故 Reddit 留言不列互動數。X 互動數為 2026-10-25 12:33（台北時間）重新擷取。</p>
+<h4>來源</h4><ul><li><a href="https://x.com/Kimi_Moonshot/status/2113680701770068067">Kimi 官方發布文（X）</a></li><li><a href="https://www.kimi.com/blog/kimi-k3-1-pro">Kimi K3.1 Pro 技術部落格</a></li><li><a href="https://x.com/ArtificialAnlys/status/2113688085385097251">Artificial Analysis 評測串（X）</a></li><li><a href="https://simonwillison.net/2026/Oct/23/kimi-k31-pro/">Simon Willison：Introducing Kimi K3.1 Pro</a></li><li><a href="https://x.com/elshayib_/status/2113710752741892476">@elshayib_ 爆料第 1～3 則</a></li><li><a href="https://x.com/natolambert/status/2113961148576063760">@natolambert 提問串</a></li><li><a href="https://www.reddit.com/r/kimi/comments/1xe7cbr/moonshot_fooled_everyone_with_kimi_k31_pros_3d/">Reddit r/kimi：3D 展示討論</a></li><li><a href="https://www.pekingnology.com/p/kimis-global-momentand-a-very-chinese">Pekingnology：Kimi&#x27;s Global Moment—and a Very Chinese PR Habit（10-24）</a></li><li><a href="https://runtimewire.com/article/kimi-k31-pro-creator-marketing-disclosure-claims">RuntimeWire：creator marketing disclosure claims（10-24）</a></li></ul>
+<p><a href="../social-sample-kimi/">完整研究版（長版範例）→</a></p>
+</details>
+<a class="totop" href="#top">↑ 回頂端</a></article>
+<article class="card seg" id="x-gdm-gemini4-argon-blender-mcp-2026-10-23">
+<div class="chips"><span class="chip score">55 分</span><span class="chip">02 Agentic AI、工具使用、Multi-Agent</span><span class="chip">發布 2026-10-23</span><span class="chip">X・@GoogleDeepMind</span></div>
+<h3>2. Google DeepMind 示範：Gemini 4 Argon 用一張圖＋Blender MCP 自動建出 3D 哥德式教堂</h3>
+<div class="take">官方 44 秒示範影片：模型透過 Blender MCP 反覆調整幾何、材質與光線，從單張圖產生完整 3D 場景。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>輸入為一張 Nano Banana 生成的圖片，工具為 Blender MCP，環境為 Antigravity。</li><li>貼文附 44 秒影片；約 2,334 讚、244 回覆、約 14.7 萬次曝光（10-25 上午擷取）。</li><li>同一時段 Kimi 也主打 Blender／CAD 參數化建模能力，3D 工具操作成為模型發布的新展示重點。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>模型以 MCP 呼叫 Blender 操作，多輪檢視渲染結果再修正。</li><li><span class="k">差異：</span>展示重點從「生成圖片」轉為「操作專業軟體完成成品」。</li>
+<li><span class="k">結果與限制：</span>僅為精選示範，未公布成功率、耗時或成本。</li><li><span class="k">與你的關聯：</span>MCP 讓模型操作桌面專業工具的模式越來越成熟，可參考其「渲染→檢視→修正」迴圈。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>3D／CAD 工具操作可能成為下一個代理基準的熱門類別。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>若有 3D 或設計相關需求，可試用開源 Blender MCP 伺服器，觀察模型多輪修正的穩定度。</li></ul></div>
+<div class="src"><div>發文 2026-10-23 14:57 UTC（台北 10-23 22:57）。</div><div class="quote">&quot;It iterates on the geometry, textures, and lighting to create the finished scene.&quot;</div>
+<div>來源：<a href="https://x.com/GoogleDeepMind/status/2113645959762575623" target="_blank" rel="noopener">x.com</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<h2 id="sec-industry">產業與產品動態</h2>
+<article class="card seg" id="kimi-k31-pro-2026-10-23">
+<div class="chips"><span class="chip score">78 分</span><span class="chip">07 模型發布、基準與排行榜</span><span class="chip">發布 2026-10-23</span></div>
+<h3>3. Moonshot 發布 Kimi K3.1 Pro：2.8T MoE、1M context，11-04 前開放權重</h3>
+<div class="take">總參數 2.8T／啟用 104B、1M context、多模態；Terminal-Bench 4.0 65.7%（官方對照 Opus 5.5 66.4%、GPT-6 Astra 58.2%）；開放版移除資安訓練資料。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>MoE 架構：總參數 2.8T、每 token 啟用 104B；1M token context；多模態。</li><li>另有 K3.1 Pro Highspeed 版本（官方稱快 2～3 倍）；已上線 Kimi.ai、Kimi Work、Kimi Code 與 API，開放權重預計 2026-11-04 前釋出。</li><li>官方基準：Terminal-Bench 4.0 65.7%（GPT-6 Astra 58.2%、Opus 5.5 66.4%）；BenchCAD 92.7%；OfficeQA Pro v2 64.4（官方稱 SOTA）。</li><li>內部幻覺基準由 23.4% 降至 8.3%。</li><li>開放版移除資安相關訓練資料：xdev-bench-hard 由 90.5% 降至 81.0%。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul>
+<li><span class="k">核心方法：</span>超大規模 MoE 搭配長 context 與工具使用後訓練，主打全專案寫程式、3D／CAD 建模與金融工作。</li><li><span class="k">差異：</span>主動為開放權重版移除資安能力，並公開代價數據，是少見的做法。</li>
+<li><span class="k">結果與限制：</span>所有數字為官方自述；社群早期評價分歧（見社群區）。</li><li><span class="k">與你的關聯：</span>若需要可自架的強模型，11-04 釋出後值得評估；但 2.8T 規模的自架成本很高。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>「開放權重但移除資安能力」可能成為開放模型的新慣例。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步・值得實驗</span><ul><li>先用 API 跑你的代理評測集；開放權重釋出後再評估量化版本的自架可行性。</li></ul></div>
+<div class="src"><div>官方技術部落格與 X 發布 2026-10-23 17:15 UTC（台北 10-24 01:15）。</div><div class="quote">&quot;Kimi K3.1 Pro and K3.1 Pro Highspeed (2–3× faster) are now live... Open weights by Nov 4, 2026.&quot;</div>
+<div>來源：<a href="https://kimi.ai/blog/kimi-k3-1-pro" target="_blank" rel="noopener">kimi.ai</a><a href="https://x.com/Kimi_Moonshot/status/2113680701770068067" target="_blank" rel="noopener">x.com</a><a href="https://simonwillison.net/2026/Oct/23/kimi-k31-pro/" target="_blank" rel="noopener">simonwillison.net</a></div>
+<a class="totop" href="#toc">↑ 回目錄</a></div></article>
+<footer>排版範例。精簡卡片的內容全部取自本刊已查證的研究資料（data/preview/social-sample-kimi.json）；第 2、3 則取自預覽版 v11。</footer></main></body></html>
