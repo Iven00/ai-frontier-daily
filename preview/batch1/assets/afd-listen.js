@@ -77,9 +77,10 @@
   function mini() {
     if (MB) return MB;
     MB = document.createElement('div'); MB.className = 'afdl-mini'; MB.setAttribute('role', 'region'); MB.setAttribute('aria-label', '迷你播放器');
-    MB.innerHTML = '<button type="button" class="mb-pp" aria-label="播放／暫停">▶</button><div class="mb-m"><div class="mb-t"></div><div class="mb-r"><span class="beads sm" data-afdl-beads=""></span><span class="mb-c"></span></div></div><a class="mb-go">看本期 →</a><button type="button" class="mb-x" aria-label="關閉播放器">✕</button><audio preload="none"></audio>';
+    MB.innerHTML = '<button type="button" class="mb-pp" aria-label="播放／暫停">▶</button><div class="mb-m"><div class="mb-t"></div><div class="mb-r"><span class="beads sm" data-afdl-beads=""></span><span class="mb-c"></span></div></div><a class="mb-go">邊聽邊看 →</a><button type="button" class="mb-x" aria-label="關閉播放器">✕</button><audio preload="none"></audio>';
     document.body.appendChild(MB); document.body.classList.add('has-mini');
     $('.mb-pp', MB).onclick = function () { P.a.paused ? P.a.play() : P.a.pause(); };
+    $('.mb-go', MB).addEventListener('click', function () { var a = P.a, D = DATA[P.k]; if (a && D && !a.paused) { persist(); this.href = D.href + '?play=1&t=' + Math.floor(a.currentTime); } });
     $('.mb-x', MB).onclick = function () { P.a.pause(); persist(); MB.hidden = true; document.body.classList.remove('has-mini'); };
     return MB;
   }
@@ -94,8 +95,11 @@
     }
     if (P.a && P.a !== a) { P.a.pause(); persist(); }
     bind(a, k);
-    var go = function () { if (at != null) a.currentTime = at; var p = a.play(); if (p && p.catch) p.catch(function () {}); paintBeads(); };
-    if (a.readyState >= 1) go(); else { a.preload = 'metadata'; a.addEventListener('loadedmetadata', go, { once: true }); a.load && a.src && a.readyState === 0 && a.load(); }
+    // play() is called synchronously inside the click (iOS Safari requires that); the resume seek happens once metadata is known
+    var seek = function () { if (at != null && Math.abs(a.currentTime - at) > 1) { try { a.currentTime = at; } catch (e) {} } paintBeads(); };
+    if (a.readyState >= 1) seek(); else { a.preload = 'auto'; a.addEventListener('loadedmetadata', seek, { once: true }); }
+    var p = a.play(); if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError' && D.href) location.href = D.href + '?play=1' + (at ? '&t=' + Math.floor(at) : ''); });
+    paintBeads();
   }
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-afdl-play]');

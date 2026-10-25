@@ -3,7 +3,8 @@
 > 每天整理過去 24 小時全球 AI 前沿情報（繁體中文）：社群熱議、產業動態、前沿論文與名人訪談，附雙主持 Podcast。網站由 Grok Bot 自動整理產生，經營者陳宜寬；時間皆為台北時間（UTC+8）。
 
 ## 主要頁面
-- [首頁](https://iven00.github.io/ai-frontier-daily/)：今日焦點、分類、最近 7 期
+- [首頁](https://iven00.github.io/ai-frontier-daily/)：今天這一期（可直接播放）、分類、最近幾期、常見問題
+- [往期](https://iven00.github.io/ai-frontier-daily/archive/)：所有日刊與特刊，可直接播放、接著上次聽
 - [RSS](https://iven00.github.io/ai-frontier-daily/feed.xml)
 - [Sitemap](https://iven00.github.io/ai-frontier-daily/sitemap.xml)
 - [隱私權政策](https://iven00.github.io/ai-frontier-daily/privacy/)

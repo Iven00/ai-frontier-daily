@@ -75,6 +75,29 @@
   ev('page_view', ref ? ref.split('/')[2] : '', { ref: ref.slice(0, 200), ai: aiEngine(ref), ret: returning ? 1 : 0 });
   if (TOKEN) { s('afd-s', TOKEN); ev('email_click', qs.get('d') || ''); }
 
+  // ---------- visits (one visit = activity across all pages with no gap >= 10 min; heartbeat is local only) ----------
+  var BOT = navigator.webdriver || /bot|crawl|spider|slurp|headless|lighthouse|preview|facebookexternalhit|embedly|whatsapp|telegrambot|line-poker|bingpreview/i.test(navigator.userAgent || '');
+  var NOVISIT = BOT || /^\/(preview|admin)\//.test(PAGE) || IS_MANAGE;
+  if (!NOVISIT && LS) {
+    var VGAP = 10 * 60e3, vnow = Date.now(), vlast = +g('afd-vlast') || 0, vsid = g('afd-vsid');
+    if (!vsid || vnow - vlast >= VGAP) { vsid = 'w_' + rnd(6); s('afd-vsid', vsid); ev('visit_start', vsid); }
+    s('afd-vlast', String(vnow));
+    var vbeat = function () { if (document.visibilityState !== 'hidden') s('afd-vlast', String(Date.now())); };
+    setInterval(vbeat, 60e3); ['click', 'scroll', 'keydown', 'touchstart'].forEach(function (t) { var last = 0; addEventListener(t, function () { var n = Date.now(); if (n - last > 15e3) { last = n; vbeat(); } }, { passive: true }); });
+    document.addEventListener('visibilitychange', vbeat);
+  }
+  // public counters: feature-flagged (config visitStats) AND only shown when ?action=stats answers with real numbers; never placeholder numbers
+  var STATBOX = $$('[data-afd-stats]');
+  if (STATBOX.length && C.visitStats && API) {
+    fetch(API + (API.indexOf('?') >= 0 ? '&' : '?') + 'action=stats', { redirect: 'follow' }).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.ok || typeof j.total !== 'number' || typeof j.today !== 'number') return;
+      STATBOX.forEach(function (b) {
+        $$('[data-afd-stat]', b).forEach(function (x) { x.textContent = Number(j[x.getAttribute('data-afd-stat')]).toLocaleString('zh-TW'); });
+        b.hidden = false;
+      });
+    }).catch(function () {});
+  }
+
   // scroll depth (max only), read_end, active time
   var maxD = 0, sentD = 0;
   window.addEventListener('scroll', function () {
@@ -107,6 +130,44 @@
   $$('details').forEach(function (d) { d.addEventListener('toggle', function () { if (d.open) ev('item_expand', d.id || (d.closest('[id]') || {}).id || ''); }); });
   if (CAT && !ITEM) ev('topic_view', CAT);
 
+  // ---------- in-app browsers (LINE / Facebook / Messenger / Instagram / Threads / WeChat / Google app / Gmail webview …) ----------
+  // Google sign-in is blocked or cannot return to the page inside these webviews, so never start it there:
+  // LINE → reopen with openExternalBrowser=1 (LINE opens the default browser); Android webviews → intent:// to Chrome;
+  // iOS in-app with no programmatic escape → copy link + "右上角 ⋯ → 用 Safari 開啟".
+  var UA = navigator.userAgent || '';
+  var IOS = /iPhone|iPad|iPod/i.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1), ANDROID = /Android/i.test(UA);
+  var INAPP = (function () {
+    var m = [['LINE', /\bLine\//i], ['Messenger', /Orca-Android|FBAN\/Messenger|MessengerForiOS|\bMessenger\b/i], ['Facebook', /FBAN|FBAV|FB_IAB|FBIOS|FB4A/], ['Instagram', /Instagram/i],
+      ['Threads', /Barcelona|Threads/i], ['WeChat', /MicroMessenger/i], ['Google App', /\bGSA\//], ['TikTok', /musical_ly|TikTok|BytedanceWebview/i],
+      ['KakaoTalk', /KAKAOTALK/i], ['X', /Twitter/i], ['LinkedIn', /LinkedInApp/i], ['Snapchat', /Snapchat/i], ['Pinterest', /Pinterest/i]];
+    for (var i = 0; i < m.length; i++) if (m[i][1].test(UA)) return m[i][0];
+    if (ANDROID && /; wv\)|\bwv\b/.test(UA)) return 'App 內建瀏覽器';
+    if (IOS && /AppleWebKit/.test(UA) && !/Safari\//.test(UA) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(UA)) return 'App 內建瀏覽器'; // iOS WKWebView (no "Safari/" token)
+    return '';
+  })();
+  function subUrl() { var u = new URL(location.href); u.searchParams.delete('openExternalBrowser'); u.searchParams.set('sub', '1'); u.hash = ''; return u.toString(); }
+  function escapeHref() {
+    var u = subUrl();
+    if (INAPP === 'LINE') { var x = new URL(u); x.searchParams.set('openExternalBrowser', '1'); return x.toString(); }
+    if (ANDROID) { var p = new URL(u); return 'intent://' + p.host + p.pathname + p.search + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(u) + ';end'; }
+    return '';
+  }
+  function inappHTML() {
+    var h = escapeHref(), br = INAPP === 'LINE' ? '外部瀏覽器' : ANDROID ? 'Chrome' : (IOS ? 'Safari' : '一般瀏覽器');
+    return '<div class="afd-inapp" role="note"><div><b>' + (INAPP === 'App 內建瀏覽器' ? '你正在 App 的內建瀏覽器裡。' : '你正在「' + INAPP + '」的內建瀏覽器裡。') + '</b>Google 不允許在這裡登入，請改用 ' + br + ' 開啟本站再訂閱（打開後會直接跳出訂閱視窗）。</div>'
+      + (h ? '<a class="btn primary" data-afd-escape href="' + h.replace(/"/g, '&quot;') + '">用 ' + (INAPP === 'LINE' ? '預設瀏覽器' : 'Chrome') + ' 開啟並訂閱</a>' : '<div class="note">' + (IOS ? '點畫面右上角（或右下角）的「⋯」→ 選「用 Safari 開啟」；或複製網址貼到 Safari。' : '點選單「⋯」→「用瀏覽器開啟」；或複製網址貼到瀏覽器。') + '</div>')
+      + '<button class="btn" type="button" data-afd-copy>複製網址</button><span class="note" data-afd-copied role="status"></span></div>';
+  }
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest && e.target.closest('[data-afd-copy]'); if (!c) return;
+    var u = subUrl(), out = c.parentNode.querySelector('[data-afd-copied]');
+    var done = function () { if (out) out.textContent = '已複製，請貼到 ' + (IOS ? 'Safari' : 'Chrome') + ' 的網址列。'; ev('inapp_copy', INAPP); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(done, function () { prompt('複製這個網址：', u); });
+    else { prompt('複製這個網址：', u); }
+  });
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-afd-escape]')) ev('inapp_escape', INAPP); });
+  (function () { var st = document.createElement('style'); st.textContent = '.afd-inapp{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--line,#ddd);background:var(--card,#fff);border-radius:12px;padding:10px 12px;font-size:.88rem;line-height:1.6}.afd-inapp>div{flex:1 1 100%}.afd-inapp .btn{margin:0}'; document.head.appendChild(st); })();
+
   // ---------- subscribe (one shared state; every [data-afd-sub] box mirrors it) ----------
   var FULL_MSG = '目前是試營運版，訂閱名額已滿（上限 400 人），暫時無法訂閱。名額增加時，要我們通知你嗎？';
   var gisP = null, gisInit = false, credFn = null;
@@ -115,9 +176,24 @@
     gisP = new Promise(function (ok, no) { var x = document.createElement('script'); x.src = 'https://accounts.google.com/gsi/client'; x.async = true; x.onload = ok; x.onerror = function () { gisP = null; no(); }; document.head.appendChild(x); });
     return gisP;
   }
+  // popup sign-in watchdog: if the visitor tapped the Google button, left the page and came back without a credential, offer help
+  var gisTry = 0;
+  window.addEventListener('blur', function () { setTimeout(function () { var f = document.activeElement; if (f && f.tagName === 'IFRAME' && f.closest && f.closest('.gb')) gisTry = Date.now(); }, 0); });
+  function gisBack() {
+    if (!gisTry || document.visibilityState !== 'visible') return; var t0 = gisTry;
+    setTimeout(function () {
+      if (gisTry !== t0) return; gisTry = 0;
+      BOXES.forEach(function (box) { var m = $('.afd-sub-ui .msg', box); if (m && !m.textContent) m.innerHTML = '沒有完成登入嗎？如果停在 Google 的空白頁，請關掉那一頁再按一次按鈕；還是不行的話，請用 ' + (IOS ? 'Safari' : 'Chrome') + ' 開啟本站再訂閱。<button class="btn" type="button" data-afd-copy>複製網址</button><span class="note" data-afd-copied></span>'; });
+      ev('gis_no_return', IOS ? 'ios' : ANDROID ? 'android' : 'other');
+    }, 4000);
+  }
+  window.addEventListener('focus', gisBack); document.addEventListener('visibilitychange', gisBack);
   function gisButton(el, onCred, text) {
-    credFn = onCred;
+    if (INAPP) { el.innerHTML = inappHTML(); ev('inapp_sub_view', INAPP); return Promise.resolve(); }
+    credFn = function (c) { gisTry = 0; onCred(c); };
+    var RD = !!(C.gisRedirect && (IOS || ANDROID)); // redirect sign-in (no popup return needed); needs Apps Script login_uri support — off until deployed
     return loadGIS().then(function () {
+      if (RD && !gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, ux_mode: 'redirect', login_uri: API, auto_select: false }); }
       if (!gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, callback: function (r) { if (credFn) credFn(r.credential); }, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true }); }
       var w = Math.max(200, Math.min(320, Math.floor((el.parentNode && el.parentNode.clientWidth) || 280)));
       el.innerHTML = ''; google.accounts.id.renderButton(el, { type: 'standard', theme: 'outline', size: 'large', shape: 'pill', text: text || 'signup_with', locale: 'zh-TW', logo_alignment: 'left', width: w });
@@ -345,11 +421,51 @@
   });
   // restore the play label with the resume time
   $$('[data-afd-play]').forEach(function (b) { var r = resumeAt(b.getAttribute('data-afd-play')); if (r != null) { b._lab = b.textContent; b.textContent = '▶ 從 ' + mmss(r) + ' 繼續聽'; } });
+  // ---------- share (every page): canonical URL + ?openExternalBrowser=1 (so LINE opens it in the external browser) ----------
+  try { if (qs.has('openExternalBrowser') && !qs.has('sub')) { qs.delete('openExternalBrowser'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } } catch (e) {}
+  function shareUrl() { var c = $('link[rel=canonical]'), u = new URL(c ? c.href : location.href.split('#')[0]); u.search = ''; u.hash = ''; u.searchParams.set('openExternalBrowser', '1'); return u.toString(); }
+  var SHS = null;
+  function shareSheet() {
+    if (!SHS) {
+      SHS = document.createElement('div'); SHS.className = 'afd-shs'; SHS.hidden = true; SHS.setAttribute('role', 'dialog'); SHS.setAttribute('aria-label', '分享');
+      SHS.innerHTML = '<div class="in"><b>分享這一頁</b><a class="ln" target="_blank" rel="noopener">分享到 LINE</a><button type="button" data-cp>複製連結</button><button type="button" class="x" aria-label="關閉">✕</button></div>';
+      document.body.appendChild(SHS);
+      SHS.addEventListener('click', function (e) { if (e.target === SHS || e.target.closest('.x')) SHS.hidden = true; if (e.target.closest('.ln')) { ev('share', 'line'); SHS.hidden = true; } });
+      $('[data-cp]', SHS).onclick = function () {
+        var u = shareUrl(), ok = function () { SHS.hidden = true; var t = toast('<span>已複製</span>'); if (t) setTimeout(function () { t.remove(); }, 2000); ev('share', 'copy'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok, function () { prompt('複製這個連結：', u); });
+        else prompt('複製這個連結：', u);
+      };
+      var st = document.createElement('style');
+      st.textContent = '.afd-shs{position:fixed;inset:0;z-index:65;background:#0003}.afd-shs[hidden]{display:none}'
+        + '.afd-shs .in{position:absolute;right:max(12px,calc(50vw - 538px));top:calc(var(--navh,56px) + 8px);width:min(300px,calc(100vw - 24px));box-sizing:border-box;background:var(--card,#fff);color:var(--fg,#222);border:1px solid var(--line,#ddd);border-radius:16px;box-shadow:0 12px 32px #0003;padding:14px;display:flex;flex-direction:column;gap:8px}'
+        + '.afd-shs .in>a,.afd-shs .in>button[data-cp]{display:block;text-align:center;border-radius:999px;padding:11px 14px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}'
+        + '.afd-shs .ln{background:var(--accent,#b5532a);color:#fff}.afd-shs [data-cp]{border:1px solid var(--line,#ddd);background:var(--card,#fff);color:var(--fg,#222)}'
+        + '.afd-shs .x{position:absolute;right:8px;top:6px;border:0;background:transparent;color:inherit;font-size:1rem;cursor:pointer;padding:4px 6px}'
+        + '@media (max-width:760px){.afd-shs .in{top:auto;right:12px;left:12px;width:auto;bottom:calc(var(--tabh,58px) + var(--sab,0px) + 10px)}}';
+      document.head.appendChild(st);
+    }
+    $('.ln', SHS).href = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(shareUrl());
+    SHS.hidden = false;
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-afd-share]'); if (!b) return; e.preventDefault();
+    var md = $('meta[name=description]'), data = { title: document.title, text: md ? md.content : document.title, url: shareUrl() };
+    if (navigator.share && (!navigator.canShare || navigator.canShare(data))) navigator.share(data).then(function () { ev('share', 'native'); }, function (err) { if (!err || err.name !== 'AbortError') shareSheet(); });
+    else shareSheet();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && SHS) SHS.hidden = true; });
   // after most of the episode: gentle subscribe nudge (once per session, never for subscribers)
   if (AUD && API) AUD.addEventListener('timeupdate', function () {
     if (AUD._nudged || !AUD.duration || g('afd-subscribed') === '1' || AUD.currentTime / AUD.duration < 0.9) return; AUD._nudged = true;
     var t = toast('<span>聽完了？明早 6 點把下一期寄給你</span><button type="button" data-afd-open-sub="nudge">📬 訂閱</button>', 'afd-nudge'); if (t) ev('subscribe_nudge');
   });
+  if (qs.get('sub') === '1') { qs.delete('sub'); qs.delete('openExternalBrowser'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {} setTimeout(function () { if (g('afd-subscribed') !== '1') openSub('escape'); }, 300); }
+  // back from redirect sign-in (Apps Script returns to ?subok=1|already|full|err)
+  var SOK = qs.get('subok');
+  if (SOK) { qs.delete('subok'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {}
+    if (SOK === '1' || SOK === 'already') { s('afd-subscribed', '1'); SUB.st = 'done'; setHTML('<div class="msg">✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到你的信箱。</div>'); ev('subscribe_success', 'redirect'); }
+    else if (SOK === 'full') { SUB.st = 'full'; paintAll(); } else msgAll('訂閱沒有完成，請再試一次。'); }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var sh = $('#afd-cats'); if (sh) sh.hidden = true; } });
 
   // ---------- feedback ----------

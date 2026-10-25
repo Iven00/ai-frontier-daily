@@ -11,6 +11,7 @@ h1,h2,h3,p,li,a,span,b,small,div{overflow-wrap:anywhere}
 /* nav */
 .v2-nav{position:sticky;top:0;z-index:30;background:rgba(251,247,241,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(58,48,42,.04)}
 .v2-nav .wrap{height:var(--navh);display:flex;align-items:center;gap:20px}
+.v2-share{white-space:nowrap;flex:none}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);flex:none}
 .logo .mk{width:34px;height:34px;border-radius:10px;background:var(--pri);display:grid;place-items:center;color:#fff;font-weight:800;font-size:.9rem}
 .logo b{display:block;font-size:1rem;line-height:1.1}.logo small{display:block;font-size:.66rem;letter-spacing:.12em;color:var(--teal);font-weight:700}
@@ -111,7 +112,7 @@ body.has-mini{padding-bottom:90px}
 @media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr);gap:20px;padding:24px}.hero .cv{order:-1;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}.hero .cover{border-radius:14px}.hero .hosts{justify-content:flex-start;margin:0}.vals{grid-template-columns:1fr}}
 @media (max-width:760px){
  .wrap{padding:0 16px}
- .v2-nav{position:relative}.v2-nav .wrap{height:54px;gap:10px}.links{display:none}.logo{flex:1}.logo .mk{width:30px;height:30px}
+ .v2-nav{position:relative}.v2-nav .wrap{height:54px;gap:10px}.links{display:none}.logo{flex:1}.logo .mk{width:30px;height:30px} .v2-share{display:none}
  .hero{padding:20px 16px}.hero:before{left:16px;right:16px}.hero>*{min-width:0}.hero h1{font-size:1.6rem;margin:2px 0 6px}.hero .sub{font-size:.95rem;margin-bottom:14px}
  .hero .cta .btn.pri{width:100%}.focus{padding:10px 12px;margin-bottom:14px}.focus li{font-size:.9rem}
  .datebar{margin:14px 0 10px;font-size:.8rem}
