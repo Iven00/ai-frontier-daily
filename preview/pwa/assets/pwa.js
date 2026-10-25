@@ -1,5 +1,5 @@
 /* Mirakee Signal PWA front end — PREVIEW. Registers the service worker (scope = preview folder), shows the update toast,
- * the mobile-only 「📲 安裝到桌面」 entry (分類 menu sheet) + homepage hint (2nd visit on, dismiss remembered),
+ * the bottom-tab 「更多」 sheet (分享本頁 + mobile-only 「📲 安裝到桌面」) + homepage hint (2nd visit on, dismiss remembered),
  * the iOS 「點分享 → 加入主畫面」 sheet, the in-app-browser hint, and fires pwa_* events through the existing pipeline. */
 (function () {
   'use strict';
@@ -99,15 +99,21 @@
   }
   function install(src) {
     if (INAPP) { ev('pwa_install_prompt', 'inapp:' + INAPP + ':' + src); return openSheet('inapp'); }
-    if (BIP) { var p = BIP; BIP = null; p.prompt(); ev('pwa_install_prompt', 'native:' + src);
+    if (BIP) { closeSheet(); var p = BIP; BIP = null; p.prompt(); ev('pwa_install_prompt', 'native:' + src);
       (p.userChoice || Promise.resolve({})).then(function (c) { ev('pwa_install_prompt', 'native_' + ((c && c.outcome) || 'unknown')); paint(); }); return; }
     ev('pwa_install_prompt', (IOS ? 'ios_sheet:' : 'manual_sheet:') + src); openSheet(IOS ? 'ios' : 'manual');
   }
-  // entry 1: the existing 分類 menu sheet (#afd-cats, role=menu) — one extra row at the bottom, mobile only
-  function menuEntry() {
-    var m = $('#afd-cats'); if (!m || $('[data-pwa-install]', m)) return;
-    var b = D.createElement('button'); b.type = 'button'; b.className = 'pwa-menu'; b.setAttribute('data-pwa-install', 'menu'); b.setAttribute('role', 'menuitem');
-    b.innerHTML = '📲 安裝到桌面<span>' + (INAPP ? '需用瀏覽器開啟' : IOS ? '加入主畫面 →' : '→') + '</span>'; m.appendChild(b);
+  // entry 1: bottom tab 「更多」 (replaces the old 「分享」 tab, built into the HTML) → small sheet: 分享本頁 (existing share sheet via data-afd-share) + 📲 安裝到桌面 (only when installable)
+  function openMore(btn) {
+    closeSheet(); SH = D.createElement('dialog'); SH.className = 'pwa-sheet pwa-more'; SH.setAttribute('aria-label', '更多'); SH.setAttribute('data-kind', 'more');
+    SH.innerHTML = '<div class="pwa-more-hd"><b>更多</b><button type="button" class="pwa-x" data-pwa-close aria-label="關閉">✕</button></div>'
+      + '<button type="button" class="pwa-row" data-afd-share>🔗<span>分享本頁</span></button>'
+      + (canShow() ? '<button type="button" class="pwa-row" data-pwa-install="more">📲<span>安裝到桌面</span><small>' + (INAPP ? '需用瀏覽器開啟' : IOS ? '加入主畫面' : '') + '</small></button>' : '');
+    D.body.appendChild(SH);
+    if (btn) { btn.setAttribute('aria-expanded', 'true'); SH.addEventListener('close', function () { btn.setAttribute('aria-expanded', 'false'); }); }
+    // close first, then let the click bubble on to afd.js (data-afd-share → the existing share sheet) or to install()
+    SH.addEventListener('click', function (e) { if (e.target === SH || e.target.closest('[data-pwa-close]') || e.target.closest('[data-afd-share]')) closeSheet(); });
+    if (SH.showModal) SH.showModal(); else SH.setAttribute('open', '');
   }
   // entry 2: homepage hint from the 2nd visit on (one visit per browser session), dismiss remembered
   var IS_HOME = H.getAttribute('data-pwa-page') === 'home';
@@ -122,13 +128,13 @@
   }
   function paint() {
     var on = canShow();
-    if (on) menuEntry();
     D.querySelectorAll('[data-pwa-install]').forEach(function (b) { b.hidden = !on; });
     H.classList.toggle('pwa-standalone', standalone());
     hint();
   }
   D.addEventListener('click', function (e) {
-    var b = e.target.closest && e.target.closest('[data-pwa-install]'); if (b) { e.preventDefault(); var m = $('#afd-cats'); if (m && m.contains(b)) m.hidden = true; return install(b.getAttribute('data-pwa-install')); }
+    var mo = e.target.closest && e.target.closest('[data-pwa-more]'); if (mo) { e.preventDefault(); var c = $('#afd-cats'); if (c) c.hidden = true; return openMore(mo); }
+    var b = e.target.closest && e.target.closest('[data-pwa-install]'); if (b) { e.preventDefault(); return install(b.getAttribute('data-pwa-install')); }
     if (e.target.closest && e.target.closest('[data-pwa-hint-x]')) { s('afd-pwa-hint-x', '1'); hint(); }
   });
   if (window.matchMedia) try { matchMedia('(display-mode: standalone)').addEventListener('change', paint); } catch (e) {}

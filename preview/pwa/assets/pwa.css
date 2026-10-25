@@ -22,3 +22,10 @@
 @media (min-width:701px){.pwa-hint{bottom:20px}}
 /* dark only on pages that support dark (the light-only homepage gets html.pwa-light) */
 @media (prefers-color-scheme:dark){html:not(.pwa-light) .pwa-menu{border-top-color:#3A3F47}html:not(.pwa-light) .pwa-menu span,html:not(.pwa-light) .pwa-x,html:not(.pwa-light) .pwa-p.sm,html:not(.pwa-light) .pwa-sh-hd small{color:#ADA59B}html:not(.pwa-light) .pwa-hint,html:not(.pwa-light) .pwa-sheet{background:#262A31;color:#ECE6DD;border-color:#3A3F47}html:not(.pwa-light) .pwa-btn{background:#22262C;color:#ECE6DD;border-color:#3A3F47}html:not(.pwa-light) .pwa-btn.pri{background:#C2643C;border-color:#C2643C;color:#fff}html:not(.pwa-light) .pwa-steps li{background:#22262C;border-color:#3A3F47}html:not(.pwa-light) .pwa-steps .ic{background:#1E3532;color:#7CC4BA}html:not(.pwa-light) .pwa-steps li::before{background:#7CC4BA;color:#14201E}html:not(.pwa-light) .pwa-arrow{color:#E8956F}html:not(.pwa-light) .pwa-toast button{background:#7CC4BA;color:#14201E}}
+/* bottom tab 「更多」: three-dot icon at the same box as the emoji icons (1em), sheet rows */
+.pwa-dots svg{display:block;width:1.1em;height:1.1em;margin:0 auto}
+.pwa-more-hd{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px}
+.pwa-more-hd b{font-size:1rem}
+.pwa-row{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;min-height:52px;padding:12px 6px;border:0;border-top:1px solid #EADFD0;background:transparent;color:inherit;font:inherit;font-size:1.02rem;text-align:left;cursor:pointer}
+.pwa-row span{flex:1;font-weight:700}.pwa-row small{font-size:.8rem;color:#8C7F73}
+@media (prefers-color-scheme:dark){html:not(.pwa-light) .pwa-row{border-top-color:#3A3F47}html:not(.pwa-light) .pwa-row small{color:#ADA59B}}

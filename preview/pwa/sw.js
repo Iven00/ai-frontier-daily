@@ -7,7 +7,7 @@
  *   other origins (Apps Script, Google sign-in, fonts…) and any URL with a token → NOT handled (network only, never cached)
  */
 'use strict';
-const VERSION = 'e38a1b6244';
+const VERSION = '70b9b9867e';
 const SHELL = 'ms-pwa-shell-' + VERSION, PAGES = 'ms-pwa-pages-' + VERSION, IMG = 'ms-pwa-img-' + VERSION;
 const SCOPE = new URL(self.registration.scope);
 const SHELL_FILES = ["manifest.webmanifest", "offline/", "assets/afd.js", "assets/afd-listen.js", "assets/config.js", "assets/v2.css", "assets/item-topics.json", "assets/pwa.js", "assets/pwa.css", "icons/apple-touch-icon.png", "icons/favicon.ico", "icons/favicon.svg", "icons/icon-192.png", "icons/icon-32.png", "icons/icon-512.png", "icons/icon-maskable-512.png"];   // relative to scope
