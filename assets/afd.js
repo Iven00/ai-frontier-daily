@@ -107,56 +107,146 @@
   $$('details').forEach(function (d) { d.addEventListener('toggle', function () { if (d.open) ev('item_expand', d.id || (d.closest('[id]') || {}).id || ''); }); });
   if (CAT && !ITEM) ev('topic_view', CAT);
 
-  // ---------- subscribe ----------
+  // ---------- subscribe (one shared state; every [data-afd-sub] box mirrors it) ----------
   var FULL_MSG = '目前是試營運版，訂閱名額已滿（上限 400 人），暫時無法訂閱。名額增加時，要我們通知你嗎？';
-  var gisP = null;
+  var gisP = null, gisInit = false, credFn = null;
   function loadGIS() {
     if (gisP) return gisP;
-    gisP = new Promise(function (ok, no) { var x = document.createElement('script'); x.src = 'https://accounts.google.com/gsi/client'; x.async = true; x.onload = ok; x.onerror = no; document.head.appendChild(x); });
+    gisP = new Promise(function (ok, no) { var x = document.createElement('script'); x.src = 'https://accounts.google.com/gsi/client'; x.async = true; x.onload = ok; x.onerror = function () { gisP = null; no(); }; document.head.appendChild(x); });
     return gisP;
   }
   function gisButton(el, onCred, text) {
+    credFn = onCred;
     return loadGIS().then(function () {
-      google.accounts.id.initialize({ client_id: C.clientId, callback: function (r) { onCred(r.credential); }, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true });
-      el.innerHTML = ''; google.accounts.id.renderButton(el, { type: 'standard', theme: 'outline', size: 'large', shape: 'pill', text: text || 'signup_with', locale: 'zh-TW', logo_alignment: 'left' });
+      if (!gisInit) { gisInit = true; google.accounts.id.initialize({ client_id: C.clientId, callback: function (r) { if (credFn) credFn(r.credential); }, ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true, use_fedcm_for_button: true }); }
+      var w = Math.max(200, Math.min(320, Math.floor((el.parentNode && el.parentNode.clientWidth) || 280)));
+      el.innerHTML = ''; google.accounts.id.renderButton(el, { type: 'standard', theme: 'outline', size: 'large', shape: 'pill', text: text || 'signup_with', locale: 'zh-TW', logo_alignment: 'left', width: w });
     });
   }
   function consentGiven() { s('afd-consent', '1'); }
-  function subUI(box) {
+  var SUB = { st: g('afd-subscribed') === '1' ? 'done' : 'loading', html: '', wcred: null };
+  var BOXES = $$('[data-afd-sub]');
+  function visible(box) { return !box.hasAttribute('data-afd-lazy') || box.closest('dialog[open]'); }
+  function paint(box) {
     var ui = $('.afd-sub-ui', box); if (!ui || !API) return;
-    if (g('afd-subscribed') === '1') { ui.innerHTML = '<div class="msg">✅ 你已經訂閱晨報了，每天早上 6 點（台北時間）見。</div>'; return; }
-    ui.innerHTML = '<div class="note">載入中…</div>';
-    var seen = false;
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!seen && es[0].isIntersecting) { seen = true; ev('subscribe_view'); } }).observe(box);
-    function msg(t, html) { var m = $('.msg', ui); if (!m) { m = document.createElement('div'); m.className = 'msg'; m.setAttribute('role', 'status'); ui.appendChild(m); } if (html) m.innerHTML = t; else m.textContent = t; }
-    function showFull(cred) {
-      ui.innerHTML = '<div>' + FULL_MSG + '</div><div style="margin-top:10px"><button class="btn primary" type="button" data-y>要，通知我</button><button class="btn" type="button" data-n>不用了</button></div><div class="gis2" style="margin-top:10px"></div>';
-      $('[data-n]', ui).onclick = function () { ev('waitlist_optout'); post({ action: 'waitlist', optin: false, vid: vid() }).catch(function () {}); ui.innerHTML = '<div class="msg">好的，不會通知你。謝謝你的關注！</div>'; };
+    var strip = box.hasAttribute('data-afd-strip');
+    if (strip) box.classList.toggle('afd-done', SUB.st === 'done' && g('afd-subscribed') === '1' && !box._justDone);
+    if (!visible(box)) { box._dirty = true; return; } box._dirty = false;
+    if (SUB.st === 'done' && !SUB.html) { ui.innerHTML = '<div class="msg">✅ 你已經訂閱晨報了，每天早上 6 點（台北時間）見。</div>'; return; }
+    if (SUB.html) { ui.innerHTML = SUB.html; return; }
+    if (SUB.st === 'loading') { ui.innerHTML = '<div class="note">載入 Google 訂閱按鈕…</div>'; return; }
+    if (SUB.st === 'error') { ui.innerHTML = '<div class="note">訂閱服務暫時連不上，請稍後再試。</div>'; return; }
+    if (SUB.st === 'ready') {
+      ui.innerHTML = '<div class="gb"></div>' + (EU && !strip ? '<div class="note">你所在地區適用歐盟規範：登入訂閱前，本站不記錄你的閱讀行為。</div>' : '') + '<div class="msg" role="status"></div>';
+      gisButton($('.gb', ui), onCred).catch(function () { ui.innerHTML = '<div class="note">無法載入 Google 登入，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。</div>'; });
+      return;
+    }
+    if (SUB.st === 'full') {
+      ui.innerHTML = '<div>' + FULL_MSG + '</div><div style="margin-top:10px"><button class="btn primary" type="button" data-y>要，通知我</button><button class="btn" type="button" data-n>不用了</button></div><div class="gis2" style="margin-top:10px"></div><div class="msg" role="status"></div>';
+      $('[data-n]', ui).onclick = function () { ev('waitlist_optout'); post({ action: 'waitlist', optin: false, vid: vid() }).catch(function () {}); setHTML('<div class="msg">好的，不會通知你。謝謝你的關注！</div>'); };
       $('[data-y]', ui).onclick = function () {
-        function send(c) { msg('處理中…'); consentGiven(); post({ action: 'waitlist', optin: true, credential: c, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0 })
-          .then(function (r) { if (r.ok) { ev('waitlist_optin'); ui.innerHTML = '<div class="msg">✅ 已登記！名額增加時會寄信通知 ' + (r.email || '你') + '。</div>'; } else msg(r.message || '登記失敗，請稍後再試。'); })
-          .catch(function () { msg('連線失敗，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。'); }); }
-        if (cred) return send(cred);
+        if (SUB.wcred) return sendWait(SUB.wcred);
         $('.gis2', ui).innerHTML = '<div class="note">請用 Google 帳號登入，讓我們知道要通知哪個信箱：</div><div class="gb"></div>';
-        gisButton($('.gb', ui), send, 'continue_with').catch(function () { msg('無法載入 Google 登入，請稍後再試。'); });
+        gisButton($('.gb', ui), sendWait, 'continue_with').catch(function () { msgAll('無法載入 Google 登入，請稍後再試。'); });
       };
     }
-    function onCred(cred) {
-      msg('處理中…'); consentGiven(); ev('subscribe_start');
-      post({ action: 'subscribe', credential: cred, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0, page: PAGE })
-        .then(function (r) {
-          if (r.ok) { s('afd-subscribed', '1'); ev('subscribe_success'); flush(false); ui.innerHTML = '<div class="msg">✅ 訂閱成功！' + (r.already ? '（你之前就訂閱了）' : '') + '明天早上 6 點（台北時間）起，晨報會寄到 ' + (r.email || '你的信箱') + '。</div>'; }
-          else if (r.state === 'full') showFull(cred);
-          else msg(r.message || '訂閱失敗，請稍後再試。');
-        }).catch(function () { msg('連線失敗，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。'); });
-    }
-    getStatus().then(function (r) {
-      if (r && r.state === 'full') return showFull(null);
-      ui.innerHTML = '<div class="gb"></div>' + (EU ? '<div class="note">你所在地區適用歐盟規範：登入訂閱前，本站不記錄你的閱讀行為。</div>' : '');
-      return gisButton($('.gb', ui), onCred);
-    }).catch(function () { ui.innerHTML = '<div class="note">訂閱服務暫時連不上，請稍後再試。</div>'; });
   }
-  $$('[data-afd-sub]').forEach(subUI);
+  function paintAll() { BOXES.forEach(paint); }
+  function setHTML(h) { SUB.html = h; paintAll(); }
+  function msgAll(t) { BOXES.forEach(function (box) { var m = $('.afd-sub-ui .msg', box); if (m) m.textContent = t; }); }
+  function sendWait(c) {
+    msgAll('處理中…'); consentGiven();
+    post({ action: 'waitlist', optin: true, credential: c, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0 })
+      .then(function (r) { if (r.ok) { ev('waitlist_optin'); setHTML('<div class="msg">✅ 已登記！名額增加時會寄信通知 ' + (r.email || '你') + '。</div>'); } else msgAll(r.message || '登記失敗，請稍後再試。'); })
+      .catch(function () { msgAll('連線失敗，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。'); });
+  }
+  function onCred(cred) {
+    msgAll('處理中…'); consentGiven(); ev('subscribe_start');
+    post({ action: 'subscribe', credential: cred, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0, page: PAGE })
+      .then(function (r) {
+        if (r.ok) { s('afd-subscribed', '1'); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
+          setHTML('<div class="msg">✅ 訂閱成功！' + (r.already ? '（你之前就訂閱了）' : '') + '明天早上 6 點（台北時間）起，晨報會寄到 ' + (r.email || '你的信箱') + '。</div>'); }
+        else if (r.state === 'full') { SUB.st = 'full'; SUB.wcred = cred; paintAll(); }
+        else msgAll(r.message || '訂閱失敗，請稍後再試。');
+      }).catch(function () { msgAll('連線失敗，請稍後再試（若有開啟廣告阻擋外掛，請暫時關閉）。'); });
+  }
+  if (API && BOXES.length) {
+    BOXES.forEach(function (box) {
+      var seen = false;
+      if ('IntersectionObserver' in window && !box.hasAttribute('data-afd-lazy')) new IntersectionObserver(function (es) { if (!seen && es[0].isIntersecting) { seen = true; ev('subscribe_view', box.hasAttribute('data-afd-strip') ? 'strip' : 'box'); } }).observe(box);
+    });
+    paintAll();
+    if (SUB.st !== 'done') getStatus().then(function (r) { SUB.st = (r && r.state === 'full') ? 'full' : 'ready'; paintAll(); })
+      .catch(function () { SUB.st = 'error'; paintAll(); });
+  }
+
+  // ---------- shared shell: subscribe dialog, category sheet, listen tab, sidebar TOC, ?play= ----------
+  var DLG = $('#afd-subdlg');
+  function openSub(src) {
+    ev('subscribe_open', src || '');
+    if (DLG && DLG.showModal) { if (!DLG.open) DLG.showModal(); var bx = $('[data-afd-sub]', DLG); if (bx && (bx._dirty || !$('.afd-sub-ui', bx).children.length || /載入中/.test($('.afd-sub-ui', bx).textContent))) paint(bx); }
+    else { var t = $('#subscribe') || $('[data-afd-sub]'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  }
+  document.addEventListener('click', function (e) {
+    var o = e.target.closest && e.target.closest('[data-afd-open-sub]');
+    if (o) { e.preventDefault(); openSub(o.getAttribute('data-afd-open-sub')); return; }
+    if (e.target.closest && e.target.closest('[data-afd-close]') && DLG) { DLG.close(); return; }
+    if (DLG && e.target === DLG) { DLG.close(); return; } // backdrop click
+    var sh = $('#afd-cats'), cb = e.target.closest && e.target.closest('[data-afd-cats]');
+    if (sh) { if (cb) { sh.hidden = !sh.hidden; cb.setAttribute('aria-expanded', String(!sh.hidden)); return; } if (!sh.hidden && !e.target.closest('#afd-cats')) { sh.hidden = true; } }
+  });
+  // listen: on pages with the follow-along player toggle it; on item pages play the clip; elsewhere open today's issue
+  var AUD = $('#aud'), PP = $('#pp');
+  function listenUI() {
+    $$('[data-afd-listen]').forEach(function (b) {
+      var t = $('.t', b), playing = AUD && !AUD.paused;
+      if (t) t.textContent = playing ? '暫停' : '收聽'; else if (AUD) b.textContent = playing ? '❚❚ 暫停播放' : '▶ 播放整期（自動跟讀）';
+      var i = $('.i', b); if (i) i.textContent = playing ? '⏸' : '🎧';
+    });
+  }
+  if (AUD) { AUD.addEventListener('play', listenUI); AUD.addEventListener('pause', listenUI); }
+  $$('[data-afd-listen]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      ev('listen_tap', PAGE);
+      if (PP && AUD) { PP.click(); return; }
+      var clip = $('main audio'); if (clip) { clip.paused ? clip.play() : clip.pause(); clip.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      var h = b.getAttribute('data-href'); if (h) location.href = h;
+    });
+  });
+  var clipA = !AUD && $('main audio');
+  if (clipA) { var upd = function () { $$('[data-afd-listen] .t').forEach(function (t) { t.textContent = clipA.paused ? '收聽' : '暫停'; }); }; clipA.addEventListener('play', upd); clipA.addEventListener('pause', upd); }
+  // sidebar TOC (desktop)
+  var tocBox = $('[data-afd-toc]'), toc = $('ol.toc');
+  if (tocBox && toc) { var cl = toc.cloneNode(true); cl.className = ''; tocBox.appendChild(cl); tocBox.hidden = false; }
+  // toast helper
+  function toast(html, key) {
+    if (key && sessionStorage.getItem(key)) return null;
+    var d = document.createElement('div'); d.className = 'afd-toast'; d.setAttribute('role', 'status');
+    d.innerHTML = html + '<button class="x" type="button" aria-label="關閉">✕</button>'; document.body.appendChild(d);
+    $('.x', d).onclick = function () { d.remove(); }; if (key) try { sessionStorage.setItem(key, '1'); } catch (e) {}
+    return d;
+  }
+  // ?play=1 or ?play=<segment id>: one tap from anywhere to start listening at the right spot
+  var PLAY = qs.get('play');
+  if (PLAY && AUD) {
+    var TLx = []; try { TLx = JSON.parse(($('#timeline') || {}).textContent || '[]'); } catch (e) {}
+    var seg = TLx.filter(function (x) { return x.id === PLAY; })[0];
+    try { qs.delete('play'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {}
+    var go = function () {
+      if (seg) AUD.currentTime = seg.start + 0.01;
+      var p = AUD.play(); if (p && p.catch) p.catch(function () {
+        var t = toast('<span>' + (seg ? '從「' + seg.label.replace(/^第\d+則｜/, '').slice(0, 18) + '」' : '從頭') + '開始聽？</span><button type="button" data-go>▶ 播放</button>');
+        if (t) $('[data-go]', t).onclick = function () { if (seg) AUD.currentTime = seg.start + 0.01; AUD.play(); t.remove(); };
+      });
+    };
+    if (AUD.readyState >= 1) go(); else AUD.addEventListener('loadedmetadata', go, { once: true });
+  }
+  // after most of the episode: gentle subscribe nudge (once per session, never for subscribers)
+  if (AUD && API) AUD.addEventListener('timeupdate', function () {
+    if (AUD._nudged || !AUD.duration || g('afd-subscribed') === '1' || AUD.currentTime / AUD.duration < 0.9) return; AUD._nudged = true;
+    var t = toast('<span>聽完了？明早 6 點把下一期寄給你</span><button type="button" data-afd-open-sub="nudge">📬 訂閱</button>', 'afd-nudge'); if (t) ev('subscribe_nudge');
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var sh = $('#afd-cats'); if (sh) sh.hidden = true; } });
 
   // ---------- feedback ----------
   var fb = $('[data-afd-feedback]');

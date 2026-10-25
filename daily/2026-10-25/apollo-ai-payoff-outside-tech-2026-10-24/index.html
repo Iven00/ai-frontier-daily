@@ -70,10 +70,113 @@ header.top.seg.now,section.seg.now{background:var(--chip)}
 .form label{display:block;font-weight:600;margin:12px 0 4px}
 .form select,.form textarea,.form input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg)}
 .form textarea{min-height:160px}.hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
-</style></head><body data-afd-item="apollo-ai-payoff-outside-tech-2026-10-24" data-afd-topics="roi,startup" data-afd-cat="industry"><main class="wrap"><header class="top"><div class="kicker"><a href="../../../">AI FRONTIER DAILY</a> ・ <a href="../../../topics/industry/">產業動態</a> ・ <a href="../">2026-10-25 整期</a></div>
+</style><!--afd-shell:head--><style>
+html,body{max-width:100%}body{overflow-x:clip}
+main.wrap,.player .wrap{min-width:0}
+p,li,dd,dt,td,th,h1,h2,h3,h4,blockquote,figcaption,.meta,.src,.take,.tx,.trend,.subbox,.cat,.issues a,.kicker,.quote,.note,.msg{overflow-wrap:anywhere}
+a{overflow-wrap:anywhere}
+img,video,iframe,svg,canvas{max-width:100%;height:auto}audio{max-width:100%}
+pre{max-width:100%;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+code,kbd,samp{overflow-wrap:anywhere;word-break:break-word}
+table{display:block;max-width:100%;overflow-x:auto}
+.prow,.prow2,.seek,.chips,.ptitle,.trend h3{min-width:0}.seek input{min-width:0}
+.ptitle span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+figure{max-width:100%}
+
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:10px 18px;font-weight:700;text-decoration:none;border:1px solid var(--accent);font-size:1rem;cursor:pointer;background:transparent;color:var(--accent);font-family:inherit;margin:4px 8px 4px 0;line-height:1.3}
+.btn.primary{background:var(--accent);color:#fff}
+.subbox{background:var(--chip);border-radius:14px;padding:16px;margin:16px 0}
+.subbox .note{font-size:.8rem;color:var(--muted);margin-top:8px}.subbox .msg{margin-top:8px;font-weight:600}
+:root{--navh:56px;--tabh:58px;--sab:env(safe-area-inset-bottom,0px)}
+.afd-nav{position:sticky;top:0;z-index:30;background:var(--player,#fffdf8ee);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.afd-nav-in{max-width:1100px;margin:0 auto;padding:0 18px;height:var(--navh);display:flex;align-items:center;gap:18px}
+.afd-logo{font-weight:800;color:var(--fg);text-decoration:none;white-space:nowrap;font-size:1rem;flex:none}
+.afd-logo b{color:var(--accent)}
+.afd-links{display:flex;gap:4px;flex:1;min-width:0;overflow:hidden}
+.afd-links a{color:var(--fg);text-decoration:none;font-size:.92rem;padding:6px 10px;border-radius:999px;white-space:nowrap}
+.afd-links a:hover{background:var(--chip)}.afd-links a.on{background:var(--chip);color:var(--accent);font-weight:700}
+.afd-subbtn{flex:none;border:0;background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:.92rem;border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+.afd-tabs,.afd-sheet{display:none}
+.afd-strip{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--chip);border-radius:14px;padding:12px 14px;margin:14px 0 4px}
+.afd-strip .afd-strip-t{flex:1 1 220px;min-width:0;font-size:.95rem;line-height:1.5}
+.afd-strip .afd-strip-t b{display:block}.afd-strip .afd-strip-t span{color:var(--muted);font-size:.82rem}
+.afd-strip .afd-sub-ui{flex:0 1 auto;min-width:0;max-width:100%}
+.afd-strip .afd-sub-ui .note{margin:0}
+.afd-strip.afd-done{display:none}
+.afd-sub-ui .gb{max-width:100%;overflow:hidden;min-height:44px}
+.afd-dlg{border:0;border-radius:18px;padding:0;max-width:min(440px,calc(100vw - 24px));width:100%;background:var(--card);color:var(--fg);box-shadow:0 20px 60px #0005}
+.afd-dlg::backdrop{background:#0007}
+.afd-dlg .subbox{margin:0;border-radius:0;background:var(--card);padding:22px 20px 18px}
+.afd-dlg .x{position:absolute;right:10px;top:8px;border:0;background:transparent;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1;padding:6px}
+.afd-dlg ul{margin:.5em 0;padding-left:1.2em;font-size:.92rem}
+.afd-side{display:none}
+.afd-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;background:var(--fg);color:var(--bg);border-radius:14px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px #0004;max-width:calc(100vw - 24px);font-size:.92rem}
+.afd-toast button{border:0;border-radius:999px;background:var(--accent);color:#fff;font:inherit;font-weight:700;padding:8px 14px;cursor:pointer;flex:none}
+.afd-toast .x{background:transparent;color:inherit;padding:4px 6px;font-weight:400}
+body:has(.player) .afd-nav{position:relative}
+@media (min-width:761px){
+ body:has(.player) .afd-nav{position:sticky}
+ .player{top:var(--navh)}
+ html{scroll-padding-top:calc(var(--navh) + 170px)}
+ html:not(:has(.player)){scroll-padding-top:calc(var(--navh) + 16px)}
+}
+@media (min-width:761px) and (max-width:980px){.afd-links a{padding:6px 7px;font-size:.86rem}.afd-nav-in{gap:10px}}
+@media (min-width:1000px){
+ main.wrap.afd-wide{max-width:1100px}
+ .afd-wide .issues{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+ .afd-wide .issues a{margin:0}
+ .afd-wide .subbox,.afd-wide .afd-strip{max-width:740px}
+}
+@media (min-width:1180px){
+ main.wrap.afd-2col{max-width:1100px;display:grid;grid-template-columns:minmax(0,1fr) 300px;column-gap:44px;align-items:start}
+ main.wrap.afd-2col>*{grid-column:1;min-width:0}
+ main.wrap.afd-2col>aside.afd-side{display:block;grid-column:2;grid-row:1/span 200;align-self:stretch}
+ .afd-side-in{position:sticky;top:calc(var(--navh) + 16px);padding-top:26px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - var(--navh) - 24px);overflow:auto}
+ body:has(.player) .afd-side-in{top:calc(var(--navh) + 172px);max-height:calc(100vh - var(--navh) - 184px)}
+ .player .wrap{max-width:1100px}
+ .afd-side .btn{margin:0;justify-content:center}
+ .afd-side-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:.88rem}
+ .afd-side-box h4{margin:0 0 6px;font-size:.8rem;letter-spacing:.08em;color:var(--muted)}
+ .afd-side-box ol{margin:0;padding-left:1.3em}.afd-side-box li{margin:.3em 0;line-height:1.45}.afd-side-box .sc{display:none}
+ .afd-side-box a{color:var(--fg);text-decoration:none}.afd-side-box a:hover{color:var(--accent)}
+}
+@media (max-width:760px){
+ body{padding-bottom:calc(var(--tabh) + var(--sab) + 8px)}
+ html{scroll-padding-top:12px}
+ .afd-nav{position:relative}
+ .afd-nav-in{height:46px;padding:0 14px;gap:8px}
+ .afd-links{display:none}
+ .afd-logo{font-size:.95rem;flex:1}
+ .afd-subbtn{padding:6px 12px;font-size:.82rem}
+ .afd-tabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;height:calc(var(--tabh) + var(--sab));padding-bottom:var(--sab);background:var(--card);border-top:1px solid var(--line);box-shadow:0 -2px 12px #0000000d}
+ .afd-tabs>a,.afd-tabs>button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.7rem;text-decoration:none;cursor:pointer;padding:6px 0;-webkit-tap-highlight-color:transparent}
+ .afd-tabs .i{font-size:1.25rem;line-height:1.1}
+ .afd-tabs .on{color:var(--accent);font-weight:700}
+ .afd-tabs .sub{color:var(--accent);font-weight:700}
+ .afd-tabs .sub .i{background:var(--accent);color:#fff;border-radius:999px;padding:0 10px}
+ .afd-sheet{position:fixed;left:8px;right:8px;bottom:calc(var(--tabh) + var(--sab) + 8px);z-index:45;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 40px #0003;padding:8px}
+ .afd-sheet:not([hidden]){display:block}
+ .afd-sheet a{display:flex;justify-content:space-between;padding:12px 14px;border-radius:10px;color:var(--fg);text-decoration:none;font-weight:600}
+ .afd-sheet a span{color:var(--muted);font-weight:400;font-size:.8rem}
+ .afd-sheet a:active{background:var(--chip)}
+ /* follow-along player docked above the bottom bar */
+ body:has(.player){padding-bottom:calc(var(--tabh) + var(--sab) + 150px)}
+ .player{position:fixed;top:auto;left:0;right:0;bottom:calc(var(--tabh) + var(--sab));z-index:35;border-bottom:0;border-top:1px solid var(--line);padding:6px 0 4px;box-shadow:0 -4px 16px #00000012}
+ .player .wrap{padding:0 12px}
+ .ptitle{margin-bottom:2px;font-size:.75rem}.ptitle .loop{display:none}
+ .prow{gap:6px}.pbtn{height:36px;min-width:36px;padding:0 8px;font-size:.82rem}.pbtn.play{min-width:52px}
+ select.speed{height:32px}
+ .seek{margin-top:2px;font-size:.72rem}
+ .prow2{margin-top:2px;min-height:28px}.mini{height:28px;font-size:.72rem;padding:0 8px}
+ .afd-toast{bottom:calc(var(--tabh) + var(--sab) + 12px)}
+ body:has(.player) .afd-toast{bottom:calc(var(--tabh) + var(--sab) + 160px)}
+ .afd-strip .afd-sub-ui{flex:1 1 100%}
+}
+@media print{.afd-nav,.afd-tabs,.afd-sheet,.afd-side,.afd-strip,.afd-dlg{display:none!important}}
+</style><script>(function(){var m=function(){return matchMedia('(max-width:760px)').matches};window.AFD_TOP=function(P){if(m())return 8;var n=document.querySelector('.afd-nav');return (n?n.getBoundingClientRect().height:0)+(P?P.getBoundingClientRect().height:0)};window.AFD_BOT=function(P){if(!m())return 0;var t=document.querySelector('.afd-tabs');return (t?t.getBoundingClientRect().height:0)+(P?P.getBoundingClientRect().height:0)};})();</script><!--/afd-shell:head--></head><body data-afd-item="apollo-ai-payoff-outside-tech-2026-10-24" data-afd-topics="roi,startup" data-afd-cat="industry"><!--afd-shell:nav--><nav class="afd-nav" aria-label="主選單"><div class="afd-nav-in"><a class="afd-logo" href="../../../">📡 AI 前沿<b>情報日刊</b></a><div class="afd-links"><a href="../../../daily/2026-10-25/">今日晨報</a><a href="../../../topics/social/">社群熱議</a><a href="../../../topics/industry/" class=on aria-current=page>產業動態</a><a href="../../../topics/special/">名人訪談</a><a href="../../../topics/paper/">前沿論文</a><a href="../../../archive/">往期</a></div><button class="afd-subbtn" type="button" data-afd-open-sub="nav">📬 免費訂閱</button></div></nav><!--/afd-shell:nav--><main class="wrap afd-2col"><header class="top"><div class="kicker"><a href="../../../">AI FRONTIER DAILY</a> ・ <a href="../../../topics/industry/">產業動態</a> ・ <a href="../">2026-10-25 整期</a></div>
 <h1>Apollo 首席經濟學家：科技業以外，還看不到 AI 帶來的營收與利潤改善</h1><div class="meta"><div><b>出自</b>　2026-10-25 日刊（台北時間）・08 企業 AI 商業應用與實際案例</div><div><b>原始發布</b>　2026-10-24・Apollo Global Management</div></div></header>
-<div class="subbox"><div><b>🎧 收聽這一則</b>（整期 Podcast 第 11:55 起）</div><audio controls preload="none" src="../2026-10-25-briefing-duo.mp3#t=715.4" style="width:100%;margin-top:8px"></audio><div style="margin-top:10px"><a class="btn primary" href="../#apollo-ai-payoff-outside-tech-2026-10-24">▶ 收聽今天整期（自動跟讀）</a></div></div>
-<div class="take">Mag 7 的每員工營收與利潤率上升，S&amp;P 493 則持平；主流企業開始把 token 支出視為壓縮利潤的成本，而非成長投資。</div>
+<div class="subbox"><div><b>🎧 收聽這一則</b>（整期 Podcast 第 11:55 起）</div><audio controls preload="none" src="../2026-10-25-briefing-duo.mp3#t=715.4" style="width:100%;margin-top:8px"></audio><div style="margin-top:10px"><a class="btn primary" href="../?play=apollo-ai-payoff-outside-tech-2026-10-24#apollo-ai-payoff-outside-tech-2026-10-24">▶ 從這則開始聽整期（自動跟讀）</a></div></div>
+<div class="take">Mag 7 的每員工營收與利潤率上升，S&amp;P 493 則持平；主流企業開始把 token 支出視為壓縮利潤的成本，而非成長投資。</div><!--afd-shell:strip--><section class="afd-strip" data-afd-sub data-afd-strip aria-label="訂閱晨報"><div class="afd-strip-t"><b>📬 每天 6 點把這樣的整理寄給你</b><span>免費・用 Google 帳號一鍵訂閱・隨時取消（<a href="../../../privacy/">隱私權</a>）</span></div><div class="afd-sub-ui"><button class="btn primary" type="button" data-afd-open-sub="strip">免費訂閱</button></div></section><!--/afd-shell:strip-->
 <div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>每員工營收：Mag 7 上升，S&amp;P 493 持平；利潤率同樣呈現此對比。</li><li>以舊金山聯準會的 TFP 數據看，尚未出現 AI 推升生產力的跡象。</li><li>VC 支持的公司 token 支出持續增加，但主流企業不需要最新模型、也不願付費。</li><li>作者認為只要代理式 AI 與 token 支出集中在經濟的一小部分，總體影響就有限。</li></ul></div>
 <div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul><li><span class="k">核心方法：</span>以總體與財報指標（每員工營收、利潤率、TFP、企業 AI 支出）觀察 AI 擴散。</li><li><span class="k">差異：</span>與廠商案例的「某流程快幾倍」不同，這是看整體財務結果是否改善。</li><li><span class="k">結果與限制：</span>屬觀點型短評，圖表未附完整方法；生產力效果可能有時間落差；作者立場偏審慎。</li><li><span class="k">與你的關聯：</span>對你的 AI 產品商業化：賣點要從「更聰明」轉向「可量測的營收或毛利改善」，並設計 ROI 證明機制。</li></ul></div>
 <div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>企業 AI 採購可能更偏向按成果計價與小模型，以壓低 token 成本。</li></ul></div>
@@ -82,4 +185,4 @@ header.top.seg.now,section.seg.now{background:var(--chip)}
 <div class="src"><div>Apollo The Daily Spark，2026-10-24；同日登上 Hacker News 首頁。</div><div>來源：<a href="https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector" target="_blank" rel="noopener">apollo.com</a></div></div>
 <div id="afd-end"></div><h2>同期其他則</h2><ul><li><a href="../arxiv-2610.30755-v1/">Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統</a></li><li><a href="../anthropic-formal-verification-2026-10-22/">Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明</a></li><li><a href="../block-dessa-2026-10-23/">Block 發表 Dessa：只用人類語音訓練、可本地執行的全雙工語音模型</a></li><li><a href="../claude-code-mcp-tasks-elicitations-2026-10-23/">Claude Code 支援 MCP Tasks 與 Elicitations：工具可背景長跑、也能中途問你</a></li><li><a href="../github-mcp-typescript-sdk-2.4.0/">MCP 官方 TypeScript SDK 2.4.0：加入 Skills over MCP（SEP-2640）</a></li><li><a href="../github-google-adk-python-2.13.0/">Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶</a></li></ul>
 <section class="subbox" id="subscribe" data-afd-sub><h3 style="margin:0 0 .4em">📬 免費訂閱晨報</h3><div>喜歡這則整理？每天早上 6 點（台北時間）把當期晨報寄給你。</div><div class="afd-sub-ui" style="margin-top:12px"><div class="note">訂閱功能即將開放（目前為試營運準備中）。</div></div><div class="note">使用 Google 帳號登入訂閱，即表示你同意本站的<a href="../../../privacy/">隱私權政策與訂閱同意事項</a>。每封信都有取消訂閱按鈕，不需要登入。</div></section>
-<footer class="foot"><div>時間皆為台北時間（UTC+8）・經營者：陳宜寬</div><div><a href="../../../">首頁</a><a href="../../../privacy/">隱私權政策</a><a href="../../../feedback/">建議寄給管理者</a><a href="../../../unsubscribe/">取消訂閱說明</a><a href="#" data-afd-notrack>不要追蹤</a></div><div>由 Grok Bot 自動整理產生；內容為公開來源整理，以原始來源為準。</div></footer></main><!--afd-js--><script src="../../../assets/config.js" defer></script><script src="../../../assets/afd.js" defer></script><!--/afd-js--></body></html>
+<footer class="foot"><div>時間皆為台北時間（UTC+8）・經營者：陳宜寬</div><div><a href="../../../">首頁</a><a href="../../../privacy/">隱私權政策</a><a href="../../../feedback/">建議寄給管理者</a><a href="../../../unsubscribe/">取消訂閱說明</a><a href="#" data-afd-notrack>不要追蹤</a></div><div>由 Grok Bot 自動整理產生；內容為公開來源整理，以原始來源為準。</div></footer><!--afd-shell:side--><aside class="afd-side" aria-label="本頁捷徑"><div class="afd-side-in"><a class="btn primary" href="../?play=apollo-ai-payoff-outside-tech-2026-10-24">▶ 從這則開始聽整期</a><div class="afd-side-box" data-afd-toc hidden><h4>本期目錄</h4></div><div class="afd-side-box"><h4>📬 免費訂閱</h4><div style="margin-bottom:8px">每天 6:00（台北時間）寄到信箱，用 Google 帳號一鍵訂閱。</div><button class="btn primary" type="button" data-afd-open-sub="side" style="width:100%">免費訂閱</button></div></div></aside><!--/afd-shell:side--></main><!--afd-js--><script src="../../../assets/config.js" defer></script><script src="../../../assets/afd.js" defer></script><!--/afd-js--><!--afd-shell:tabs--><nav class="afd-tabs" aria-label="快速功能列"><a href="../../../"><span class="i">🏠</span>首頁</a><a href="../../../daily/2026-10-25/"><span class="i">📰</span>今日</a><button type="button" data-afd-cats aria-expanded="false" aria-controls="afd-cats"><span class="i">🗂</span>分類</button><button type="button" data-afd-listen data-href="../../../daily/2026-10-25/?play=1"><span class="i">🎧</span><span class="t">收聽</span></button><button type="button" class="sub" data-afd-open-sub="tab"><span class="i">📬</span>訂閱</button></nav><div class="afd-sheet" id="afd-cats" hidden role="menu"><a href="../../../topics/social/">社群熱議<span>→</span></a><a href="../../../topics/industry/">產業動態<span>→</span></a><a href="../../../topics/special/">名人訪談<span>→</span></a><a href="../../../topics/paper/">前沿論文<span>→</span></a><a href="../../../archive/">往期<span>所有日刊與特別版 →</span></a></div><!--/afd-shell:tabs--><!--afd-shell:dlg--><dialog class="afd-dlg" id="afd-subdlg" aria-label="免費訂閱晨報"><button class="x" type="button" data-afd-close aria-label="關閉">✕</button><section class="subbox" data-afd-sub data-afd-lazy><h3 style="margin:0 0 .4em">📬 免費訂閱 AI 前沿晨報</h3><ul><li>每天早上 6 點（台北時間）寄到你的信箱</li><li>重點摘要＋雙主持 Podcast，通勤開車也能聽</li><li>用 Google 帳號一鍵訂閱；每封信都能一鍵取消</li></ul><div class="afd-sub-ui" style="margin-top:12px"><div class="note">載入中…</div></div><div class="note">按下 Google 按鈕訂閱，即表示你同意本站的<a href="../../../privacy/">隱私權政策與訂閱同意事項</a>。</div></section></dialog><!--/afd-shell:dlg--></body></html>
