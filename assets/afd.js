@@ -210,6 +210,7 @@
       ev('listen_tap', PAGE);
       if (PP && AUD) { PP.click(); return; }
       var clip = $('main audio'); if (clip) { clip.paused ? clip.play() : clip.pause(); clip.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      var ip = $('[data-afd-play][data-src]'); if (ip) { ip.click(); return; }
       var h = b.getAttribute('data-href'); if (h) location.href = h;
     });
   });
@@ -226,21 +227,124 @@
     $('.x', d).onclick = function () { d.remove(); }; if (key) try { sessionStorage.setItem(key, '1'); } catch (e) {}
     return d;
   }
-  // ?play=1 or ?play=<segment id>: one tap from anywhere to start listening at the right spot
-  var PLAY = qs.get('play');
+  // ---------- listening: progress (resume), play-intent in place, ?play= with one-tap fallback ----------
+  // Rule: a PLAY-intent click must start audio with no extra tap; READ links never autoplay.
+  // Progress lives in localStorage 'afd-prog-v1' {v:1, issues:{'d:YYYY-MM-DD'|'s:YYYY-MM-DD':{pos,dur,upd,iv:[[s,e]]}}}
+  // (same model as the batch-1 preview; ready for later sync). Resume = saved position − 15 s.
+  var PK = 'afd-prog-v1';
+  function prog() { try { var o = JSON.parse(g(PK) || 'null'); if (o && o.issues) return o; } catch (e) {} return { v: 1, issues: {} }; }
+  function progRec(k) { return prog().issues[k] || null; }
+  function progSave(k, a) {
+    if (!LS || !k || !a._afdPlayed || !a.duration || !isFinite(a.duration)) return; // never overwrite progress for audio that was not played
+    var o = prog(), r = o.issues[k] || (o.issues[k] = { pos: 0, dur: 0, upd: '', iv: [] });
+    r.pos = Math.round(a.currentTime * 10) / 10; r.dur = Math.round(a.duration * 10) / 10; r.upd = ts8(); r.iv = r.iv || [];
+    if (a._ivS != null && a.currentTime > a._ivS) {
+      var iv = r.iv.concat([[Math.round(a._ivS * 10) / 10, r.pos]]).sort(function (x, y) { return x[0] - y[0]; }), m = [];
+      iv.forEach(function (x) { var l = m[m.length - 1]; if (l && x[0] <= l[1] + 1) l[1] = Math.max(l[1], x[1]); else m.push([x[0], x[1]]); });
+      r.iv = m; a._ivS = a.currentTime;
+    }
+    try { s(PK, JSON.stringify(o)); } catch (e) {}
+  }
+  function resumeAt(k) { var r = progRec(k); if (!r || !r.pos || !r.dur || r.pos < 20 || r.pos > r.dur - 20) return null; return Math.max(0, r.pos - 15); }
+  function mmss(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+  function track(a, k) {
+    if (a._afdTrack) return; a._afdTrack = 1; var last = 0, K = typeof k === 'function' ? k : function () { return k; };
+    a.addEventListener('playing', function () { a._afdPlayed = true; a._ivS = a.currentTime; });
+    a.addEventListener('seeking', function () { progSave(K(), a); a._ivS = null; });
+    a.addEventListener('seeked', function () { if (!a.paused) a._ivS = a.currentTime; });
+    a.addEventListener('timeupdate', function () { var n = Date.now(); if (n - last > 5000) { last = n; progSave(K(), a); } });
+    a.addEventListener('pause', function () { progSave(K(), a); a._ivS = null; });
+    window.addEventListener('pagehide', function () { progSave(K(), a); });
+  }
+  (function css() {
+    var st = document.createElement('style');
+    st.textContent = '.afd-mini{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:55;width:min(720px,calc(100vw - 20px));box-sizing:border-box;background:var(--card,#fff);color:var(--fg,#222);border:1px solid var(--line,#ddd);border-radius:16px;box-shadow:0 10px 30px #0003;padding:10px 12px;display:flex;align-items:center;gap:10px}'
+      + '.afd-mini[hidden]{display:none}.afd-mini .pp{flex:none;width:44px;height:44px;border-radius:999px;border:0;background:var(--accent,#b5532a);color:#fff;font-size:1.05rem;cursor:pointer}'
+      + '.afd-mini .m{flex:1;min-width:0}.afd-mini .t{font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
+      + '.afd-mini .r{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--muted,#777)}.afd-mini input{flex:1;min-width:0;accent-color:var(--accent,#b5532a);margin:0}'
+      + '.afd-mini a{flex:none;font-size:.8rem;font-weight:700;color:var(--accent,#b5532a);white-space:nowrap}.afd-mini .x{flex:none;border:0;background:transparent;color:inherit;font-size:1rem;padding:4px 6px;cursor:pointer}'
+      + '.afd-tap{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;justify-content:center;padding:12px;background:#000a}.afd-tap button{font:inherit;font-size:1.15rem;font-weight:800;border:0;border-radius:999px;padding:16px 28px;background:var(--accent,#b5532a);color:#fff;box-shadow:0 8px 24px #0005;cursor:pointer;max-width:100%}'
+      + '.afd-tap small{display:block;font-size:.78rem;font-weight:400;opacity:.9;margin-top:2px}'
+      + 'body.afd-has-mini{padding-bottom:96px}'
+      + '@media (max-width:760px){.afd-mini{bottom:calc(var(--tabh,58px) + var(--sab,0px) + 8px)}.afd-mini a{display:none}body.afd-has-mini{padding-bottom:calc(var(--tabh,58px) + var(--sab,0px) + 96px)}}';
+    document.head.appendChild(st);
+  })();
+  // big one-tap fallback when the browser blocks autoplay after navigation
+  function tapToPlay(a, sub) {
+    var o = document.createElement('div'); o.className = 'afd-tap'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', '開始播放');
+    o.innerHTML = '<button type="button">▶ 點一下開始播放<small></small></button>'; $('small', o).textContent = sub || '瀏覽器需要你點一下才能播放聲音';
+    document.body.appendChild(o);
+    $('button', o).onclick = function () { a.play(); o.remove(); };
+    o.addEventListener('click', function (e) { if (e.target === o) o.remove(); });
+    a.addEventListener('play', function () { o.remove(); }, { once: true });
+    ev('autoplay_blocked', PAGE);
+  }
+  function tryPlay(a, sub) { var p = a.play(); if (p && p.catch) p.catch(function () { tapToPlay(a, sub); }); }
+  // issue / special page: key from the URL, track progress on the main player
+  var PKEY = (function () { var m = /\/(daily|special)\/(\d{4}-\d{2}-\d{2})\/?$/.exec(location.pathname); return m ? (m[1] === 'daily' ? 'd:' : 's:') + m[2] : ''; })();
+  if (AUD && PKEY) track(AUD, PKEY);
+  // ?play=1 (resume or start) / ?play=<segment id> (start at that segment) / &t=<sec> (continue from the homepage mini player)
+  var PLAY = qs.get('play'), T0 = parseFloat(qs.get('t'));
   if (PLAY && AUD) {
     var TLx = []; try { TLx = JSON.parse(($('#timeline') || {}).textContent || '[]'); } catch (e) {}
     var seg = TLx.filter(function (x) { return x.id === PLAY; })[0];
-    try { qs.delete('play'); history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {}
+    qs.delete('play'); qs.delete('t');
+    try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {}
+    var at = seg ? seg.start + 0.01 : (isFinite(T0) && T0 > 0 ? T0 : (PKEY ? resumeAt(PKEY) : null));
     var go = function () {
-      if (seg) AUD.currentTime = seg.start + 0.01;
-      var p = AUD.play(); if (p && p.catch) p.catch(function () {
-        var t = toast('<span>' + (seg ? '從「' + seg.label.replace(/^第\d+則｜/, '').slice(0, 18) + '」' : '從頭') + '開始聽？</span><button type="button" data-go>▶ 播放</button>');
-        if (t) $('[data-go]', t).onclick = function () { if (seg) AUD.currentTime = seg.start + 0.01; AUD.play(); t.remove(); };
-      });
+      if (at != null) AUD.currentTime = at;
+      tryPlay(AUD, seg ? '從「' + seg.label.replace(/^第\d+則｜/, '').slice(0, 18) + '」開始' : (at ? '從 ' + mmss(at) + ' 繼續聽' : '從頭開始聽整期'));
     };
     if (AUD.readyState >= 1) go(); else AUD.addEventListener('loadedmetadata', go, { once: true });
+    ev('play_intent_nav', PLAY);
+  } else if (AUD && PKEY) {
+    // read-intent visit: never autoplay; the first ▶ press resumes at saved−15 s
+    var r0 = resumeAt(PKEY);
+    if (r0 != null) AUD.addEventListener('play', function f() {
+      AUD.removeEventListener('play', f); if (AUD.currentTime < 1) { AUD.currentTime = r0; var t = toast('<span>從 ' + mmss(r0) + ' 繼續聽</span><button type="button" data-z>從頭聽</button>'); if (t) { $('[data-z]', t).onclick = function () { AUD.currentTime = 0; t.remove(); }; setTimeout(function () { t.remove(); }, 8000); } }
+    });
   }
+  // play in place: [data-afd-play=key][data-src][data-page][data-label] → sticky mini player on this page
+  var MINI = null, MA = null, MK = '';
+  function mini() {
+    if (MINI) return MINI;
+    MINI = document.createElement('div'); MINI.className = 'afd-mini'; MINI.hidden = true; MINI.setAttribute('role', 'region'); MINI.setAttribute('aria-label', '播放器');
+    MINI.innerHTML = '<button class="pp" type="button" aria-label="暫停">❚❚</button><div class="m"><div class="t"></div><div class="r"><span class="c">0:00</span><input type="range" min="0" max="100" step="0.1" value="0" aria-label="播放進度"><span class="d"></span></div></div><a href="#">邊聽邊看 →</a><button class="x" type="button" aria-label="關閉播放器">✕</button>';
+    MA = document.createElement('audio'); MA.preload = 'metadata'; MINI.appendChild(MA); document.body.appendChild(MINI);
+    var pp = $('.pp', MINI), rg = $('input', MINI), lk = $('a', MINI);
+    function ui() {
+      var p = MA.paused; pp.textContent = p ? '▶' : '❚❚'; pp.setAttribute('aria-label', p ? '播放' : '暫停');
+      $$('[data-afd-play="' + MK + '"]').forEach(function (b) { b.setAttribute('aria-pressed', String(!p)); if (!b._lab) b._lab = b.textContent; b.textContent = p ? (MA.currentTime > 1 ? '▶ 繼續播放（' + mmss(MA.currentTime) + '）' : b._lab) : '❚❚ 暫停播放'; });
+    }
+    MA.addEventListener('play', ui); MA.addEventListener('pause', ui);
+    MA.addEventListener('timeupdate', function () { if (MA.duration) { rg.value = MA.currentTime / MA.duration * 100; $('.c', MINI).textContent = mmss(MA.currentTime); $('.d', MINI).textContent = mmss(MA.duration); } });
+    rg.addEventListener('input', function () { if (MA.duration) MA.currentTime = rg.value / 100 * MA.duration; });
+    pp.onclick = function () { MA.paused ? MA.play() : MA.pause(); };
+    $('.x', MINI).onclick = function () { MA.pause(); MINI.hidden = true; document.body.classList.remove('afd-has-mini'); };
+    lk.addEventListener('click', function () { progSave(MK, MA); lk.href = MINI._page + '?play=1&t=' + Math.floor(MA.currentTime); ev('mini_to_page', MK); });
+    return MINI;
+  }
+  function playInPlace(b) {
+    var k = b.getAttribute('data-afd-play'), src = b.getAttribute('data-src'); if (!k || !src) return false;
+    mini();
+    if (MK === k) { MA.paused ? MA.play() : MA.pause(); return true; }
+    if (MK) progSave(MK, MA);
+    MK = k; MA._afdPlayed = false; MA.src = src; MINI._page = b.getAttribute('data-page') || ''; $('.t', MINI).textContent = '正在播放：' + (b.getAttribute('data-label') || '');
+    track(MA, function () { return MK; }); MINI.hidden = false; document.body.classList.add('afd-has-mini');
+    var r = resumeAt(k);
+    if (r != null) { var seek = function () { MA.currentTime = r; }; if (MA.readyState >= 1) seek(); else MA.addEventListener('loadedmetadata', seek, { once: true }); }
+    var p = MA.play(); // inside the click gesture → allowed
+    if (p && p.catch) p.catch(function () { location.href = b.href; }); // last resort: issue page handles ?play=1
+    if (r != null) toast('<span>從 ' + mmss(r) + ' 繼續聽</span>');
+    ev('play_in_place', k); return true;
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('a[data-afd-play],button[data-afd-play]');
+    if (!b || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;
+    if (playInPlace(b)) e.preventDefault();
+  });
+  // restore the play label with the resume time
+  $$('[data-afd-play]').forEach(function (b) { var r = resumeAt(b.getAttribute('data-afd-play')); if (r != null) { b._lab = b.textContent; b.textContent = '▶ 從 ' + mmss(r) + ' 繼續聽'; } });
   // after most of the episode: gentle subscribe nudge (once per session, never for subscribers)
   if (AUD && API) AUD.addEventListener('timeupdate', function () {
     if (AUD._nudged || !AUD.duration || g('afd-subscribed') === '1' || AUD.currentTime / AUD.duration < 0.9) return; AUD._nudged = true;
