@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM｜AI 前沿情報日刊 2026-10-24</title><meta name="color-scheme" content="light dark"><!--afd-seo--><meta name="description" content="以 Gemma 4 E4B 為基座做 Nemotron 後訓練，8B 參數（4B 有效）、64K context，Q4_K_M 版本鎖定約 4GB，主打多輪工具呼叫與語音對話。"><link rel="canonical" href="https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23/"><meta property="og:site_name" content="AI 前沿情報日刊"><meta property="og:type" content="article"><meta property="og:title" content="NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM｜AI 前沿情報日刊"><meta property="og:description" content="以 Gemma 4 E4B 為基座做 Nemotron 後訓練，8B 參數（4B 有效）、64K context，Q4_K_M 版本鎖定約 4GB，主打多輪工具呼叫與語音對話。"><meta property="og:url" content="https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23/"><meta property="og:locale" content="zh_TW"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM｜AI 前沿情報日刊"><meta name="twitter:description" content="以 Gemma 4 E4B 為基座做 Nemotron 後訓練，8B 參數（4B 有效）、64K context，Q4_K_M 版本鎖定約 4GB，主打多輪工具呼叫與語音對話。"><link rel="alternate" type="application/rss+xml" title="AI 前沿情報日刊" href="https://iven00.github.io/ai-frontier-daily/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM","description":"以 Gemma 4 E4B 為基座做 Nemotron 後訓練，8B 參數（4B 有效）、64K context，Q4_K_M 版本鎖定約 4GB，主打多輪工具呼叫與語音對話。","inLanguage":"zh-Hant-TW","datePublished":"2026-10-24T22:51:00+08:00","author":{"@type":"Person","name":"陳宜寬"},"publisher":{"@type":"Organization","name":"AI 前沿情報日刊","url":"https://iven00.github.io/ai-frontier-daily/"},"mainEntityOfPage":"https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23/","isBasedOn":["https://research.nvidia.com/labs/nemotron/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/","https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB","https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-BF16"],"articleSection":"產業動態","keywords":"SLM, On-device, Tool Use, Voice Agent","audio":{"@type":"AudioObject","contentUrl":"https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/2026-10-24-briefing-duo.mp3","encodingFormat":"audio/mpeg"}}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首頁","item":"https://iven00.github.io/ai-frontier-daily/"},{"@type":"ListItem","position":2,"name":"產業動態","item":"https://iven00.github.io/ai-frontier-daily/topics/industry/"},{"@type":"ListItem","position":3,"name":"NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM","item":"https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23/"}]}</script><!--/afd-seo-->
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--muted:#5b636e;--card:#ffffff;--line:#e6e2d9;--accent:#b4531f;--fact:#1f7a4d;--ana:#2457a6;--hyp:#a1650a;--chip:#f2eee6;--player:#fffdf8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--fact:#4cc38a;--ana:#7aa7ff;--hyp:#f0b44c;--chip:#262a31;--player:#1c1f24ee}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:740px;margin:0 auto;padding:0 18px 80px}
+header.top{padding:26px 0 8px}.kicker{font-size:.8rem;color:var(--muted);letter-spacing:.12em}
+h1{font-size:1.7rem;line-height:1.35;margin:.2em 0 .3em}h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.12rem;line-height:1.5;margin:0 0 .4em}
+.meta{color:var(--muted);font-size:.92rem;line-height:1.7}.meta b{color:var(--fg);font-weight:600}
+.player{position:sticky;top:0;z-index:10;background:var(--player);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+.player .wrap{padding-bottom:0}.prow{display:flex;align-items:center;gap:8px}
+.pbtn{flex:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:42px;min-width:42px;padding:0 10px;font-size:.9rem;cursor:pointer}
+.pbtn.play{background:var(--accent);color:#fff;border-color:var(--accent);min-width:54px;font-size:1.1rem}
+.seek{flex:1;display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:6px}
+.seek input{flex:1;accent-color:var(--accent)}
+select.speed{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;height:34px;font-size:.85rem}
+.ptitle{font-size:.82rem;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.loop{font-size:.75rem;color:var(--muted)}
+.trend{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+.trend p{margin:.3em 0 0}
+ol.toc{padding-left:1.4em}ol.toc li{margin:.35em 0}ol.toc .sc{color:var(--muted);font-size:.85rem;margin-left:.3em}
+article.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin:22px 0;box-shadow:0 1px 2px #0000000a}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chip{background:var(--chip);border-radius:999px;padding:1px 10px;font-size:.78rem;color:var(--muted)}
+.chip.score{background:var(--accent);color:#fff;font-weight:700}
+.take{font-size:1.02rem;font-weight:500;border-left:4px solid var(--accent);padding:2px 0 2px 12px;margin:10px 0 14px}
+.sec{margin:14px 0}.lbl{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#fff;border-radius:6px;padding:1px 8px;margin-bottom:4px}
+.sec.fact .lbl{background:var(--fact)}.sec.ana .lbl{background:var(--ana)}.sec.hyp .lbl{background:var(--hyp)}.sec.next .lbl{background:var(--accent)}
+.sec ul{margin:.2em 0;padding-left:1.2em}.sec li{margin:.3em 0}
+.sec.fact{border-left:3px solid var(--fact);padding-left:12px}.sec.ana{border-left:3px solid var(--ana);padding-left:12px}.sec.hyp{border-left:3px solid var(--hyp);padding-left:12px}
+.k{color:var(--muted);font-weight:600}
+.src{font-size:.88rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px;word-break:break-word}
+.src a{margin-right:10px}
+.quote{font-size:.88rem;color:var(--muted);font-style:italic}
+.issues a{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0;text-decoration:none;color:var(--fg)}
+.issues .d{font-weight:700;font-size:1.1rem}.issues .s{color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.82rem;margin-top:40px}
+.totop{display:inline-block;font-size:.82rem;margin-top:4px}
+.seg{transition:box-shadow .35s ease,background-color .35s ease;border-radius:16px}
+.seg.now{box-shadow:0 0 0 3px var(--accent),0 6px 18px #0000001a}
+header.top.seg,section.seg{padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+header.top.seg.now,section.seg.now{background:var(--chip)}
+.prow2{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:30px}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:30px;padding:0 10px;font-size:.78rem;cursor:pointer;flex:none}
+.mini[aria-pressed="false"]{color:var(--muted)}
+.mini.back{background:var(--accent);color:#fff;border-color:var(--accent)}
+.segname{flex:1;min-width:0;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segplay{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;font-size:.75rem;padding:0 9px;height:24px;cursor:pointer;line-height:22px}
+.trend h3{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.seg{transition:none}}
+
+.hub-hero{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:16px 0;box-shadow:0 1px 2px #0000000a}
+.hub-hero h2{border:0;margin:.2em 0 .4em;padding:0;font-size:1.35rem;line-height:1.45}
+.hub-hero ul{margin:.4em 0 .8em;padding-left:1.2em}.hub-hero li{margin:.35em 0}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:10px 18px;font-weight:700;text-decoration:none;border:1px solid var(--accent);font-size:1rem;cursor:pointer;background:transparent;color:var(--accent);font-family:inherit}
+.btn.primary{background:var(--accent);color:#fff}.btn{margin:4px 8px 4px 0}
+.cats{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:640px){.cats{grid-template-columns:1fr 1fr}}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.cat h3{margin:0 0 .3em}.cat p{margin:0 0 .4em;color:var(--muted);font-size:.85rem}.cat ul{margin:0;padding-left:1.1em;font-size:.95rem}.cat li{margin:.3em 0}
+.cat .more{font-size:.85rem}
+.subbox{background:var(--chip);border-radius:14px;padding:16px;margin:16px 0}
+.subbox .note{font-size:.8rem;color:var(--muted);margin-top:8px}
+.subbox .msg{margin-top:8px;font-weight:600}
+.tx{font-size:.95rem}.tx p{margin:.35em 0}.tx b{color:var(--accent)}
+.crumb{font-size:.8rem;color:var(--muted)}
+.foot a{margin-right:12px}
+.form label{display:block;font-weight:600;margin:12px 0 4px}
+.form select,.form textarea,.form input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg)}
+.form textarea{min-height:160px}.hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
+</style></head><body data-afd-item="hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23" data-afd-topics="agents" data-afd-cat="industry"><main class="wrap"><header class="top"><div class="kicker"><a href="../../../">AI FRONTIER DAILY</a> ・ <a href="../../../topics/industry/">產業動態</a> ・ <a href="../">2026-10-24 整期</a></div>
+<h1>NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM</h1><div class="meta"><div><b>出自</b>　2026-10-24 日刊（台北時間）・07 推理效能、模型部署、硬體與成本</div><div><b>原始發布</b>　2026-10-23・NVIDIA Research / Hugging Face</div></div></header>
+<div class="subbox"><div><b>🎧 收聽這一則</b>（整期 Podcast 第 9:41 起）</div><audio controls preload="none" src="../2026-10-24-briefing-duo.mp3#t=581.2" style="width:100%;margin-top:8px"></audio><div style="margin-top:10px"><a class="btn primary" href="../#hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23">▶ 收聽今天整期（自動跟讀）</a></div></div>
+<div class="take">以 Gemma 4 E4B 為基座做 Nemotron 後訓練，8B 參數（4B 有效）、64K context，Q4_K_M 版本鎖定約 4GB，主打多輪工具呼叫與語音對話。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>模型卡：總參數 8B（4B 有效）、架構 Gemma-4-E4B、輸入／輸出各最多 64K tokens、授權 OpenMDW-1.1。</li><li>支援多輪工具呼叫、可切換的推理模式與思考預算、「對話模式」產生適合語音的簡短回覆。</li><li>官方稱在其對話代理基準上比前代 Nano 4B 平均高約 40%，推理開啟時輸出 tokens 最多少約 80%。</li><li>官方表格：RTX 5070（12GB）於 Q4_K_M、llama.cpp、短提示下 TTFT 548 ms、133.4 tokens/s、VRAM 3.5GB。</li><li>提供 BF16 全精度版本供後訓練，以及搭配的 DFlash drafter 做推測解碼。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul><li><span class="k">核心方法：</span>在小型基座上做針對對話代理的後訓練，並以推理開關與思考預算控制延遲。</li><li><span class="k">差異：</span>定位明確為「語音／裝置助理」：短回覆、低 TTFT、為同管線其他模型（ASR、TTS）保留顯存。</li><li><span class="k">結果與限制：</span>基準為 NVIDIA 自選的對話代理測試；模型卡標示主要語言為英文與程式語言，繁體中文能力未知，需自測。llama.cpp 部署 recipe 標示「pending」。</li><li><span class="k">與你的關聯：</span>非常適合你做本地 ASR→SLM→TTS 管線或 Open WebUI／Ollama 實驗的「工具呼叫小腦」。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>4GB 級 SLM 搭配 2B 級 ASR，可能讓完全本地的會議助理在一般筆電 GPU 上可行。</li><li>繁體中文工具呼叫品質可能明顯落後英文，需要少量微調。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步</span><ul><li>用 llama.cpp 或 Ollama 載入 GGUF，以 10 個繁中工具呼叫範例測試正確率與延遲。</li></ul></div>
+<h2 id="transcript">Podcast 逐字稿（這一則）</h2><div class="tx"><p><b>曉晨：</b>第六則，七十四分，這個我喜歡：可以在自己電腦上跑的 NVIDIA Nemotron 3.5 Bolt E4B！</p><p><b>雲哲：</b>根據模型卡，總參數八 B、有效參數四 B，架構是 Gemma-4-E4B，輸入輸出各最多六萬四千個 tokens，授權是 OpenMDW。</p><p><b>雲哲：</b>它支援多輪工具呼叫、可以切換推理模式跟思考預算，還有一個「對話模式」，會產生適合語音的簡短回覆。</p><p><b>曉晨：</b>跑起來多快？</p><p><b>雲哲：</b>官方表格是，RTX 5070 十二 GB 顯卡，用 llama.cpp 跑 Q4 量化，短提示首字延遲五百四十八毫秒，每秒一百三十三個 tokens，顯存只用三點五 GB。</p><p><b>曉晨：</b>三點五 GB？那一般筆電都能跑了吧！</p><p><b>雲哲：</b>先別太興奮。基準是 NVIDIA 自選的對話代理測試，模型卡說主要語言是英文跟程式語言，繁體中文能力不知道，llama.cpp 的部署方式也還標示待定。</p><p><b>曉晨：</b>所以要自己測。</p><p><b>雲哲：</b>對，它很適合當你本地語音辨識、小模型、語音合成管線裡的「工具呼叫小腦」。下一步就是用 Ollama 載入，拿十個繁中工具呼叫的例子，測正確率跟延遲。</p></div>
+<div class="src"><div>NVIDIA 研究頁與 Hugging Face 模型卡皆標示 2026-10-23 發布。</div><div>來源：<a href="https://research.nvidia.com/labs/nemotron/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB/" target="_blank" rel="noopener">research.nvidia.com</a><a href="https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB" target="_blank" rel="noopener">huggingface.co</a><a href="https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-BF16" target="_blank" rel="noopener">huggingface.co</a></div></div>
+<div id="afd-end"></div><h2>同期其他則</h2><ul><li><a href="../openai-blog-securing-frontier-training-2026-10-23/">OpenAI 公開前沿模型訓練環境的圍堵架構：離線世界、microVM 與高算力紅隊</a></li><li><a href="../gcp-agent-compute-engine-2026-10-22/">Google Cloud 發表 Agent Compute Engine：每個代理一台硬體隔離 microVM</a></li><li><a href="../openai-decisions-api-ga-2026-10-22/">OpenAI Decisions API 正式上線：把分類與路由從大模型生成中拆出</a></li><li><a href="../arxiv-2610.29995-v1/">MHG-Mem：保留溯源的多模態超圖記憶，追蹤實體狀態隨時間演化</a></li><li><a href="../kimi-k3.1-pro-2026-10-23/">Moonshot 推出 Kimi K3.1 Pro：3T 級開放權重模型，權重 11/4 前釋出</a></li><li><a href="../hf-ibm-granite-speech-5.0-2b-2026-10-21/">IBM Granite Speech 5.0：2B 多語 ASR／翻譯，支援 2,000 詞關鍵字偏置，Apache 2.0</a></li></ul>
+<section class="subbox" id="subscribe" data-afd-sub><h3 style="margin:0 0 .4em">📬 免費訂閱晨報</h3><div>喜歡這則整理？每天早上 6 點（台北時間）把當期晨報寄給你。</div><div class="afd-sub-ui" style="margin-top:12px"><div class="note">訂閱功能即將開放（目前為試營運準備中）。</div></div><div class="note">使用 Google 帳號登入訂閱，即表示你同意本站的<a href="../../../privacy/">隱私權政策與訂閱同意事項</a>。每封信都有取消訂閱按鈕，不需要登入。</div></section>
+<footer class="foot"><div>時間皆為台北時間（UTC+8）・經營者：陳宜寬</div><div><a href="../../../">首頁</a><a href="../../../privacy/">隱私權政策</a><a href="../../../feedback/">建議寄給管理者</a><a href="../../../unsubscribe/">取消訂閱說明</a><a href="#" data-afd-notrack>不要追蹤</a></div><div>由 Grok Bot 自動整理產生；內容為公開來源整理，以原始來源為準。</div></footer></main><!--afd-js--><script src="../../../assets/config.js" defer></script><script src="../../../assets/afd.js" defer></script><!--/afd-js--></body></html>

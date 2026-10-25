@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶｜AI 前沿情報日刊 2026-10-25</title><meta name="color-scheme" content="light dark"><!--afd-seo--><meta name="description" content="12 個實驗功能轉穩定，新增 ClassifierNode 路由、Live 語音插話、MongoDB 對話與長期記憶；遙測預設改為 OpenTelemetry GenAI v2（破壞性）。"><link rel="canonical" href="https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-google-adk-python-2.13.0/"><meta property="og:site_name" content="AI 前沿情報日刊"><meta property="og:type" content="article"><meta property="og:title" content="Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶｜AI 前沿情報日刊"><meta property="og:description" content="12 個實驗功能轉穩定，新增 ClassifierNode 路由、Live 語音插話、MongoDB 對話與長期記憶；遙測預設改為 OpenTelemetry GenAI v2（破壞性）。"><meta property="og:url" content="https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-google-adk-python-2.13.0/"><meta property="og:locale" content="zh_TW"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶｜AI 前沿情報日刊"><meta name="twitter:description" content="12 個實驗功能轉穩定，新增 ClassifierNode 路由、Live 語音插話、MongoDB 對話與長期記憶；遙測預設改為 OpenTelemetry GenAI v2（破壞性）。"><link rel="alternate" type="application/rss+xml" title="AI 前沿情報日刊" href="https://iven00.github.io/ai-frontier-daily/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶","description":"12 個實驗功能轉穩定，新增 ClassifierNode 路由、Live 語音插話、MongoDB 對話與長期記憶；遙測預設改為 OpenTelemetry GenAI v2（破壞性）。","inLanguage":"zh-Hant-TW","datePublished":"2026-10-25T06:17:49+08:00","author":{"@type":"Person","name":"陳宜寬"},"publisher":{"@type":"Organization","name":"AI 前沿情報日刊","url":"https://iven00.github.io/ai-frontier-daily/"},"mainEntityOfPage":"https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-google-adk-python-2.13.0/","isBasedOn":["https://github.com/google/adk-python/releases/tag/v2.13.0"],"articleSection":"產業動態","keywords":"Agent Framework, Open Source, Memory, Voice Agent, Routing","audio":{"@type":"AudioObject","contentUrl":"https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/2026-10-25-briefing-duo.mp3","encodingFormat":"audio/mpeg"}}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首頁","item":"https://iven00.github.io/ai-frontier-daily/"},{"@type":"ListItem","position":2,"name":"產業動態","item":"https://iven00.github.io/ai-frontier-daily/topics/industry/"},{"@type":"ListItem","position":3,"name":"Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶","item":"https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-google-adk-python-2.13.0/"}]}</script><!--/afd-seo-->
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--muted:#5b636e;--card:#ffffff;--line:#e6e2d9;--accent:#b4531f;--fact:#1f7a4d;--ana:#2457a6;--hyp:#a1650a;--chip:#f2eee6;--player:#fffdf8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--fact:#4cc38a;--ana:#7aa7ff;--hyp:#f0b44c;--chip:#262a31;--player:#1c1f24ee}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:740px;margin:0 auto;padding:0 18px 80px}
+header.top{padding:26px 0 8px}.kicker{font-size:.8rem;color:var(--muted);letter-spacing:.12em}
+h1{font-size:1.7rem;line-height:1.35;margin:.2em 0 .3em}h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.12rem;line-height:1.5;margin:0 0 .4em}
+.meta{color:var(--muted);font-size:.92rem;line-height:1.7}.meta b{color:var(--fg);font-weight:600}
+.player{position:sticky;top:0;z-index:10;background:var(--player);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+.player .wrap{padding-bottom:0}.prow{display:flex;align-items:center;gap:8px}
+.pbtn{flex:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:42px;min-width:42px;padding:0 10px;font-size:.9rem;cursor:pointer}
+.pbtn.play{background:var(--accent);color:#fff;border-color:var(--accent);min-width:54px;font-size:1.1rem}
+.seek{flex:1;display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:6px}
+.seek input{flex:1;accent-color:var(--accent)}
+select.speed{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;height:34px;font-size:.85rem}
+.ptitle{font-size:.82rem;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.loop{font-size:.75rem;color:var(--muted)}
+.trend{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+.trend p{margin:.3em 0 0}
+ol.toc{padding-left:1.4em}ol.toc li{margin:.35em 0}ol.toc .sc{color:var(--muted);font-size:.85rem;margin-left:.3em}
+article.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin:22px 0;box-shadow:0 1px 2px #0000000a}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chip{background:var(--chip);border-radius:999px;padding:1px 10px;font-size:.78rem;color:var(--muted)}
+.chip.score{background:var(--accent);color:#fff;font-weight:700}
+.take{font-size:1.02rem;font-weight:500;border-left:4px solid var(--accent);padding:2px 0 2px 12px;margin:10px 0 14px}
+.sec{margin:14px 0}.lbl{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#fff;border-radius:6px;padding:1px 8px;margin-bottom:4px}
+.sec.fact .lbl{background:var(--fact)}.sec.ana .lbl{background:var(--ana)}.sec.hyp .lbl{background:var(--hyp)}.sec.next .lbl{background:var(--accent)}
+.sec ul{margin:.2em 0;padding-left:1.2em}.sec li{margin:.3em 0}
+.sec.fact{border-left:3px solid var(--fact);padding-left:12px}.sec.ana{border-left:3px solid var(--ana);padding-left:12px}.sec.hyp{border-left:3px solid var(--hyp);padding-left:12px}
+.k{color:var(--muted);font-weight:600}
+.src{font-size:.88rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px;word-break:break-word}
+.src a{margin-right:10px}
+.quote{font-size:.88rem;color:var(--muted);font-style:italic}
+.issues a{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0;text-decoration:none;color:var(--fg)}
+.issues .d{font-weight:700;font-size:1.1rem}.issues .s{color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.82rem;margin-top:40px}
+.totop{display:inline-block;font-size:.82rem;margin-top:4px}
+.seg{transition:box-shadow .35s ease,background-color .35s ease;border-radius:16px}
+.seg.now{box-shadow:0 0 0 3px var(--accent),0 6px 18px #0000001a}
+header.top.seg,section.seg{padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+header.top.seg.now,section.seg.now{background:var(--chip)}
+.prow2{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:30px}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:30px;padding:0 10px;font-size:.78rem;cursor:pointer;flex:none}
+.mini[aria-pressed="false"]{color:var(--muted)}
+.mini.back{background:var(--accent);color:#fff;border-color:var(--accent)}
+.segname{flex:1;min-width:0;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segplay{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;font-size:.75rem;padding:0 9px;height:24px;cursor:pointer;line-height:22px}
+.trend h3{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.seg{transition:none}}
+
+.hub-hero{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:16px 0;box-shadow:0 1px 2px #0000000a}
+.hub-hero h2{border:0;margin:.2em 0 .4em;padding:0;font-size:1.35rem;line-height:1.45}
+.hub-hero ul{margin:.4em 0 .8em;padding-left:1.2em}.hub-hero li{margin:.35em 0}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:10px 18px;font-weight:700;text-decoration:none;border:1px solid var(--accent);font-size:1rem;cursor:pointer;background:transparent;color:var(--accent);font-family:inherit}
+.btn.primary{background:var(--accent);color:#fff}.btn{margin:4px 8px 4px 0}
+.cats{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:640px){.cats{grid-template-columns:1fr 1fr}}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.cat h3{margin:0 0 .3em}.cat p{margin:0 0 .4em;color:var(--muted);font-size:.85rem}.cat ul{margin:0;padding-left:1.1em;font-size:.95rem}.cat li{margin:.3em 0}
+.cat .more{font-size:.85rem}
+.subbox{background:var(--chip);border-radius:14px;padding:16px;margin:16px 0}
+.subbox .note{font-size:.8rem;color:var(--muted);margin-top:8px}
+.subbox .msg{margin-top:8px;font-weight:600}
+.tx{font-size:.95rem}.tx p{margin:.35em 0}.tx b{color:var(--accent)}
+.crumb{font-size:.8rem;color:var(--muted)}
+.foot a{margin-right:12px}
+.form label{display:block;font-weight:600;margin:12px 0 4px}
+.form select,.form textarea,.form input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg)}
+.form textarea{min-height:160px}.hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
+</style></head><body data-afd-item="github-google-adk-python-2.13.0" data-afd-topics="memory,agents" data-afd-cat="industry"><main class="wrap"><header class="top"><div class="kicker"><a href="../../../">AI FRONTIER DAILY</a> ・ <a href="../../../topics/industry/">產業動態</a> ・ <a href="../">2026-10-25 整期</a></div>
+<h1>Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶</h1><div class="meta"><div><b>出自</b>　2026-10-25 日刊（台北時間）・06 開源專案、GitHub、框架與工具</div><div><b>原始發布</b>　2026-10-23・GitHub</div></div></header>
+<div class="subbox"><div><b>🎧 收聽這一則</b>（整期 Podcast 第 10:24 起）</div><audio controls preload="none" src="../2026-10-25-briefing-duo.mp3#t=624.6" style="width:100%;margin-top:8px"></audio><div style="margin-top:10px"><a class="btn primary" href="../#github-google-adk-python-2.13.0">▶ 收聽今天整期（自動跟讀）</a></div></div>
+<div class="take">12 個實驗功能轉穩定，新增 ClassifierNode 路由、Live 語音插話、MongoDB 對話與長期記憶；遙測預設改為 OpenTelemetry GenAI v2（破壞性）。</div>
+<div class="sec fact"><span class="lbl">FACT｜已確認事實</span><ul><li>新增 BaseClassifier、ClassifierNode 與 TypesafeClassifier，可用 TypeSafe 的 Jev 模型在工作流中做路由；官方稱單次前向計算回傳校準機率，比 LLM 快很多。</li><li>Live 音訊支援 barge-in（插話），並整合 Gemini 語音轉文字與文字轉語音。</li><li>MongoDbSessionService 可跨副本共享對話；MongoDbMemoryService 以關鍵字比對回憶過往對話，不需要向量索引（皆為實驗性）。</li><li>BaseMemoryService 新增 delete_memory API。</li><li>字串模型代理單回合由 20ms 降至 2.5ms；遙測預設改為 OpenTelemetry GenAI semconv 1.44，移除 call_llm span。</li></ul></div>
+<div class="sec ana"><span class="lbl">ANALYSIS｜解析</span><ul><li><span class="k">核心方法：</span>在框架層把「便宜的分類決策」「即時語音」「可刪除的長期記憶」做成標準元件。</li><li><span class="k">差異：</span>與前一期 OpenAI Decisions API 同一方向：路由交給專用小模型；記憶方面則提供不依賴 embedding 的最簡方案。</li><li><span class="k">結果與限制：</span>效能數字為官方自述；MongoDB 記憶為實驗功能，關鍵字回憶的召回品質未知；遙測變更需調整既有監控。</li><li><span class="k">與你的關聯：</span>做多代理或語音代理原型時可直接利用；delete_memory 對個人資料刪除權（隱私合規）也很實用。</li></ul></div>
+<div class="sec hyp"><span class="lbl">HYPOTHESIS｜尚待驗證</span><ul><li>「分類器節點」可能成為各代理框架的標配，LLM 只在必要時被呼叫。</li></ul></div>
+<div class="sec next"><span class="lbl">建議下一步</span><ul><li>若使用 ADK，升級前先檢查 OpenTelemetry 監控；試用 ClassifierNode 把意圖路由從 LLM 移出並量測延遲。</li></ul></div>
+<h2 id="transcript">Podcast 逐字稿（這一則）</h2><div class="tx"><p><b>曉晨：</b>第六名，六十六分，Google 的開源代理框架 ADK Python 二點一三版。</p><p><b>雲哲：</b>三個重點。第一，分類器路由：工作流裡可以放一個分類器節點，用專用模型一次算出機率，不用每次都問大模型。</p><p><b>曉晨：</b>這跟上一期 OpenAI 的 Decisions API 好像是同一個想法？</p><p><b>雲哲：</b>沒錯，路由交給小而快的模型。第二，即時語音支援插話，整合 Gemini 的語音辨識和合成。第三，用 MongoDB 存對話跟長期記憶，記憶用關鍵字比對，不需要向量索引，還新增了刪除記憶的 API。</p><p><b>曉晨：</b>刪除記憶對隱私很重要。</p><p><b>雲哲：</b>對。不過要注意，遙測預設改成新版 OpenTelemetry 格式，是破壞性變更，升級前先檢查你的監控儀表板。</p></div>
+<div class="src"><div>版本日期 2026-10-22；GitHub release 發布於 2026-10-23 18:08 UTC（台北 10-24 02:08）。</div><div>來源：<a href="https://github.com/google/adk-python/releases/tag/v2.13.0" target="_blank" rel="noopener">github.com</a></div></div>
+<div id="afd-end"></div><h2>同期其他則</h2><ul><li><a href="../arxiv-2610.30755-v1/">Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統</a></li><li><a href="../anthropic-formal-verification-2026-10-22/">Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明</a></li><li><a href="../block-dessa-2026-10-23/">Block 發表 Dessa：只用人類語音訓練、可本地執行的全雙工語音模型</a></li><li><a href="../claude-code-mcp-tasks-elicitations-2026-10-23/">Claude Code 支援 MCP Tasks 與 Elicitations：工具可背景長跑、也能中途問你</a></li><li><a href="../github-mcp-typescript-sdk-2.4.0/">MCP 官方 TypeScript SDK 2.4.0：加入 Skills over MCP（SEP-2640）</a></li><li><a href="../github-k2-fsa-sherpa-onnx-v2.0.0/">sherpa-onnx 2.0.0：離線 ASR／TTS 工具鏈升級主版本，擴大跨平台與 HLG 解碼支援</a></li></ul>
+<section class="subbox" id="subscribe" data-afd-sub><h3 style="margin:0 0 .4em">📬 免費訂閱晨報</h3><div>喜歡這則整理？每天早上 6 點（台北時間）把當期晨報寄給你。</div><div class="afd-sub-ui" style="margin-top:12px"><div class="note">訂閱功能即將開放（目前為試營運準備中）。</div></div><div class="note">使用 Google 帳號登入訂閱，即表示你同意本站的<a href="../../../privacy/">隱私權政策與訂閱同意事項</a>。每封信都有取消訂閱按鈕，不需要登入。</div></section>
+<footer class="foot"><div>時間皆為台北時間（UTC+8）・經營者：陳宜寬</div><div><a href="../../../">首頁</a><a href="../../../privacy/">隱私權政策</a><a href="../../../feedback/">建議寄給管理者</a><a href="../../../unsubscribe/">取消訂閱說明</a><a href="#" data-afd-notrack>不要追蹤</a></div><div>由 Grok Bot 自動整理產生；內容為公開來源整理，以原始來源為準。</div></footer></main><!--afd-js--><script src="../../../assets/config.js" defer></script><script src="../../../assets/afd.js" defer></script><!--/afd-js--></body></html>

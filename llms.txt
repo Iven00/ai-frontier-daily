@@ -1,0 +1,38 @@
+# AI 前沿情報日刊
+
+> 每天整理過去 24 小時全球 AI 前沿情報（繁體中文）：社群熱議、產業動態、前沿論文與名人訪談，附雙主持 Podcast。網站由 Grok Bot 自動整理產生，經營者陳宜寬；時間皆為台北時間（UTC+8）。
+
+## 主要頁面
+- [首頁](https://iven00.github.io/ai-frontier-daily/)：今日焦點、分類、最近 7 期
+- [RSS](https://iven00.github.io/ai-frontier-daily/feed.xml)
+- [Sitemap](https://iven00.github.io/ai-frontier-daily/sitemap.xml)
+- [隱私權政策](https://iven00.github.io/ai-frontier-daily/privacy/)
+
+## 分類
+- [社群熱議](https://iven00.github.io/ai-frontier-daily/topics/social/)：X、Reddit、YouTube 上 AI 圈正在討論的事
+- [產業動態](https://iven00.github.io/ai-frontier-daily/topics/industry/)：AI 公司、產品、開源專案與商業應用的新消息
+- [名人訪談](https://iven00.github.io/ai-frontier-daily/topics/special/)：重要 AI 人物的演講、Podcast 與訪談整理
+- [前沿論文](https://iven00.github.io/ai-frontier-daily/topics/paper/)：值得一讀的 AI 論文，白話解析方法與限制
+
+## 最近各期
+- [2026-10-25 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/)：長期記憶回歸「保留原始證據」
+  - [Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/arxiv-2610.30755-v1/)
+  - [Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/anthropic-formal-verification-2026-10-22/)
+  - [Block 發表 Dessa：只用人類語音訓練、可本地執行的全雙工語音模型](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/block-dessa-2026-10-23/)
+  - [Claude Code 支援 MCP Tasks 與 Elicitations：工具可背景長跑、也能中途問你](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/claude-code-mcp-tasks-elicitations-2026-10-23/)
+  - [MCP 官方 TypeScript SDK 2.4.0：加入 Skills over MCP（SEP-2640）](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-mcp-typescript-sdk-2.4.0/)
+  - [Google ADK Python 2.13.0：分類器路由、Live 音訊插話、免 embedding 的 MongoDB 記憶](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-google-adk-python-2.13.0/)
+  - [sherpa-onnx 2.0.0：離線 ASR／TTS 工具鏈升級主版本，擴大跨平台與 HLG 解碼支援](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/github-k2-fsa-sherpa-onnx-v2.0.0/)
+  - [Apollo 首席經濟學家：科技業以外，還看不到 AI 帶來的營收與利潤改善](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/apollo-ai-payoff-outside-tech-2026-10-24/)
+- [2026-10-24 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/)：代理的「執行環境隔離」成為基礎設施主戰場
+  - [OpenAI 公開前沿模型訓練環境的圍堵架構：離線世界、microVM 與高算力紅隊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/openai-blog-securing-frontier-training-2026-10-23/)
+  - [Google Cloud 發表 Agent Compute Engine：每個代理一台硬體隔離 microVM](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/gcp-agent-compute-engine-2026-10-22/)
+  - [OpenAI Decisions API 正式上線：把分類與路由從大模型生成中拆出](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/openai-decisions-api-ga-2026-10-22/)
+  - [MHG-Mem：保留溯源的多模態超圖記憶，追蹤實體狀態隨時間演化](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/arxiv-2610.29995-v1/)
+  - [Moonshot 推出 Kimi K3.1 Pro：3T 級開放權重模型，權重 11/4 前釋出](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/kimi-k3.1-pro-2026-10-23/)
+  - [NVIDIA Nemotron 3.5 Bolt E4B：約 4GB 顯存的本地對話代理 SLM](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/hf-nvidia-nemotron-3.5-bolt-e4b-2026-10-23/)
+  - [IBM Granite Speech 5.0：2B 多語 ASR／翻譯，支援 2,000 詞關鍵字偏置，Apache 2.0](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/hf-ibm-granite-speech-5.0-2b-2026-10-21/)
+  - [Anthropic 推出 Claude Duet 研究預覽：會主動晨報、背景執行的專業人士代理](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/anthropic-claude-duet-2026-10-21/)
+  - [1Password for Agents：代理可登入，但永遠看不到密碼](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/1password-for-agents-2026-10-22/)
+  - [Microsoft Agent Framework Python 1.23.0：導入 MCP 2.x 相容層（破壞性更新）](https://iven00.github.io/ai-frontier-daily/daily/2026-10-24/github-microsoft-agent-framework-python-1.23.0/)
+- [2026-10-25 特別版：名人講話與訪談](https://iven00.github.io/ai-frontier-daily/special/2026-10-25/)：被 OpenAI 解僱的安全研究員首次受訪：第三方稽核與「可監控性」
