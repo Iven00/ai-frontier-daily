@@ -1,0 +1,8 @@
+# 注意：搜尋引擎只讀網域根目錄的 robots.txt（https://iven00.github.io/robots.txt）；本檔放在子路徑僅供參考，
+# 實際收錄控制靠各頁 <meta name="robots">，sitemap 請在 Search Console／Bing Webmaster 直接提交。
+User-agent: *
+Allow: /ai-frontier-daily/
+Disallow: /ai-frontier-daily/preview/
+Disallow: /ai-frontier-daily/admin/
+
+Sitemap: https://iven00.github.io/ai-frontier-daily/sitemap.xml
