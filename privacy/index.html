@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>隱私權政策｜AI 前沿情報日刊</title><meta name="color-scheme" content="light dark">
+<style>
+:root{--bg:#fbfaf7;--fg:#1f2328;--muted:#5b636e;--card:#ffffff;--line:#e6e2d9;--accent:#b4531f;--fact:#1f7a4d;--ana:#2457a6;--hyp:#a1650a;--chip:#f2eee6;--player:#fffdf8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--fact:#4cc38a;--ana:#7aa7ff;--hyp:#f0b44c;--chip:#262a31;--player:#1c1f24ee}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{max-width:740px;margin:0 auto;padding:0 18px 80px}
+header.top{padding:26px 0 8px}.kicker{font-size:.8rem;color:var(--muted);letter-spacing:.12em}
+h1{font-size:1.7rem;line-height:1.35;margin:.2em 0 .3em}h2{font-size:1.3rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.12rem;line-height:1.5;margin:0 0 .4em}
+.meta{color:var(--muted);font-size:.92rem;line-height:1.7}.meta b{color:var(--fg);font-weight:600}
+.player{position:sticky;top:0;z-index:10;background:var(--player);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+.player .wrap{padding-bottom:0}.prow{display:flex;align-items:center;gap:8px}
+.pbtn{flex:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:42px;min-width:42px;padding:0 10px;font-size:.9rem;cursor:pointer}
+.pbtn.play{background:var(--accent);color:#fff;border-color:var(--accent);min-width:54px;font-size:1.1rem}
+.seek{flex:1;display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:6px}
+.seek input{flex:1;accent-color:var(--accent)}
+select.speed{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;height:34px;font-size:.85rem}
+.ptitle{font-size:.82rem;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.loop{font-size:.75rem;color:var(--muted)}
+.trend{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+.trend p{margin:.3em 0 0}
+ol.toc{padding-left:1.4em}ol.toc li{margin:.35em 0}ol.toc .sc{color:var(--muted);font-size:.85rem;margin-left:.3em}
+article.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 12px;margin:22px 0;box-shadow:0 1px 2px #0000000a}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chip{background:var(--chip);border-radius:999px;padding:1px 10px;font-size:.78rem;color:var(--muted)}
+.chip.score{background:var(--accent);color:#fff;font-weight:700}
+.take{font-size:1.02rem;font-weight:500;border-left:4px solid var(--accent);padding:2px 0 2px 12px;margin:10px 0 14px}
+.sec{margin:14px 0}.lbl{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#fff;border-radius:6px;padding:1px 8px;margin-bottom:4px}
+.sec.fact .lbl{background:var(--fact)}.sec.ana .lbl{background:var(--ana)}.sec.hyp .lbl{background:var(--hyp)}.sec.next .lbl{background:var(--accent)}
+.sec ul{margin:.2em 0;padding-left:1.2em}.sec li{margin:.3em 0}
+.sec.fact{border-left:3px solid var(--fact);padding-left:12px}.sec.ana{border-left:3px solid var(--ana);padding-left:12px}.sec.hyp{border-left:3px solid var(--hyp);padding-left:12px}
+.k{color:var(--muted);font-weight:600}
+.src{font-size:.88rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px;word-break:break-word}
+.src a{margin-right:10px}
+.quote{font-size:.88rem;color:var(--muted);font-style:italic}
+.issues a{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0;text-decoration:none;color:var(--fg)}
+.issues .d{font-weight:700;font-size:1.1rem}.issues .s{color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.82rem;margin-top:40px}
+.totop{display:inline-block;font-size:.82rem;margin-top:4px}
+.seg{transition:box-shadow .35s ease,background-color .35s ease;border-radius:16px}
+.seg.now{box-shadow:0 0 0 3px var(--accent),0 6px 18px #0000001a}
+header.top.seg,section.seg{padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+header.top.seg.now,section.seg.now{background:var(--chip)}
+.prow2{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:30px}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;height:30px;padding:0 10px;font-size:.78rem;cursor:pointer;flex:none}
+.mini[aria-pressed="false"]{color:var(--muted)}
+.mini.back{background:var(--accent);color:#fff;border-color:var(--accent)}
+.segname{flex:1;min-width:0;font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.segplay{border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;font-size:.75rem;padding:0 9px;height:24px;cursor:pointer;line-height:22px}
+.trend h3{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+@media (prefers-reduced-motion:reduce){.seg{transition:none}}
+</style></head><body><main class="wrap"><header class="top" id="top"><div class="kicker">AI FRONTIER DAILY ・ <a href="../">回首頁</a></div><h1>隱私權政策</h1><div class="meta"><div><b>服務</b>　AI 前沿情報日刊</div><div><b>生效日期</b>　2026-10-25</div><div><b>聯絡</b>　<a href="mailto:rooteric@gmail.com">rooteric@gmail.com</a></div></div></header>
+<h2 id="toc">目錄</h2><ol class="toc"><li><a href="#operator">經營者與聯絡方式</a></li><li><a href="#service">服務說明</a></li><li><a href="#google">透過 Google 登入取得的資料</a></li><li><a href="#site">在網站上蒐集的資料</a></li><li><a href="#purpose">蒐集與利用目的</a></li><li><a href="#storage">儲存位置與分享對象</a></li><li><a href="#retention">保存期間與刪除</a></li><li><a href="#inactive">不活躍提醒與自動取消訂閱</a></li><li><a href="#unsub">取消訂閱</a></li><li><a href="#tracking">追蹤的選擇：歐盟訪客、〔不要追蹤〕、DNT 與 GPC</a></li><li><a href="#storage-local">Cookie 與瀏覽器儲存（localStorage）</a></li><li><a href="#rights">你的權利</a></li><li><a href="#beta">測試期說明</a></li><li><a href="#changes">政策變更與生效日期</a></li></ol>
+<section class="card" id="operator"><h2>1. 經營者與聯絡方式</h2><ul><li>經營者：陳宜寬（個人經營）。</li><li>聯絡 email：<a href="mailto:rooteric@gmail.com">rooteric@gmail.com</a>。查詢、更正、刪除個人資料或對本政策有疑問，都請寄到這個信箱。</li></ul></section>
+<section class="card" id="service"><h2>2. 服務說明</h2><ul><li>「AI 前沿情報日刊」提供每日 AI 情報網頁、雙主持 Podcast 語音，以及電子報（email）。</li><li>瀏覽網頁與收聽語音不需要登入。訂閱電子報時，使用 Google 帳號登入（Sign in with Google）。</li><li>訂閱、電子報與閱讀行為紀錄等功能正在建置中；本政策說明這些功能上線後的運作方式。功能上線前，本站不蒐集下列第 3、4 節的資料。</li></ul></section>
+<section class="card" id="google"><h2>3. 透過 Google 登入取得的資料</h2><ul><li>只要求 Google 的基本範圍：openid、email、profile。</li><li>取得的資料只有：你的姓名、email 地址、大頭貼照片，以及 Google 帳號的識別碼（用來辨認同一位訂閱者）。</li><li>我們不會存取你的 Gmail 信件、雲端硬碟、聯絡人、行事曆或任何其他 Google 資料。</li><li>本服務使用與傳輸從 Google API 取得的資訊時，會遵守 <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API 服務使用者資料政策（Google API Services User Data Policy）</a>，包括其中的有限使用（Limited Use）規定。</li></ul></section>
+<section class="card" id="site"><h2>4. 在網站上蒐集的資料</h2><ul><li>匿名訪客代碼：第一次造訪時，瀏覽器會產生一組隨機編號，存在你的瀏覽器裡。這組編號本身不包含姓名或 email。</li><li>閱讀行為：看過哪些頁面與分類、捲動深度、語音收聽進度、點擊、從哪個網站連過來（referrer），以及造訪時間。</li><li>電子報連結：寄給訂閱者的信中，連結會帶一組個人代碼（token），讓我們知道你點了哪些連結、是否仍在閱讀。</li><li>我們不使用開信追蹤像素（不追蹤你是否打開信件）。</li></ul></section>
+<section class="card" id="purpose"><h2>5. 蒐集與利用目的</h2><ul><li>提供服務：管理訂閱、寄送電子報與通知信。</li><li>了解哪些內容對讀者有用，並據此改善內容與網站，讓網站更容易被找到。</li><li>分析讀者興趣，包括辨識經營者所開發之相關產品或服務的潛在使用者或合作對象。</li><li>聯繫方式的限制：除了訂閱的電子報與相關通知信之外，經營者不會主動以其他方式聯繫你；只有在你回覆來信，或另外明確表示同意時，才會進一步聯繫。</li></ul></section>
+<section class="card" id="storage"><h2>6. 儲存位置與分享對象</h2><ul><li>資料存放在經營者私人的 Google 帳號中（Google 試算表 Google Sheets 與 Google Apps Script）。</li><li>資料不公開、不出售，也不會分享給第三方；唯一例外是作為服務提供者的 Google（登入、資料儲存與寄信）。</li><li>網站本身架設在 GitHub Pages；GitHub 作為網站主機，可能依其政策記錄連線資訊（例如 IP 位址），這部分不經過我們，也不會與上述資料合併。</li></ul></section>
+<section class="card" id="retention"><h2>7. 保存期間與刪除</h2><ul><li>資料會保存到經營者刪除為止。取消訂閱後，你的資料仍會保留。</li><li>你可以隨時寄信到 <a href="mailto:rooteric@gmail.com">rooteric@gmail.com</a> 要求刪除，經營者會刪除你的個人資料。</li></ul></section>
+<section class="card" id="inactive"><h2>8. 不活躍提醒與自動取消訂閱</h2><ul><li>「活躍」只看兩件事：點電子報中帶個人代碼的連結，或用已綁定的瀏覽器造訪網站。</li><li>連續 X 天（預設 10 天）沒有活躍紀錄時，會寄一封提醒信，你可以選擇繼續訂閱。</li><li>連續 N 天（預設 13 天）沒有活躍紀錄時，訂閱會自動取消並寄出通知。之後隨時可以重新訂閱。</li></ul></section>
+<section class="card" id="unsub"><h2>9. 取消訂閱</h2><ul><li>每封電子報都有取消訂閱按鈕，按一下即可取消，不需要登入。</li></ul></section>
+<section class="card" id="tracking"><h2>10. 追蹤的選擇：歐盟訪客、〔不要追蹤〕、DNT 與 GPC</h2><ul><li>歐盟／歐洲經濟區（EU/EEA）的訪客：取得你的同意之後才開始追蹤；未同意前不產生訪客代碼、不記錄閱讀行為。</li><li>其他訪客：網頁上會有明顯的〔不要追蹤〕選項，按下後即停止記錄閱讀行為。</li><li>瀏覽器送出「不要追蹤」（Do Not Track，DNT）或「全球隱私控制」（Global Privacy Control，GPC）訊號時，一律不追蹤。</li><li>以上為相關功能上線後的運作方式。</li></ul></section>
+<section class="card" id="storage-local"><h2>11. Cookie 與瀏覽器儲存（localStorage）</h2><ul><li>本站使用瀏覽器的 localStorage 儲存匿名訪客代碼，以及你的偏好設定（例如播放速度、自動跟隨、是否同意追蹤）。</li><li>本站本身不設定廣告或第三方追蹤 cookie。使用 Google 登入時，Google 可能依其隱私權政策設定自己的 cookie。</li><li>清除瀏覽資料即可刪除本站存在你瀏覽器中的資料。</li></ul></section>
+<section class="card" id="rights"><h2>12. 你的權利</h2><ul><li>依台灣《個人資料保護法》，你可以查詢、閱覽或取得副本、補充或更正、要求停止蒐集／處理／利用，以及要求刪除你的個人資料。</li><li>歐盟／歐洲經濟區的使用者另享有《一般資料保護規則》（GDPR）的權利，包括存取、更正、刪除、限制處理、資料可攜、反對處理，以及隨時撤回同意（撤回不影響撤回前處理的合法性），並可向所在地的資料保護主管機關申訴。</li><li>行使權利請寄信到 <a href="mailto:rooteric@gmail.com">rooteric@gmail.com</a>。</li></ul></section>
+<section class="card" id="beta"><h2>13. 測試期說明</h2><ul><li>本服務目前為測試期，訂閱名額上限為 400 位；額滿時暫停接受新訂閱。</li></ul></section>
+<section class="card" id="changes"><h2>14. 政策變更與生效日期</h2><ul><li>本政策若有修改，會更新本頁並標示新的生效日期；重大變更會在電子報中通知訂閱者。</li><li>生效日期：2026-10-25。</li></ul></section>
+<footer>AI 前沿情報日刊・經營者：陳宜寬・<a href="mailto:rooteric@gmail.com">rooteric@gmail.com</a>・<a href="../">回首頁</a></footer></main></body></html>
