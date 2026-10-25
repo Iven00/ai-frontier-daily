@@ -41,6 +41,12 @@
   var TOKEN = qs.get('s') || '';
   if (TOKEN && !IS_MANAGE) { qs.delete('s'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {} }
 
+  // ---------- audio: no 「下載」 in the native ⋮ menu, no right-click save (playback speed stays) ----------
+  function noDl(a) { if (!a || a._nodl) return; a._nodl = 1; try { a.setAttribute('controlslist', 'nodownload'); a.addEventListener('contextmenu', function (e) { e.preventDefault(); }); } catch (e) {} }
+  function noDlAll() { $$('audio').forEach(noDl); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', noDlAll); else noDlAll();
+  try { new MutationObserver(function (ms) { ms.forEach(function (m) { [].forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1) { if (n.tagName === 'AUDIO') noDl(n); else if (n.querySelectorAll) [].forEach.call(n.querySelectorAll('audio'), noDl); } }); }); }).observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
+
   // ---------- transport ----------
   function post(body) {
     return fetch(API, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
@@ -73,7 +79,7 @@
   var ref = document.referrer && document.referrer.indexOf(location.host + '/ai-frontier-daily') < 0 ? document.referrer : '';
   var returning = !!g('afd-vid');
   ev('page_view', ref ? ref.split('/')[2] : '', { ref: ref.slice(0, 200), ai: aiEngine(ref), ret: returning ? 1 : 0 });
-  if (TOKEN) { s('afd-s', TOKEN); ev('email_click', qs.get('d') || ''); }
+  if (TOKEN) { if (!IS_MANAGE) s('afd-s', TOKEN); ev('email_click', qs.get('d') || ''); }
 
   // ---------- visits (one visit = activity across all pages with no gap >= 10 min; heartbeat is local only) ----------
   var BOT = navigator.webdriver || /bot|crawl|spider|slurp|headless|lighthouse|preview|facebookexternalhit|embedly|whatsapp|telegrambot|line-poker|bingpreview/i.test(navigator.userAgent || '');
@@ -222,11 +228,31 @@
     });
   }
   function consentGiven() { s('afd-consent', '1'); }
-  // Subscribed flag on this device = a hint only (2026-10-26 fix): trusted for 12 h, then re-checked. The backend (action=sub_status, by ID token) is the
-  // source of truth when a fresh Google token is available; 「訂閱成功」 is shown only right after a real subscribe in this page session.
-  var SUB_TTL = 12 * 3600e3, SS_K = 'afd-substat';
-  function subFlag() { return g('afd-subscribed') === '1' && Date.now() - (+g('afd-sub-ts') || 0) < SUB_TTL; }
-  function subMark(on) { s('afd-subscribed', on ? '1' : '0'); s('afd-sub-ts', String(Date.now())); try { sessionStorage.removeItem(SS_K); } catch (e) {} }
+  // ONE source of truth for subscription state on this device (2026-10-26 v2):
+  //   localStorage 'afd-sub-state' = { email, status: active|unsubscribed|waitlist|unknown|none|paused, ts, src }.
+  //   EVERY place that changes the state (in-site subscribe / one-click / redirect, in-site unsubscribe, email unsubscribe, keep, resubscribe) calls subSet():
+  //   it writes the state, broadcasts it (storage event + BroadcastChannel 'afd-sub') and re-renders the panels on THIS page immediately.
+  //   The backend (action=sub_status, by Google ID token) overrides it on page load (if signed in) and whenever the panel opens; cached ≤60 s per tab.
+  //   Local state is only the fast first paint: trusted ≤12 h, and never for a different signed-in account. 「訂閱成功」 only right after a real subscribe.
+  var SUB_TTL = 12 * 3600e3, SS_K = 'afd-substat', SK = 'afd-sub-state', SS_TTL = 60e3, AK = 'afd-acct', ACCT_MS = 30 * 864e5, BC = null;
+  try { BC = new BroadcastChannel('afd-sub'); } catch (e) {}
+  function subGet() {
+    var o = null; try { o = JSON.parse(g(SK) || 'null'); } catch (e) {}
+    if (!o) { var f = g('afd-subscribed'); if (f === '1' || f === '0') o = { email: '', status: f === '1' ? 'active' : 'unsubscribed', ts: +g('afd-sub-ts') || 0, src: 'legacy' }; }
+    return o;
+  }
+  function subFlag() {
+    var o = subGet(); if (!o || o.status !== 'active' || Date.now() - (o.ts || 0) >= SUB_TTL) return false;
+    var a = acctGet(); if (!a || !a.email) return false; // subscription state is tied to the signed-in account: signed out never shows 「你已訂閱」
+    return !(o.email && o.email !== String(a.email).toLowerCase());
+  }
+  function subSet(status, email, src) {
+    var o = { email: String(email || '').toLowerCase(), status: status, ts: Date.now(), src: src || '' };
+    s(SK, JSON.stringify(o)); s('afd-subscribed', status === 'active' ? '1' : '0'); s('afd-sub-ts', String(o.ts)); // legacy keys kept in sync for older open tabs
+    try { sessionStorage.removeItem(SS_K); } catch (e) {}
+    try { if (BC) BC.postMessage(o); } catch (e) {}
+    subApply(status === 'active');
+  }
   var SUB = { st: subFlag() ? 'done' : 'loading', html: '', wcred: null };
   var BOXES = $$('[data-afd-sub]');
   function visible(box) { return !box.hasAttribute('data-afd-lazy') || box.closest('dialog[open]'); }
@@ -313,7 +339,7 @@
   function unsubPost(cred, R, msg, go) {
     post({ action: 'unsub_web', credential: cred, reasons: R.reasons, other: R.other, vid: vid(), page: PAGE }).then(function (r) {
       if (r && r.ok) {
-        subMark(false); SUB.st = 'ready'; SUB.doneMsg = ''; BOXES.forEach(function (x) { x._justDone = false; }); setHTML(''); ucfClose(); ev('unsub_web_done');
+        var a0 = acctGet(); subSet('unsubscribed', (r.email || (a0 && a0.email) || ''), 'unsub_web'); SUB.st = 'ready'; SUB.doneMsg = ''; BOXES.forEach(function (x) { x._justDone = false; }); setHTML(''); ucfClose(); ev('unsub_web_done');
         BOXES.forEach(function (x) { var u = $('.afd-sub-ui', x); if (u && visible(x)) u.insertAdjacentHTML('afterbegin', '<div class="msg afd-unsub-done">已取消訂閱，之後不會再寄晨報給你。想回來時，按下面的按鈕就能再訂閱。</div>'); });
         var t = toast('<span>已取消訂閱</span>'); if (t) setTimeout(function () { t.remove(); }, 3000); return;
       }
@@ -361,7 +387,7 @@
     msgAll('處理中…'); consentGiven(); ev('subscribe_start');
     post({ action: 'subscribe', credential: cred, vid: vid(), consent_version: C.consentVersion, eu: EU ? 1 : 0, page: PAGE })
       .then(function (r) {
-        if (r.ok) { acctSet(cred); subMark(true); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
+        if (r.ok) { var ac = acctSet(cred); subSet('active', r.email || (ac && ac.email) || '', r.already ? 'subscribe_already' : 'subscribe'); ev('subscribe_success'); flush(false); BOXES.forEach(function (x) { x._justDone = true; }); SUB.st = 'done';
           SUB.doneMsg = r.already ? '✅ 你已訂閱，晨報每天早上 6 點（台北時間）寄到 ' + escH(r.email || '你的信箱') + '。'
             : '✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到 ' + escH(r.email || '你的信箱') + '。'; setHTML(''); }
         else if (r.state === 'full') { SUB.st = 'full'; SUB.wcred = cred; paintAll(); }
@@ -376,17 +402,32 @@
   }
   function subSync() {
     if (!API || !BOXES.length) return;
-    if (SUB.st === 'done' && !subFlag()) subApply(false);
-    var t = idtGet(), a = acctGet(); if (!t || !a || t.email !== a.email) return;
+    subApply(subFlag()); // local state first (fast paint), backend below overrides
+    var t = idtGet(), a = acctGet(); if (!t || !a || t.email !== a.email) return; // no fresh token → local state only (token expired / signed out)
     var c = null; try { c = JSON.parse(sessionStorage.getItem(SS_K) || 'null'); } catch (e) {}
-    if (c && c.email === t.email && Date.now() - c.t < 600e3) return;
+    if (c && c.email === t.email && Date.now() - c.t < SS_TTL) return;
     post({ action: 'sub_status', credential: t.c }).then(function (r) {
-      if (!r || !r.ok || !r.state) return; // backend without sub_status (older deploy) → keep the 12 h local rule
+      if (r && r.reauth) { idtClear(); return; }
+      if (!r || !r.ok || !r.state) return; // backend without sub_status (older deploy) → keep the local rule
+      var o = subGet(), st = r.state === 'active' ? 'active' : r.state;
+      if (!o || o.status !== st || (o.email && o.email !== String(t.email).toLowerCase())) subSet(st, t.email, 'backend'); else subApply(st === 'active');
       try { sessionStorage.setItem(SS_K, JSON.stringify({ email: t.email, state: r.state, t: Date.now() })); } catch (e) {}
-      var on = r.state === 'active'; s('afd-subscribed', on ? '1' : '0'); s('afd-sub-ts', String(Date.now())); subApply(on);
     }).catch(function () {});
   }
-  window.addEventListener('storage', function (e) { if (e.key === 'afd-subscribed' || e.key === 'afd-sub-ts') subApply(subFlag()); });
+  // logout (user-agreed rule): clear ALL local identity + subscription state, broadcast, back to the plain 免費訂閱 state. Device data (progress, beads, read marks, 歷史觀看) stays.
+  function signOutLocal(broadcast) {
+    if (LS) { [AK, SK, 'afd-subscribed', 'afd-sub-ts', 'afd-s'].forEach(function (k) { LS.removeItem(k); }); }
+    idtClear(); try { sessionStorage.removeItem(SS_K); } catch (e) {}
+    SUB.wcred = null; SUB.doneMsg = ''; SUB.html = ''; if (SUB.st === 'done' || SUB.st === 'loading') SUB.st = 'ready';
+    BOXES.forEach(function (x) { x._justDone = false; x._swap = false; }); $$('.afd-ucf').forEach(function (d) { try { d.close(); } catch (e) {} d.remove(); });
+    if (broadcast) { try { if (BC) BC.postMessage({ logout: 1 }); } catch (e) {} }
+    paintAll(); try { acctPaint(); } catch (e) {}
+  }
+  window.addEventListener('storage', function (e) {
+    if (e.key === AK && !e.newValue) return signOutLocal(false); // another tab logged out
+    if (e.key === SK || e.key === 'afd-subscribed' || e.key === AK) subApply(subFlag());
+  });
+  if (BC) BC.onmessage = function (m) { if (m && m.data && m.data.logout) return signOutLocal(false); subApply(subFlag()); };
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') subSync(); });
   if (API && BOXES.length) {
     BOXES.forEach(function (box) {
@@ -401,6 +442,8 @@
 
   // ---------- shared shell: subscribe dialog, category sheet, listen tab, sidebar TOC, ?play= ----------
   var DLG = $('#afd-subdlg');
+  // a result message (「訂閱成功…」) is shown once; after the dialog closes the panel shows the steady state 「你已訂閱」
+  if (DLG) DLG.addEventListener('close', function () { if (SUB.st === 'done' && SUB.doneMsg) { SUB.doneMsg = ''; BOXES.forEach(function (x) { x._justDone = false; }); paintAll(); } });
   function openSub(src) {
     ev('subscribe_open', src || '');
     if (DLG && DLG.showModal) { subSync(); if (!DLG.open) DLG.showModal(); var bx = $('[data-afd-sub]', DLG); if (bx && (bx._dirty || !$('.afd-sub-ui', bx).children.length || /載入中/.test($('.afd-sub-ui', bx).textContent))) paint(bx); }
@@ -529,7 +572,7 @@
     if (MINI) return MINI;
     MINI = document.createElement('div'); MINI.className = 'afd-mini'; MINI.hidden = true; MINI.setAttribute('role', 'region'); MINI.setAttribute('aria-label', '播放器');
     MINI.innerHTML = '<button class="pp" type="button" aria-label="暫停">❚❚</button><div class="m"><div class="t"></div><div class="r"><span class="c">0:00</span><input type="range" min="0" max="100" step="0.1" value="0" aria-label="播放進度"><span class="d"></span></div></div><a href="#">邊聽邊看 →</a><button class="x" type="button" aria-label="關閉播放器">✕</button>';
-    MA = document.createElement('audio'); MA.preload = 'metadata'; MINI.appendChild(MA); document.body.appendChild(MINI);
+    MA = document.createElement('audio'); MA.preload = 'metadata'; MA.setAttribute('controlslist', 'nodownload'); MA.oncontextmenu = function () { return false; }; MINI.appendChild(MA); document.body.appendChild(MINI);
     var pp = $('.pp', MINI), rg = $('input', MINI), lk = $('a', MINI);
     function ui() {
       var p = MA.paused; pp.textContent = p ? '▶' : '❚❚'; pp.setAttribute('aria-label', p ? '播放' : '暫停');
@@ -623,7 +666,7 @@
   // Session lives only in this browser: the ID token's claims {name, email, picture, exp} + sign-in time. The raw token is never stored.
   // The ID token itself expires in ~1 h; this local profile is display-only (not a credential), kept 30 days. Anything server-side
   // (batch 2 progress sync) must get a fresh ID token and verify it on the server.
-  var AK = 'afd-acct', ACCT_MS = 30 * 864e5;
+  // AK / ACCT_MS are declared with the subscription state above (needed earlier)
   var SVG_O = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>';
   var SVG_F = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3.5 21.5c0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5z"/></svg>';
   function escH(x) { return String(x || '').replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
@@ -682,7 +725,7 @@
     ACP.hidden = false; ACCT_OPEN = true; if (ACB) ACB.setAttribute('aria-expanded', 'true');
   }
   function acctLoginDone(c) {
-    ACW = 0; var o = acctSet(c); BOXES.forEach(function (x) { x._swap = false; }); if (o && (SUB.st === 'ready' || SUB.st === 'done')) paintAll();
+    ACW = 0; var o = acctSet(c); BOXES.forEach(function (x) { x._swap = false; }); if (o && (SUB.st === 'ready' || SUB.st === 'done')) paintAll(); if (o) subSync(); // fresh token → ask the backend right away
     if (!o) { if (ACP && !ACP.hidden) { var m = $('.in .gb', ACP); if (m) m.insertAdjacentHTML('afterend', '<p class="note">登入沒有完成，請再試一次。</p>'); } return; }
     if (ACP && !ACP.hidden) acctOpen(ACB); // repaint the open panel as signed in: avatar, name, email, 登出
     var t = toast('<span>已登入：' + escH(o.name || o.email) + '</span>'); if (t) setTimeout(function () { t.remove(); }, 2500); ev('login');
@@ -694,7 +737,7 @@
       if (gb && !$('.in [data-acw]', ACP)) gb.insertAdjacentHTML('afterend', '<p class="note" data-acw>還沒登入成功嗎？請確認 Google 登入視窗沒有被瀏覽器擋下，然後再按一次上面的按鈕；也可以重新整理頁面再試。</p>');
       ev('login_no_return'); }, 25000); }
   function acctLogout() {
-    if (LS) LS.removeItem(AK); idtClear(); BOXES.forEach(function (x) { x._swap = false; }); if (SUB.st === 'ready' || SUB.st === 'done') paintAll(); acctPaint(); acctClose(); ev('logout');
+    signOutLocal(true); acctClose(); ev('logout');
     var t = toast('<span>已登出</span>'); if (t) setTimeout(function () { t.remove(); }, 2000);
     var off = function () { try { google.accounts.id.disableAutoSelect(); } catch (e) {} };
     if (window.google && google.accounts && google.accounts.id) off(); else if (C.clientId) loadGIS().then(off, function () {});
@@ -725,7 +768,7 @@
   // back from redirect sign-in (Apps Script returns to ?subok=1|already|full|err)
   var SOK = qs.get('subok');
   if (SOK) { qs.delete('subok'); try { history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (e) {}
-    if (SOK === '1' || SOK === 'already') { subMark(true); SUB.st = 'done'; setHTML('<div class="msg">✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到你的信箱。</div>'); ev('subscribe_success', 'redirect'); }
+    if (SOK === '1' || SOK === 'already') { var a2 = acctGet(); subSet('active', a2 ? a2.email : '', 'redirect'); SUB.st = 'done'; setHTML('<div class="msg">✅ 訂閱成功！明天早上 6 點（台北時間）起，晨報會寄到你的信箱。</div>'); ev('subscribe_success', 'redirect'); }
     else if (SOK === 'full') { SUB.st = 'full'; paintAll(); } else msgAll('訂閱沒有完成，請再試一次。'); }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var sh = $('#afd-cats'); if (sh) sh.hidden = true; } });
 
@@ -751,7 +794,9 @@
       resub: ['重新訂閱', '歡迎回來！點下方按鈕重新訂閱；名額足夠時會立刻恢復，名額已滿時會先幫你登記，有名額再通知你。', '重新訂閱']
     }[uact];
     if (tok && TXT && API) {
-      if (uact === 'unsub') subMark(false); // visiting the unsubscribe link: stop trusting this device's 'subscribed' flag
+      // signed out: these pages only show the result here and store NO identity / subscription state site-wide. Signed in: same single source of truth.
+      var mgSet = function (st, src) { var a = acctGet(); if (!a || !a.email) return; subSet(st, a.email, src); subSync(); };
+      if (uact === 'unsub') { var o0 = subGet(); if (!o0 || o0.status === 'active') mgSet('unknown', 'unsub_visit'); } // visiting the link: stop trusting 'subscribed' until confirmed
       T.textContent = TXT[0]; Bd.innerHTML = '<p>' + TXT[1] + '</p>';
       var U = uact === 'unsub';
       if (U) { // reasons FIRST; 確認取消訂閱 only after ≥1 reason; stay option is the primary (terracotta) button, same as the in-site dialog
@@ -774,10 +819,10 @@
         post(body).then(function (r) {
           if (!r.ok) { O.textContent = r.message || '處理失敗，請稍後再試，或寄信到 rooteric@gmail.com。'; btn.disabled = false; return; }
           A.innerHTML = '';
-          if (U) { subMark(false); var f = $('.afd-ur', Bd); if (f) f.remove(); Bd.innerHTML = '';
+          if (U) { mgSet('unsubscribed', 'unsub_email'); var f = $('.afd-ur', Bd); if (f) f.remove(); Bd.innerHTML = '';
             O.innerHTML = '已取消訂閱，之後不會再寄晨報給你。謝謝你告訴我們原因！想再收時，<a href="?a=resub&s=' + encodeURIComponent(tok) + '">點這裡重新訂閱</a>。'; }
-          else if (uact === 'keep') { subMark(true); O.textContent = '✅ 已確認，晨報會繼續寄給你。'; }
-          else { if (r.state !== 'waitlist') subMark(true); O.textContent = r.state === 'waitlist' ? '目前名額已滿，已幫你登記；名額增加時會寄信通知你。' : '✅ 已重新訂閱，明天早上 6 點（台北時間）起恢復寄送。'; }
+          else if (uact === 'keep') { mgSet('active', 'keep_email'); O.textContent = '✅ 已確認，晨報會繼續寄給你。'; }
+          else { mgSet(r.state === 'waitlist' ? 'waitlist' : 'active', 'resub_email'); O.textContent = r.state === 'waitlist' ? '目前名額已滿，已幫你登記；名額增加時會寄信通知你。' : '✅ 已重新訂閱，明天早上 6 點（台北時間）起恢復寄送。'; }
         }).catch(function () { O.textContent = '連線失敗，請稍後再試。'; btn.disabled = false; });
       };
     } else if (tok && !API) { O.textContent = '這項功能即將開放；目前請寄信到 rooteric@gmail.com 處理。'; }
