@@ -7,10 +7,10 @@
  *   other origins (Apps Script, Google sign-in, fonts…) and any URL with a token → NOT handled (network only, never cached)
  */
 'use strict';
-const VERSION = '70b9b9867e';
+const VERSION = '6346b40e82';
 const SHELL = 'ms-pwa-shell-' + VERSION, PAGES = 'ms-pwa-pages-' + VERSION, IMG = 'ms-pwa-img-' + VERSION;
 const SCOPE = new URL(self.registration.scope);
-const SHELL_FILES = ["manifest.webmanifest", "offline/", "assets/afd.js", "assets/afd-listen.js", "assets/config.js", "assets/v2.css", "assets/item-topics.json", "assets/pwa.js", "assets/pwa.css", "icons/apple-touch-icon.png", "icons/favicon.ico", "icons/favicon.svg", "icons/icon-192.png", "icons/icon-32.png", "icons/icon-512.png", "icons/icon-maskable-512.png"];   // relative to scope
+const SHELL_FILES = ["manifest.webmanifest", "offline/", "assets/afd.js", "assets/afd-listen.js", "assets/config.js", "assets/v2.css", "assets/item-topics.json", "assets/pwa.94cf3665.js", "assets/pwa.120bf9e4.css", "icons/apple-touch-icon.png", "icons/favicon.ico", "icons/favicon.svg", "icons/icon-192.png", "icons/icon-32.png", "icons/icon-512.png", "icons/icon-maskable-512.png"];   // relative to scope
 const PRE_PAGES = ["./", "archive/", "daily/2026-10-26/", "special/2026-10-26/"];     // pages cached at install so offline works right away
 const OFFLINE = new URL('offline/', SCOPE).href;
 const SECRET = /[?&](s|t|token|credential|code|state|id_token|access_token|g_csrf_token)=/i;
@@ -56,9 +56,14 @@ async function networkFirst(req, cacheName, fallbackOffline) {
   }
 }
 async function cacheFirst(req, cacheName, cap) {
-  const hit = await caches.match(req, { ignoreSearch: cacheName === SHELL });
+  // exact URL incl. ?v= — a page asking for a newer asset version never gets an older cached copy
+  const hit = await caches.match(req);
   if (hit) return hit;
-  const r = await fetch(req);
+  let r;
+  try { r = await fetch(req); } catch (x) {
+    const any = cacheName === SHELL && await caches.match(req, { ignoreSearch: true }); // offline: same file, other ?v=
+    if (any) return any; throw x;
+  }
   if (r.ok && r.type === 'basic') { const c = await caches.open(cacheName); await c.put(req, r.clone()); if (cap) { const ks = await c.keys(); for (let i = 0; i < ks.length - cap; i++) await c.delete(ks[i]); } }
   return r;
 }
