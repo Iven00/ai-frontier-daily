@@ -1,0 +1,12 @@
+/* archive-filter.css — 往期 two-row filter (PREVIEW). Chips reuse the live .btn.sm style; only the row layout is new. */
+.afx{display:flex;flex-direction:column;gap:10px;margin:0 0 18px}
+.afx-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}   /* 6px: 狀態 + 4 chips fit one line at 360px */
+.afx-l{flex:0 0 auto;margin-right:2px;font-size:.8rem;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.afx-row .btn{margin:0}
+.afx-empty{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:18px 16px;border-radius:14px;background:var(--chip);color:var(--muted);margin:0 0 18px}
+.afx-empty[hidden]{display:none}
+.afx-empty p{margin:0;font-weight:600}
+[data-afdl-card][hidden]{display:none!important}
+/* selected chip: the live row had no visible selected state; with two groups the current choice must be visible.
+   Same size/padding/radius as before, colours from the site's existing primary button. */
+.afx .btn[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff}

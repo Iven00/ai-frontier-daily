@@ -64,6 +64,7 @@
     Q.push(e); if (Q.length >= 10) flush(false);
   }
   window.afdEv = ev; // used by assets/pwa.<hash>.js for pwa_install_prompt / pwa_installed / pwa_launch_standalone
+  window.afdVid = vid;
   function flush(beacon) {
     if (!Q.length || !canTrack()) return;
     var body = JSON.stringify({ action: 'events', v: 1, vid: vid(), sid: SID, s: TOKEN || g('afd-s') || '', eu: EU ? 1 : 0, dev: (matchMedia('(max-width:700px)').matches ? 'mobile' : 'desktop'), events: Q.splice(0, 50) });

@@ -109,6 +109,8 @@
     var rs = e.target.closest && e.target.closest('[data-afdl-restart]');
     if (rs) { e.preventDefault(); start(rs.getAttribute('data-afdl-restart'), 0); }
   });
+  // [archive filter, live 2026-10-26] listening state for the two-group filter: never played / played-not-all-beads / every bead full
+  window.afdlStateOf = function (k) { return allDone(k) ? 'done' : started(k) ? 'partial' : 'new'; };
   // filters on archive page
   $$('[data-afdl-filter]').forEach(function (btn) {
     btn.addEventListener('click', function () {
