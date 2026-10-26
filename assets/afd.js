@@ -418,7 +418,7 @@
   }
   // logout (user-agreed rule): clear ALL local identity + subscription state, broadcast, back to the plain 免費訂閱 state. Device data (progress, beads, read marks, 歷史觀看) stays.
   function signOutLocal(broadcast) {
-    if (LS) { [AK, SK, 'afd-subscribed', 'afd-sub-ts', 'afd-s'].forEach(function (k) { LS.removeItem(k); }); }
+    if (LS) { [AK, SK, 'afd-subscribed', 'afd-sub-ts', 'afd-s', 'afd-adm'].forEach(function (k) { LS.removeItem(k); }); }
     idtClear(); try { sessionStorage.removeItem(SS_K); } catch (e) {}
     SUB.wcred = null; SUB.doneMsg = ''; SUB.html = ''; if (SUB.st === 'done' || SUB.st === 'loading') SUB.st = 'ready';
     BOXES.forEach(function (x) { x._justDone = false; x._swap = false; }); $$('.afd-ucf').forEach(function (d) { try { d.close(); } catch (e) {} d.remove(); });
@@ -707,13 +707,15 @@
         + '.afd-acp .note{color:var(--muted,#777);font-size:.82rem;margin:0}.afd-acp .gb{min-height:44px;max-width:100%;overflow:hidden}'
         + '.afd-acp .who{display:flex;gap:12px;align-items:center;padding-right:24px}.afd-acp .who img,.afd-acp .who .ph{width:44px;height:44px;border-radius:999px;flex:none;object-fit:cover;background:var(--chip,var(--bg2,#eee));display:flex;align-items:center;justify-content:center}'
         + '.afd-acp .who div{min-width:0}.afd-acp .who b,.afd-acp .who span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.afd-acp .who span{color:var(--muted,#777);font-size:.84rem}'
+        + '.afd-acp .adm{display:flex;align-items:center;gap:8px;min-height:44px;box-sizing:border-box;padding:10px 14px;border-radius:12px;background:var(--chip,var(--bg2,#f3f3f3));color:inherit;text-decoration:none;font-weight:700}.afd-acp .adm[hidden]{display:none}.afd-acp .adm:hover{filter:brightness(.96)}.afd-acp .adm small{margin-left:auto;font-weight:400;color:var(--muted,#777);font-size:.8rem}'
         + '.afd-acp [data-out]{border:1px solid var(--line,#ddd);background:transparent;color:inherit;font:inherit;font-weight:700;border-radius:999px;padding:10px 14px;cursor:pointer}';
       document.head.appendChild(st);
     }
     var a = acctGet(), inn = $('.in', ACP);
     if (a) {
       inn.innerHTML = '<button type="button" class="x" aria-label="關閉">✕</button><div class="who">' + (a.picture ? '<img alt="" referrerpolicy="no-referrer" src="' + escH(a.picture) + '">' : '<span class="ph">' + SVG_F + '</span>')
-        + '<div><b>' + escH(a.name || '已登入') + '</b><span>' + escH(a.email) + '</span></div></div><button type="button" data-out>登出</button>';
+        + '<div><b>' + escH(a.name || '已登入') + '</b><span>' + escH(a.email) + '</span></div></div><a class="adm" data-adm hidden target="_blank" rel="noopener"><span aria-hidden="true">⚙️</span>管理員設定<small>開新分頁</small></a><button type="button" data-out>登出</button>';
+      admPaint(inn, a);
       var mi = $('.who img', inn); if (mi) mi.onerror = function () { mi.outerHTML = '<span class="ph">' + SVG_F + '</span>'; };
     } else {
       inn.innerHTML = '<button type="button" class="x" aria-label="關閉">✕</button><b>登入</b><p class="note">用 Google 帳號登入。登入只用來辨識你（之後用於跨裝置同步收聽進度），<b>不會自動訂閱晨報</b>；登入資料只存在這台裝置的瀏覽器。</p><div class="gb"><div class="note">載入中…</div></div>';
@@ -725,6 +727,21 @@
     var r = ACB ? ACB.getBoundingClientRect() : { bottom: 56, right: innerWidth - 12 };
     inn.style.top = Math.max(8, r.bottom + 8) + 'px'; inn.style.right = Math.max(12, innerWidth - r.right) + 'px';
     ACP.hidden = false; ACCT_OPEN = true; if (ACB) ACB.setAttribute('aria-expanded', 'true');
+  }
+  // 管理員設定 entry: backend answers only {admin:bool,url} for the caller's own verified token
+  var ADM_K = 'afd-adm', ADM_FRESH = 10 * 60e3, ADM_MAX = 7 * 864e5, ADM_Q = null;
+  function admGet(email) { try { var o = JSON.parse(g(ADM_K) || 'null'); if (o && o.email === String(email).toLowerCase() && Date.now() - o.t < ADM_MAX) return o; } catch (e) {} return null; }
+  function admShow(inn, o) { var l = inn && $('[data-adm]', inn); if (!l) return; if (o && o.admin && o.url) { l.href = o.url; l.hidden = false; } else { l.hidden = true; l.removeAttribute('href'); } }
+  function admPaint(inn, a) {
+    var o = admGet(a.email); admShow(inn, o);
+    if (!API || (o && Date.now() - o.t < ADM_FRESH)) return;
+    var t = idtGet(); if (!t || String(t.email).toLowerCase() !== String(a.email).toLowerCase() || ADM_Q) return;
+    ADM_Q = post({ action: 'is_admin', credential: t.c }).then(function (r) {
+      ADM_Q = null; if (!r) return; if (r.reauth) { idtClear(); return; } if (!r.ok) return; // older backend without is_admin → nothing shown
+      var n = { email: String(a.email).toLowerCase(), admin: !!r.admin, url: r.admin && /^https:\/\/script\.google\.com\//.test(r.url || '') ? r.url : '', t: Date.now() };
+      try { if (LS) LS.setItem(ADM_K, JSON.stringify(n)); } catch (e) {}
+      var cur = acctGet(); if (ACP && !ACP.hidden && cur && cur.email === a.email) admShow($('.in', ACP), n);
+    }, function () { ADM_Q = null; });
   }
   function acctLoginDone(c) {
     ACW = 0; var o = acctSet(c); BOXES.forEach(function (x) { x._swap = false; }); if (o && (SUB.st === 'ready' || SUB.st === 'done')) paintAll(); if (o) subSync(); // fresh token → ask the backend right away
