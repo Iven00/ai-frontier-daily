@@ -162,12 +162,10 @@
     if (ANDROID) { var p = new URL(u); return 'intent://' + p.host + p.pathname + p.search + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(u) + ';end'; }
     return '';
   }
-  var FBF = INAPP === 'Facebook' || INAPP === 'Messenger' || INAPP === 'Instagram';
   function inappHTML(k) {
     var L = k === 'login', h = escapeHref(k), br = INAPP === 'LINE' ? '外部瀏覽器' : ANDROID ? 'Chrome' : (IOS ? 'Safari' : '一般瀏覽器');
     return '<div class="afd-inapp" role="note"><div><b>' + (INAPP === 'App 內建瀏覽器' ? '你正在 App 的內建瀏覽器裡。' : '你正在「' + INAPP + '」的內建瀏覽器裡。') + '</b>Google 不允許在這裡登入，請改用 ' + br + ' 開啟本站再' + (L ? '登入（打開後會直接跳出登入視窗）' : '訂閱（打開後會直接跳出訂閱視窗）') + '。</div>'
-      + (h ? '<a class="btn primary" data-afd-escape href="' + h.replace(/"/g, '&quot;') + '">用 ' + (INAPP === 'LINE' ? '預設瀏覽器' : 'Chrome') + ' 開啟並' + (L ? '登入' : '訂閱') + '</a>' : '')
-      + (FBF ? '<div class="note afd-fbnote"><b>點右上角 ⋯ → 用瀏覽器開啟</b>' + (h ? '（或按上面的按鈕）' : '') + '，再' + (L ? '登入' : '訂閱') + '；也可以複製網址貼到 ' + (IOS ? 'Safari' : 'Chrome') + '。</div>' : (h ? '' : '<div class="note">' + (IOS ? '點畫面右上角（或右下角）的「⋯」→ 選「用 Safari 開啟」；或複製網址貼到 Safari。' : '點選單「⋯」→「用瀏覽器開啟」；或複製網址貼到瀏覽器。') + '</div>'))
+      + (h ? '<a class="btn primary" data-afd-escape href="' + h.replace(/"/g, '&quot;') + '">用 ' + (INAPP === 'LINE' ? '預設瀏覽器' : 'Chrome') + ' 開啟並' + (L ? '登入' : '訂閱') + '</a>' : '<div class="note">' + (IOS ? '點畫面右上角（或右下角）的「⋯」→ 選「用 Safari 開啟」；或複製網址貼到 Safari。' : '點選單「⋯」→「用瀏覽器開啟」；或複製網址貼到瀏覽器。') + '</div>')
       + '<button class="btn" type="button" data-afd-copy="' + (L ? 'login' : 'sub') + '">複製網址</button><span class="note" data-afd-copied role="status"></span></div>';
   }
   document.addEventListener('click', function (e) {
