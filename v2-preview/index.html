@@ -17,6 +17,8 @@ try{if(!f.nojs&&localStorage.getItem("ms.pathFontSize")==="large")d.setAttribute
 --brand-box:#C2643C;--brand-name:#3A302A;--brand-sub:#2F6F6A;--more-dot:#8C7F75;--scrim:rgba(31,35,40,.4);--on-accent:#ffffff;--col:480px;
 /* 配色 v2（2026-10-27 19:2x）：淺色深色同一套邏輯——中性偏暖的抬升表面＋accent 邊框／左側色條表達層級（關鍵路徑 > 目標 > 相關閱讀） */
 --accent-ink:#a64a19;
+/* 2026-10-27 22:3x SPEC-DSN-001（使用者 22:33：有書本圖示的關鍵詞跟標題同色會混淆）：可點關鍵詞／延伸閱讀標記專用色＝青綠，和標題的 accent-ink（橘棕）不同色相 */
+--kw-ink:#17696a;
 --kp-bg:#fff4ea;--kp-border:#e3b493;--kp-bar:#b4531f;--kp-chip:#f4ece2;
 /* 2026-10-27 21:3x（使用者 21:28：朗讀中段落和「現在試試」底色一樣會混淆）：朗讀中段落＝accent 12% 暖色底＋左色條；現在試試＝比卡片更亮的底＋虛線框 */
 --kp-now:#f6e1d2;--kp-try:#ffffff;--kp-try-line:#cf8f63;
@@ -26,6 +28,7 @@ try{if(!f.nojs&&localStorage.getItem("ms.pathFontSize")==="large")d.setAttribute
 @media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--chip:#262a31;--player:#1c1f24;
 --brand-name:#F5EEE4;--brand-sub:#7CC4BA;--more-dot:#a3a9b2;--scrim:rgba(0,0,0,.55);--on-accent:#14161a;
 --accent-ink:#f08a4b;
+--kw-ink:#6cc7bd;
 --kp-bg:#24272d;--kp-border:#7a4a2e;--kp-bar:#f08a4b;--kp-chip:#30343c;
 --kp-now:#413531;--kp-try:#1a1c21;--kp-try-line:#9a5a33;
 --goal-bg:#1d2025;--goal-border:#4a3426;--goal-bar:#a8653c;
@@ -109,12 +112,16 @@ html[data-ms-pfs="large"] .path-card{--pfs:1.15}
 .paragraph-text{font-size:calc(18px*var(--pfs));line-height:1.8;margin-bottom:10px}
 .blk{position:relative;border-left:3px solid transparent;border-radius:0 10px 10px 0;padding:4px 6px 4px 9px;margin-left:-12px;scroll-margin-top:60px;transition:background-color .3s}
 .blk.now{background:var(--kp-now);border-left-color:var(--accent)}
-/* 2026-10-27 21:56 可點的東西同一套樣子：accent-ink 字＋accent 線＋📖（＝打開解釋卡片）。沒有動畫。 */
-.clickable-term{color:var(--accent-ink);font-weight:700;border:none;border-bottom:1.5px dashed var(--accent);background:none;display:inline;cursor:pointer;font-size:inherit;line-height:inherit;padding:0}
+/* 2026-10-27 21:56 可點的東西同一套樣子：accent-ink 字＋accent 線＋書本圖示（＝打開解釋卡片；22:35 起改 💡，見 SPEC-DSN-003）。沒有動畫。 */
+/* 2026-10-27 22:3x SPEC-DSN-001：字與虛線底線改用 --kw-ink（保留虛線＋圖示；圖示 22:35 起依 SPEC-DSN-003 改 💡） */
+.clickable-term{color:var(--kw-ink);font-weight:700;border:none;border-bottom:1.5px dashed var(--kw-ink);background:none;display:inline;cursor:pointer;font-size:inherit;line-height:inherit;padding:0}
 .clickable-term-icon{font-size:.72em;margin-left:2px;vertical-align:baseline}
-.ext-chip{position:relative;display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 13px 0 10px;margin:0 0 10px;border:1.5px solid var(--accent);border-radius:16px;background:transparent;color:var(--accent-ink);font:inherit;font-size:calc(14px*var(--pfs));font-weight:700;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ext-chip::after{content:"";position:absolute;left:-5px;right:-5px;top:-8px;bottom:-8px} /* 點擊區：外框 32px＋上下各 6.5px＝45px 高 */
-.ext-chip-icon{font-size:15px;line-height:1}
+/* 2026-10-27 22:35 SPEC-DSN-003（使用者：「書本圖示太醜，想換」（原話用的是書本表情符號）→ 選 💡）：膠囊與關鍵詞後的圖示改 💡（render.py 產出），其他不變 */
+/* 2026-10-27 22:34 SPEC-DSN-002（使用者：膠囊整體縮小、字和框都變小、太佔空間、優先縮橫向）：外框 22px 高、字 12px、左右內距 7/5px、圖示與字間距 2px；
+   改成區塊級 flex＋max-content 寬，不再產生一行 25.6px 的匿名行框（行高不撐開）；下方外距 10→4px。顏色走 SPEC-DSN-001 --kw-ink。 */
+.ext-chip{position:relative;z-index:1;display:flex;width:max-content;align-items:center;gap:2px;height:22px;padding:0 7px 0 5px;margin:0 0 4px;border:1.5px solid var(--kw-ink);border-radius:11px;background:transparent;color:var(--kw-ink);font:inherit;font-size:calc(12px*var(--pfs));font-weight:700;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ext-chip::after{content:"";position:absolute;left:-6px;right:-6px;top:-11px;bottom:-12px} /* 點擊區（絕對定位，不佔版面；z-index:1 讓它蓋在下一段 .blk 的空白內距上）：22＋11＋12＝45px 高；下緣剛好到下一段文字頂端（外距 4＋兩段內距 4＋4） */
+.ext-chip-icon{font-size:12px;line-height:1}
 .ext-chip:active{background:var(--kp-now)}
 .ext-chip:focus-visible,.clickable-term:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .try-now-box{background:var(--kp-try);outline:1px dashed var(--kp-try-line);outline-offset:-1px;border-radius:8px;padding:8px 12px;font-size:calc(13px*var(--pfs));line-height:1.5;margin-top:6px}
@@ -269,8 +276,8 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           <button type="button" class="step-toggle" aria-expanded="true" aria-controls="s2-body"><span>② 感受比技術更重要</span><span aria-hidden="true">▾</span></button>
           <div class="step-body" id="s2-body">
             <div class="step-title"><span class="step-title-text">② 感受比技術更重要</span><span class="step-tag"></span></div>
-            <div class="blk has-ext" id="s2-b1"><p class="paragraph-text">原文說，兒童照相館的拍照技術，或許比經驗豐富的個人照相館差；但重點在於取悅小孩，讓他們開懷大笑。</p><button type="button" class="extension-icon ext-chip" data-ext="related" aria-haspopup="dialog"><span class="ext-chip-icon" aria-hidden="true">📖</span>延伸閱讀</button></div>
-<div class="blk" id="s2-b2"><p class="paragraph-text">所以許多店員曾經當過幼稚園老師或擁有育嬰證照，拍照的過程本身就成了美好的回憶。這正是<button type="button" class="clickable-term" data-term="體驗行銷" aria-haspopup="dialog">體驗行銷<span class="clickable-term-icon" aria-hidden="true">📖</span></button>的核心。</p></div>
+            <div class="blk has-ext" id="s2-b1"><p class="paragraph-text">原文說，兒童照相館的拍照技術，或許比經驗豐富的個人照相館差；但重點在於取悅小孩，讓他們開懷大笑。</p><button type="button" class="extension-icon ext-chip" data-ext="related" aria-haspopup="dialog"><span class="ext-chip-icon" aria-hidden="true">💡</span>延伸閱讀</button></div>
+<div class="blk" id="s2-b2"><p class="paragraph-text">所以許多店員曾經當過幼稚園老師或擁有育嬰證照，拍照的過程本身就成了美好的回憶。這正是<button type="button" class="clickable-term" data-term="體驗行銷" aria-haspopup="dialog">體驗行銷<span class="clickable-term-icon" aria-hidden="true">💡</span></button>的核心。</p></div>
             <p class="step-feedback">這一步常卡在「技術不如人就沒機會」，其實顧客記得的是感受。</p>
             <div class="try-now-box"><strong>現在試試：</strong>想一個讓顧客在過程中開心的小改變。</div>
           </div>
@@ -290,7 +297,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           <div class="step-body" id="s4-body">
             <div class="step-title"><span class="step-title-text">④ 建立「關聯性」，讓顧客記得你</span><span class="step-tag"></span></div>
             <div class="blk" id="s4-b1"><p class="step-quote">「賣體驗，能增加與顧客之間的關係。而當各種事件產生時，就容易產生關聯性。」</p></div>
-<div class="blk" id="s4-b2"><p class="paragraph-text">最後把前面串起來：體驗讓顧客和你之間有了<button type="button" class="clickable-term" data-term="關聯性" aria-haspopup="dialog">關聯性<span class="clickable-term-icon" aria-hidden="true">📖</span></button>，下次有事情發生時，他會先想到你。</p></div>
+<div class="blk" id="s4-b2"><p class="paragraph-text">最後把前面串起來：體驗讓顧客和你之間有了<button type="button" class="clickable-term" data-term="關聯性" aria-haspopup="dialog">關聯性<span class="clickable-term-icon" aria-hidden="true">💡</span></button>，下次有事情發生時，他會先想到你。</p></div>
             <p class="step-feedback">你已經走完整條路徑了。</p>
             <div class="try-now-box"><strong>現在試試：</strong>回想一位老顧客：他是因為哪一次體驗，才一直記得你？</div>
           </div>
@@ -383,7 +390,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
     <a href="#subscribe" class="nav-tab-item subscribe-tab" data-nav="subscribe"><div class="subscribe-badge-icon" aria-hidden="true">📬</div><span class="nav-tab-text">訂閱</span></a>
   </nav>
 </div>
-<script id="mk-data" type="application/json">{"terms":{"體驗行銷":{"explanation":"不從提供「商品」的觀點出發，而是從「體驗」的觀點看待生意。重點不只是東西的價格與機能，而是店家與顧客之間的感人體驗。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉（《不賣東西 賣體驗》書摘）","source_url":"https://www.cw.com.tw/article/5057484","sample":true},"關聯性":{"explanation":"顧客和你之間的連結。原文的說法是：賣體驗能增加與顧客之間的關係，當各種事件發生時，就容易產生關聯性。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉","source_url":"https://www.cw.com.tw/article/5057484","sample":true}},"related":[{"title":"原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）","url":"https://www.cw.com.tw/article/5057484","note":"本篇依據的原始文章"},{"title":"書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月","url":null,"note":"原文為此書書摘"}],"duration_s":58.0,"cues":[{"anchor":"s1-b1","start":0.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s1-b2","start":7.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s2-b1","start":14.0,"label":"② 感受比技術更重要"},{"anchor":"s2-b2","start":22.0,"label":"② 感受比技術更重要"},{"anchor":"s3-b1","start":30.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s3-b2","start":38.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s4-b1","start":44.0,"label":"④ 建立「關聯性」，讓顧客記得你"},{"anchor":"s4-b2","start":51.0,"label":"④ 建立「關聯性」，讓顧客記得你"}]}</script>
+<script id="mk-data" type="application/json">{"terms":{"體驗行銷":{"explanation":"不從提供「商品」的觀點出發，而是從「體驗」的觀點看待生意。重點不只是東西的價格與機能，而是店家與顧客之間的感人體驗。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉（《不賣東西 賣體驗》書摘）","source_url":"https://www.cw.com.tw/article/5057484","sample":true},"關聯性":{"explanation":"顧客和你之間的連結。原文的說法是：賣體驗能增加與顧客之間的關係，當各種事件發生時，就容易產生關聯性。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉","source_url":"https://www.cw.com.tw/article/5057484","sample":true}},"related":[{"title":"原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）","url":"https://www.cw.com.tw/article/5057484","note":"本篇依據的原始文章"},{"title":"書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月","url":null,"note":"原文為此書書摘"}],"duration_s":58.0,"cues":[{"anchor":"s1-b1","start":0.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s1-b2","start":7.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s2-b1","start":14.0,"label":"② 感受比技術更重要"},{"anchor":"s2-b2","start":22.0,"label":"② 感受比技術更重要"},{"anchor":"s3-b1","start":30.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s3-b2","start":38.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s4-b1","start":44.0,"label":"④ 建立「關聯性」，讓顧客記得你"},{"anchor":"s4-b2","start":51.0,"label":"④ 建立「關聯性」，讓顧客記得你"}],"say":{"term:體驗行銷":[["不從提供「商品」的觀點出發，",1.0,10,0.22],["而是從「體驗」的觀點看待生意。",0.96,4,0.45],["重點不只是東西的價格與機能，",1.008,12,0.22],["而是店家與顧客之間的感人體驗。",0.944,-6,0.0]],"term:關聯性":[["顧客和你之間的連結。",1.0,10,0.45],["原文的說法是：",1.008,12,0.3],["賣體驗能增加與顧客之間的關係，",0.984,2,0.22],["當各種事件發生時，",0.984,2,0.22],["就容易產生關聯性。",0.944,-6,0.0]],"ext:related":[["這段內容的出處和可以再讀的資料：",1.0,10,0.3],["原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15），",1.008,12,0.22],["本篇依據的原始文章",0.984,2,0.45],["書籍：《不賣東西 賣體驗》，",1.008,12,0.22],["藤村正宏著，天下雜誌出版，",0.984,2,0.22],["2014 年 4 月，",0.984,2,0.22],["原文為此書書摘",0.944,-6,0.0]]},"audio":{"term:體驗行銷":{"src":"audio/term-ec5f9d2b9c.mp3","text":"不從提供「商品」的觀點出發，而是從「體驗」的觀點看待生意。重點不只是東西的價格與機能，而是店家與顧客之間的感人體驗。"},"term:關聯性":{"src":"audio/term-fdd2daac33.mp3","text":"顧客和你之間的連結。原文的說法是：賣體驗能增加與顧客之間的關係，當各種事件發生時，就容易產生關聯性。"},"ext:related":{"src":"audio/ext-d8c3bf8bbc.mp3","text":"這段內容的出處和可以再讀的資料：原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15），本篇依據的原始文章書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月，原文為此書書摘"}}}</script>
 <script>
 (()=>{'use strict';
 /* 2026-10-27 19:4x：每個功能各自 try/catch（safe），一個功能出錯不會拖垮其他功能；錯誤列在頁底「診斷」面板。
@@ -536,10 +543,35 @@ const acUI=()=>ac.setAttribute('aria-checked',autoClose);acUI();
 ac.onclick=()=>{autoClose=!autoClose;LS.set('mk-term-autoclose',autoClose?'1':'0');acUI()};
 const zhVoice=()=>{if(!('speechSynthesis' in window))return null;return speechSynthesis.getVoices().find(v=>/^zh[-_]TW/i.test(v.lang))||null};
 if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
-const stopTTS=()=>{readId++;if('speechSynthesis' in window)speechSynthesis.cancel()};
+/* 2026-10-27 22:43 SPEC-GUI-010／011：延伸說明改念事先做好的 Podcast 風格音檔（zh-TW-HsiaoYuNeural，句首上揚、轉折稍慢、逗號／句號停頓）。
+   語速＝讀者在播放器設定的 Podcast 語速（#spd／afd-rate）× 1，音高保持不變（preservesPitch）。音檔讀不到 → 退回瀏覽器語音，用同一份分段：每段語速＝讀者語速 × 風格係數。 */
+const xa=new Audio();xa.id='extAud';xa.preload='none';let ttsTimer=0;   /* 不放進畫面：卡片上沒有播放控制 */
+const spdNow=()=>+(($('#spd')||{}).value)||1;
+const stopTTS=()=>{readId++;clearTimeout(ttsTimer);try{xa.onended=xa.onerror=null;xa.pause();if(xa.getAttribute('src')){xa.removeAttribute('src');xa.load()}}catch(e){}if('speechSynthesis' in window)speechSynthesis.cancel()};
 function finished(id){if(id!==readId||sheet.hidden)return;
   if(autoClose){closeSheet();return}
   stat.textContent='✅ 解釋念完了';ask.hidden=false}
+function failed(id){if(id!==readId||sheet.hidden)return;stat.textContent='⏸️ 原語音已暫停（無法朗讀，只顯示文字）';sheet.dataset.tts='error';ask.hidden=false}
+function speakBrowser(o,id){
+  const v=zhVoice();
+  if(!v){stat.hidden=false;stat.textContent='⏸️ 原語音已暫停（這個瀏覽器沒有台灣中文語音，只顯示文字）';sheet.dataset.tts='unavailable';
+    if(!warnedNoVoice){warnedNoVoice=true;toast('這個瀏覽器沒有台灣中文語音，解釋只顯示文字')}
+    ask.hidden=false;return}  /* 沒有朗讀：不自動關閉，直接顯示確認提問 */
+  sheet.dataset.ttsEngine='browser';
+  const segs=o.say&&o.say.length?o.say:[[o.tts,1,0,0]];let i=0;
+  const next=()=>{if(id!==readId||sheet.hidden)return;if(i>=segs.length){finished(id);return}
+    const [t,f,hz,gap]=segs[i++];const u=new SpeechSynthesisUtterance(t);try{u.voice=v}catch(e){}u.lang=v.lang||'zh-TW';
+    u.rate=Math.min(10,Math.max(.1,spdNow()*f));u.pitch=Math.min(2,Math.max(0,1+hz/220));
+    u.onend=()=>{if(id!==readId)return;ttsTimer=setTimeout(next,gap*1000/spdNow())};u.onerror=()=>failed(id);
+    speechSynthesis.speak(u)};
+  next()}
+function playFile(o,id){
+  sheet.dataset.ttsEngine='audio';let fell=false;
+  const fb=()=>{if(fell||id!==readId||sheet.hidden)return;fell=true;try{xa.onended=xa.onerror=null;xa.pause()}catch(e){}speakBrowser(o,id)};
+  xa.onended=()=>finished(id);xa.onerror=fb;
+  xa.src=o.audio.src;xa.preservesPitch=true;xa.webkitPreservesPitch=true;xa.mozPreservesPitch=true;
+  const r=spdNow();xa.defaultPlaybackRate=r;xa.playbackRate=r;
+  let p;try{p=xa.play()}catch(e){fb();return}if(p&&p.catch)p.catch(fb)}
 function open(btn,o){
   opener=btn;stopTTS();const id=readId;
   $('#sheetTitle').textContent=o.title;$('#sheetText').textContent=o.text;
@@ -547,24 +579,18 @@ function open(btn,o){
   (o.links||[]).forEach(r=>{const li=document.createElement('li');const t=r.url?document.createElement('a'):document.createElement('span');t.textContent=r.title;
     if(r.url){t.href=r.url;t.target='_blank';t.rel='noopener noreferrer'}li.appendChild(t);if(r.note){const n=document.createElement('span');n.className='note';n.textContent=r.note;li.appendChild(n)}links.appendChild(li)});
   const a=$('#sheetSrc');srcRow.hidden=!o.src;if(o.src){a.textContent=o.src.label;if(o.src.url)a.href=o.src.url;else a.removeAttribute('href')}
-  ask.hidden=true;ov.hidden=false;sheet.hidden=false;sheet.dataset.term=o.title;
+  ask.hidden=true;ov.hidden=false;sheet.hidden=false;sheet.dataset.term=o.title;delete sheet.dataset.ttsEngine;
   const voiceMode=!P.paused;resumeAfter=voiceMode;
-  if(voiceMode){P.pause();
-    const v=zhVoice();
-    if(v){stat.hidden=false;stat.textContent='⏸️ 原語音已暫停，正在朗讀解釋…';
-      const u=new SpeechSynthesisUtterance(o.tts);try{u.voice=v}catch(e){}u.lang=v.lang||'zh-TW';u.rate=+(($('#spd')||{}).value)||1;
-      u.onend=()=>finished(id);u.onerror=()=>{if(id!==readId||sheet.hidden)return;stat.textContent='⏸️ 原語音已暫停（無法朗讀，只顯示文字）';sheet.dataset.tts='error';ask.hidden=false};
-      sheet.dataset.tts='speaking';speechSynthesis.speak(u)}
-    else{stat.hidden=false;stat.textContent='⏸️ 原語音已暫停（這個瀏覽器沒有台灣中文語音，只顯示文字）';sheet.dataset.tts='unavailable';
-      if(!warnedNoVoice){warnedNoVoice=true;toast('這個瀏覽器沒有台灣中文語音，解釋只顯示文字')}
-      ask.hidden=false}  /* 沒有朗讀：不自動關閉，直接顯示確認提問 */
-  }else{stat.hidden=true;sheet.dataset.tts='off';ask.hidden=false}
+  if(voiceMode){P.pause();stat.hidden=false;stat.textContent='⏸️ 原語音已暫停，正在朗讀解釋…';sheet.dataset.tts='speaking';
+    if(o.audio)playFile(o,id);else speakBrowser(o,id)}
+  else{stat.hidden=true;sheet.dataset.tts='off';ask.hidden=false}
   $('#sheetClose').focus({preventScroll:true})}
-/* 卡片上念的就是畫面上的解釋文字 */
-openTerm=function(btn){const term=btn.dataset.term,T=D.terms[term];if(!T)return;
-  open(btn,{title:term,text:T.explanation,tts:T.explanation,src:{label:T.source_label,url:T.source_url}})};
-openExt=function(btn){const R=D.related||[];const text='這段內容的出處和可以再讀的資料：';
-  open(btn,{title:'延伸閱讀',text,links:R,tts:text+R.map(r=>r.title+(r.note?'，'+r.note:'')).join('。')})};
+/* 卡片上念的就是畫面上的解釋文字（音檔與退路分段都由同一份文字逐字切出，render.py 檢查一致才放進頁面） */
+const said=k=>((D.say||{})[k]||[]).map(x=>x[0]).join('');
+openTerm=function(btn){const term=btn.dataset.term,T=D.terms[term];if(!T)return;const k='term:'+term;
+  open(btn,{title:term,text:T.explanation,tts:T.explanation,say:(D.say||{})[k],audio:(D.audio||{})[k],src:{label:T.source_label,url:T.source_url}})};
+openExt=function(btn){const R=D.related||[];const text='這段內容的出處和可以再讀的資料：',k='ext:related';
+  open(btn,{title:'延伸閱讀',text,links:R,tts:said(k)||text+R.map(r=>r.title+(r.note?'，'+r.note:'')).join('。'),say:(D.say||{})[k],audio:(D.audio||{})[k]})};
 closeSheet=function(){
   if(sheet.hidden)return;stopTTS();
   sheet.hidden=true;ov.hidden=true;delete sheet.dataset.term;
@@ -585,7 +611,7 @@ $$('[data-nav]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();co
 });
 
 safe('初次量測',()=>measure());
-window.__mk={P,update,measure,setPfs,get userHeld(){return userHeld},openTerm,openExt,closeSheet,get curStep(){return curStep},get autoClose(){return autoClose},setFollow(v){follow=v;fbUI()}};
+window.__mk={P,D,update,measure,setPfs,get userHeld(){return userHeld},openTerm,openExt,closeSheet,get curStep(){return curStep},get autoClose(){return autoClose},setFollow(v){follow=v;fbUI()}};
 })();
 
 </script>
