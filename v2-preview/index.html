@@ -133,13 +133,12 @@ html[data-ms-pfs="large"] .path-card{--pfs:1.15}
 .js .step-item.collapsed .step-body{display:none}
 .step-item:not(.collapsed) .step-toggle,html:not(.js) .step-toggle{display:none}
 html:not(.js) .pfs-toggle{visibility:hidden} /* 沒有 JS 時按了也沒用，先藏起來（保留位置，標題列高度不變） */
-/* 3 相關閱讀（收合） */
-details.related-section{background:var(--rel-bg);border:1px solid var(--rel-border);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:var(--muted)}
-details.related-section>summary{list-style:none;display:flex;justify-content:space-between;font-weight:600;cursor:pointer}
-details.related-section>summary::-webkit-details-marker{display:none}
-details.related-section[open]>summary .arrow{transform:rotate(180deg)}
-.related-list{list-style:none;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
-.related-list li{margin:6px 0;line-height:1.5}.related-list .note{display:block;font-size:12px}
+/* 3 相關閱讀（2026-10-27 23:3x SPEC-ART-001：不收合、只列標題、一則一行、超過用「…」、每列點擊高度 44px） */
+.related-section{background:var(--rel-bg);border:1px solid var(--rel-border);border-radius:12px;padding:12px 16px 4px;margin-bottom:16px;font-size:14px;color:var(--muted)}
+.related-head{font-size:14px;font-weight:600;line-height:1.5;margin:0;color:inherit}
+.related-list{list-style:none;margin-top:10px;border-top:1px solid var(--line);padding:0}
+.related-list li{margin:0;min-width:0}
+.related-item{display:block;min-height:44px;line-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .source-block{border-top:1px dashed var(--line);padding-top:12px;margin-bottom:20px;font-size:12px;color:var(--muted);line-height:1.5}
 .source-link{text-decoration:none;word-break:break-all}
 .bottom-sub-card{background:var(--chip);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
@@ -304,13 +303,13 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
         </div>
       </section>
 
-      <details class="related-section" id="related">
-        <summary><span>相關閱讀（2）</span><span class="arrow" aria-hidden="true">▼</span></summary>
+      <section class="related-section" id="related" aria-labelledby="relatedHead">
+        <h2 class="related-head" id="relatedHead">相關閱讀（2）</h2>
         <ul class="related-list">
-          <li><a href="https://www.cw.com.tw/article/5057484" target="_blank" rel="noopener noreferrer">原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）</a><span class="note">本篇依據的原始文章</span></li>
-          <li>書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月<span class="note">原文為此書書摘</span></li>
+          <li><a class="related-item" href="https://www.cw.com.tw/article/5057484" target="_blank" rel="noopener noreferrer" title="原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）" aria-label="原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）">原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）</a></li>
+          <li><span class="related-item" title="書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月" aria-label="書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月">書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月</span></li>
         </ul>
-      </details>
+      </section>
 
       <div class="source-block">來源：<a href="https://www.cw.com.tw/article/5057484" class="source-link" target="_blank" rel="noopener noreferrer">天下雜誌 cw.com.tw/article/5057484</a></div>
 
