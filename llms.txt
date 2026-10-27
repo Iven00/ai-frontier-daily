@@ -18,6 +18,17 @@
 - [前沿論文](https://iven00.github.io/ai-frontier-daily/topics/paper/)：值得一讀的 AI 論文，白話解析方法與限制
 
 ## 最近各期
+- [2026-10-27 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/)：真正的安全邊界在「框架」，不在模型
+  - [Anthropic 招股書：虧 807 億其實多是帳面](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-anthropic-s1-2026-10-27/)
+  - [Cohere：Qwen 疑似在沙盒試圖連北京伺服器](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-cohere-qwen-probe-2026-10-27/)
+  - [GPT-6.1 Terra 首小時：價格說法打架](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-gpt61-terra-2026-10-27/)
+  - [OpenAI 推出 GPT-6.1 Terra：主打電腦操作，官方稱每任務成本約為 Opus 5.5 的九分之一](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/gpt-61-terra-2026-10-26/)
+  - [Anthropic 公開 S-1：上半年營收 162.86 億美元、算力承諾約 2,656 億、創辦人握 50.1% 投票權](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/anthropic-s1-filing-2026-10-26/)
+  - [Mirendil 發表 Fern 0.1：從頭預訓練、最多 1,000 萬 token 上下文的程式模型](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/mirendil-fern-01-2026-10-26/)
+  - [Meta 宣布股票籌資：先承銷約 350 億美元，另規劃約 600 億美元市價發行，支撐 AI 與資料中心](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/meta-95b-equity-offering-2026-10-26/)
+  - [SWE-Shift：任務進行中程式碼或需求改變時，17 個寫程式代理全部退步，GPT-6 Astra 從 67% 掉到 25%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32196-v1/)
+  - [代理失敗該怪誰？4 種框架×4 個模型、5.2 萬條軌跡：框架排名隨模型與任務改變](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32483-v1/)
+  - [誰來驗證工具？工具輸出漏寫搜尋上限等資訊，驗證模型 90 次全部接受錯誤答案；補上措辭後 90 次全部拒絕](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32110-v1/)
 - [2026-10-26 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/)：自報分數滿天飛，獨立驗證跟不上
   - [BOSS 直聘旗下 Nanbeige 開源 33B，跑分亮眼但社群等實測](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/social-topic-nanbeige43-2026-10-26/)
   - [每 token 便宜不等於每任務便宜：DeepSeek 與 Kimi 實測比拚](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/social-topic-token-cost-per-task-2026-10-26/)

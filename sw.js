@@ -5,7 +5,7 @@
  *   everything else  → not handled at all (the browser loads it exactly as without a service worker; MP3 Range streaming untouched)
  */
 'use strict';
-const VERSION = '7ef95d3c';
+const VERSION = '3d7decd4';
 const SHELL = 'ms-site-shell-' + VERSION;
 const SCOPE = new URL(self.registration.scope);
 const SHELL_FILES = ["offline/", "site.webmanifest", "assets/pwa.1a7cd500.js", "assets/pwa.17166b47.css", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "favicon.svg", "favicon.ico", "assets/share.dfe73a53.js", "assets/share.22531120.css"];   // relative to scope

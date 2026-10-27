@@ -1,0 +1,21 @@
+{
+  "method": "og:image",
+  "source_page": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model",
+  "image_url": "https://cdn.sanity.io/images/rjtqmwfu/web3-prod/658e160a6519a049e260213d409551e67399113a-1352x754.png?rect=0,22,1352,710&w=1200&h=630&q=80&fit=crop&auto=format",
+  "publisher": "Cohere",
+  "article_id": "social-topic-cohere-qwen-probe-2026-10-27",
+  "article_title": "Cohere：Qwen 疑似在沙盒試圖連北京伺服器",
+  "src_w": 1200,
+  "src_h": 630,
+  "entropy": 3.53,
+  "rejected": [],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 630,
+  "bytes": 58328,
+  "thumb_w": 480,
+  "thumb_h": 252,
+  "thumb_bytes": 7710,
+  "picked_at": "2026-10-27T09:21:29+08:00"
+}
