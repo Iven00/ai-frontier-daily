@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<script>/* 啟動（首次繪製前）：診斷旗標（網址 #norail #nofixed #nojs，或 localStorage 'ms.diag'）、html.js、個人字級 */
+(function(){var d=document.documentElement,f={},h=location.hash||"";try{f=JSON.parse(localStorage.getItem("ms.diag")||"{}")||{}}catch(e){}
+["norail","nofixed","nojs"].forEach(function(k){if(h.indexOf(k)>=0)f[k]=true});window.__MS_DIAG=f;
+var c=[];if(!f.nojs)c.push("js");if(f.nofixed)c.push("diag-nofixed");if(f.norail)c.push("diag-norail");if(c.length)d.className+=(d.className?" ":"")+c.join(" ");
+try{if(!f.nojs&&localStorage.getItem("ms.pathFontSize")==="large")d.setAttribute("data-ms-pfs","large")}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>感動顧客心 不賣東西賣體驗｜Mirakee Signal</title>
+<style>
+/* Mirakee Signal v2 手機文章頁（測試實作）— 依 Stitch 第 3 輪定稿 /workspace/stitch_r3/out_compact/code.html */
+:root{--bg:#fbfaf7;--fg:#1f2328;--muted:#5b636e;--card:#ffffff;--line:#e6e2d9;--accent:#b4531f;--chip:#f2eee6;--player:#fffdf8;
+--brand-box:#C2643C;--brand-name:#3A302A;--brand-sub:#2F6F6A;--more-dot:#8C7F75;--scrim:rgba(31,35,40,.4);--on-accent:#ffffff;--col:480px;
+/* 配色 v2（2026-10-27 19:2x）：淺色深色同一套邏輯——中性偏暖的抬升表面＋accent 邊框／左側色條表達層級（關鍵路徑 > 目標 > 相關閱讀） */
+--accent-ink:#a64a19;
+--kp-bg:#fff4ea;--kp-border:#e3b493;--kp-bar:#b4531f;--kp-chip:#f4ece2;
+--goal-bg:#fff9f3;--goal-border:#ecd5c3;--goal-bar:#d9a07c;
+--rel-bg:#fcfaf6;--rel-border:#e6e2d9;
+--rail-line:#d8d2c6;--rail-ring:#b4531f;--rail-halo:rgba(180,83,31,.22)}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8e6e1;--muted:#a3a9b2;--card:#1c1f24;--line:#2c3038;--accent:#f08a4b;--chip:#262a31;--player:#1c1f24;
+--brand-name:#F5EEE4;--brand-sub:#7CC4BA;--more-dot:#a3a9b2;--scrim:rgba(0,0,0,.55);--on-accent:#14161a;
+--accent-ink:#f08a4b;
+--kp-bg:#24272d;--kp-border:#7a4a2e;--kp-bar:#f08a4b;--kp-chip:#30343c;
+--goal-bg:#1d2025;--goal-border:#4a3426;--goal-bar:#a8653c;
+--rel-bg:#181a1e;--rel-border:#2c3038;
+--rail-line:#3a3f49;--rail-ring:#f08a4b;--rail-halo:rgba(240,138,75,.28)}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+/* 祖先用 overflow-x:clip（不用 hidden，避免變成捲動容器） */
+html,body{background:var(--bg);color:var(--fg);overflow-x:clip;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* 2026-10-27 19:4x 防抖動：關掉 Android 12+ 捲到頂／底時的「拉伸」效果（會把整頁文字縮放變形）；不用平滑捲動 */
+html{overscroll-behavior-y:none;scroll-behavior:auto}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+.app-screen{max-width:var(--col);margin:0 auto;position:relative;background:var(--bg);padding-bottom:calc(140px + env(safe-area-inset-bottom));overflow-x:clip}
+/* 1 頂部列：46px，不固定 */
+.top-bar{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-left{display:flex;align-items:center;gap:8px;text-decoration:none}
+.brand-logo-box{width:26px;height:26px;background:var(--brand-box);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.brand-text-group{display:flex;flex-direction:column;line-height:1.1}
+.brand-name{font-size:13px;font-weight:700;color:var(--brand-name);letter-spacing:-.2px}
+.brand-sub{font-size:9px;font-weight:500;color:var(--brand-sub);margin-top:1px}
+.top-right{display:flex;align-items:center;gap:10px}
+.btn-sub-pill{background:var(--accent);color:var(--on-accent);border:none;border-radius:9999px;padding:5px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;cursor:pointer;text-decoration:none}
+.btn-avatar-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--muted);background:none;border:none}
+/* 左緣進度軌（2026-10-27 19:21 使用者決定）：每個關鍵路徑步驟一個圈，對齊該步驟；依視窗位置填滿。只改顏色／陰影，不改版面 */
+.content-wrapper{position:relative;padding-left:12px}
+.scroll-guide-track{position:absolute;left:5px;top:16px;bottom:24px;width:2px;background:var(--rail-line);border-radius:1px}
+/* 圈圈寫在 HTML 裡（render.py），每步一個，純 CSS 定位在該步標題左邊、壓在左緣線上：沒有 JS 也看得到（空心）。
+   x：step-item 左緣距 content-wrapper 38px（12＋6＋卡片左框 4＋內距 16），線中心在 6px → 圈圈左緣 -38px。
+   y：圈圈字級＝步驟標題字級，標題行高 1.45 → 第一行中心 .725em。JS 只切換顏色（filled／current），不改位置大小。 */
+.rail-step{position:absolute;left:-38px;top:calc(.725em - 6px);font-size:calc(17px*var(--pfs));width:12px;height:12px;border-radius:50%;border:2px solid var(--rail-ring);background:var(--bg);padding:0;cursor:pointer;transition:background-color .2s,box-shadow .2s}
+.js .step-item.collapsed>.rail-step{top:calc(10px + .725em - 6px);font-size:calc(16px*var(--pfs))}
+.rail-step::after{content:"";position:absolute;left:-4px;right:-6px;top:-10px;bottom:-10px}
+.rail-step.filled{background:var(--rail-ring)}
+.rail-step.current{background:var(--rail-ring);box-shadow:0 0 0 3px var(--rail-halo)}
+.rail-step:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.main-body{padding:16px 16px 24px 6px}
+/* 2 頁頭 */
+.article-header{margin-bottom:20px}
+.kicker{font-size:11px;color:var(--muted);letter-spacing:1.5px;font-weight:500;margin-bottom:6px;text-transform:uppercase}
+.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.article-title{font-size:26px;font-weight:800;line-height:1.35;letter-spacing:-.4px}
+.tag-sample{font-size:11px;color:var(--muted);background:var(--chip);border:1px solid var(--line);padding:2px 7px;border-radius:4px;white-space:nowrap;margin-top:4px;font-weight:500}
+.meta-group{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.meta-line strong{font-weight:700;margin-right:6px}
+.summary-quote{border-left:4px solid var(--accent);padding:8px 12px;background:var(--chip);border-radius:0 8px 8px 0;font-size:14px;line-height:1.6;font-weight:500}
+/* 3a 目標列 */
+.goal-banner{background:var(--goal-bg);border:1px solid var(--goal-border);border-left:3px solid var(--goal-bar);border-radius:12px;padding:10px 14px;font-size:13.5px;line-height:1.5;margin-bottom:16px}
+.goal-badge{font-weight:700;color:var(--accent);margin-right:4px}
+/* 3b 關鍵路徑卡 */
+.path-card{--pfs:1;--chip:var(--kp-chip);background:var(--kp-bg);border:1px solid var(--kp-border);border-left:4px solid var(--kp-bar);border-radius:16px;padding:16px;margin-bottom:24px}
+/* 3c 標題列：2026-10-27 19:21 使用者決定不再固定（一般排版，跟著捲走）；進度改到左緣圈圈。高 35px = 8 + 20 + 6 + 1 */
+.path-header{position:relative;display:flex;align-items:center;justify-content:space-between;gap:6px;background:var(--kp-bg);border-bottom:1px solid var(--line);
+margin:-16px -16px 14px -16px;padding:8px 16px 6px;line-height:20px;border-top-left-radius:12px 15px;border-top-right-radius:15px}
+.path-head-right{display:flex;align-items:center;gap:8px;flex:none}
+/* 字級切換（個人設定，全站共用 localStorage 'ms.pathFontSize'）：外觀 18px 高（含框 20px＝標題列行高，不撐高標題列），點擊區 44×44 */
+html[data-ms-pfs="large"] .path-card{--pfs:1.15}
+.pfs-toggle{display:flex;border:1px solid var(--line);border-radius:6px;overflow:visible;flex:none}
+.pfs-btn{position:relative;width:30px;height:18px;line-height:18px;padding:0;border:none;background:none;color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.pfs-btn+.pfs-btn{border-left:1px solid var(--line)}
+.pfs-btn:first-child{border-radius:5px 0 0 5px}.pfs-btn:last-child{border-radius:0 5px 5px 0}
+.pfs-btn[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.pfs-btn::after{content:"";position:absolute;left:-7px;right:-7px;top:-13px;bottom:-13px}
+.pfs-btn:first-child::after{left:-14px;right:0}.pfs-btn:last-child::after{left:0;right:-14px}
+.pfs-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.path-title{font-size:15px;font-weight:700}
+.step-item{position:relative;margin-bottom:16px;scroll-margin-top:44px}
+.step-item+.step-item{margin-top:18px}
+/* 步驟小標（使用者 19:47：更醒目）：17px（A+ 時 19.55px）、粗 800、accent-ink；狀態改變時不改字級／粗細 */
+.step-title{font-size:calc(17px*var(--pfs));font-weight:800;line-height:1.45;color:var(--accent-ink);display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.step-tag{font-size:calc(11px*var(--pfs));font-weight:600;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.step-tag{min-width:calc(3em + 14px);text-align:center;box-sizing:border-box;border:1px solid transparent}
+.step-tag:empty{visibility:hidden}
+.step-tag.done{color:var(--muted);background:var(--chip)}
+.step-tag.now{color:var(--accent-ink);background:var(--chip);border:1px solid var(--line)}
+.step-feedback{font-size:calc(12px*var(--pfs));color:var(--muted);margin:0 0 8px;padding-left:4px;font-style:italic}
+.step-quote{font-size:calc(14px*var(--pfs));color:var(--muted);line-height:1.6;margin-bottom:6px;padding-left:4px}
+.paragraph-text{font-size:calc(18px*var(--pfs));line-height:1.8;margin-bottom:10px}
+.blk{position:relative;border-left:3px solid transparent;border-radius:0 10px 10px 0;padding:4px 6px 4px 9px;margin-left:-12px;scroll-margin-top:60px;transition:background-color .3s}
+.blk.now{background:var(--chip);border-left-color:var(--accent)}
+.blk.has-ext{padding-right:34px}
+.extension-icon{position:absolute;right:4px;top:50%;margin-top:-14px;width:28px;height:28px;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;background:none;border:none;cursor:pointer}
+.extension-icon::before{content:"📖"} /* 圖示用 CSS 產生：按鈕本身不含文字 */
+.extension-icon.wiggle{animation:wig .9s ease-in-out 1}
+@keyframes wig{0%,100%{transform:none}25%{transform:translateY(-3px) rotate(-8deg)}50%{transform:translateY(0) rotate(6deg)}75%{transform:translateY(-1px)}}
+.clickable-term{color:var(--fg);font-weight:700;border:none;border-bottom:1.5px dashed var(--accent);background:none;display:inline;cursor:pointer;font-size:inherit;line-height:inherit;padding:0}
+.clickable-term-icon{font-size:calc(10px*var(--pfs));color:var(--accent-ink);vertical-align:super;margin-left:1px}
+.try-now-box{background:var(--chip);border-radius:8px;padding:8px 12px;font-size:calc(13px*var(--pfs));line-height:1.5;margin-top:6px}
+.try-now-box strong{color:var(--accent-ink);font-weight:700}
+/* 收合只在 JS 有跑時才生效（html.js 由 <head> 的小程式加上）；沒有 JS 的檢視器全部展開、不顯示收合鈕 */
+.js .step-item.collapsed{border-top:1px solid var(--line);margin:0;padding-top:0}
+.js .step-item.collapsed+.step-item.collapsed{margin-top:0}
+.step-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 0;background:none;border:none;color:var(--accent-ink);font-size:calc(16px*var(--pfs));font-weight:700;line-height:1.45;text-align:left;cursor:pointer}
+.js .step-item.collapsed .step-body{display:none}
+.step-item:not(.collapsed) .step-toggle,html:not(.js) .step-toggle{display:none}
+html:not(.js) .pfs-toggle{visibility:hidden} /* 沒有 JS 時按了也沒用，先藏起來（保留位置，標題列高度不變） */
+/* 3 相關閱讀（收合） */
+details.related-section{background:var(--rel-bg);border:1px solid var(--rel-border);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:var(--muted)}
+details.related-section>summary{list-style:none;display:flex;justify-content:space-between;font-weight:600;cursor:pointer}
+details.related-section>summary::-webkit-details-marker{display:none}
+details.related-section[open]>summary .arrow{transform:rotate(180deg)}
+.related-list{list-style:none;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.related-list li{margin:6px 0;line-height:1.5}.related-list .note{display:block;font-size:12px}
+.source-block{border-top:1px dashed var(--line);padding-top:12px;margin-bottom:20px;font-size:12px;color:var(--muted);line-height:1.5}
+.source-link{text-decoration:none;word-break:break-all}
+.bottom-sub-card{background:var(--chip);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.bottom-sub-text{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
+/* 4 名詞解釋 bottom sheet */
+.bottom-sheet-overlay{position:fixed;inset:0;background:var(--scrim);z-index:80}
+.bottom-sheet-card{position:fixed;left:0;right:0;margin:0 auto;bottom:calc(58px + env(safe-area-inset-bottom));width:100%;max-width:var(--col);background:var(--card);border-top-left-radius:20px;border-top-right-radius:20px;border-top:1px solid var(--line);box-shadow:0 -4px 24px rgba(31,35,40,.12);z-index:85;padding:16px 20px 18px;max-height:70vh;overflow-y:auto}
+[hidden]{display:none!important}
+.sheet-handle-bar{width:36px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 12px}
+.sheet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sheet-title{font-size:18px;font-weight:800}
+.sheet-close-btn{width:26px;height:26px;border-radius:50%;background:var(--chip);border:none;color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sheet-status-badge{display:inline-flex;align-items:center;gap:4px;background:var(--chip);color:var(--muted);font-size:11px;padding:3px 8px;border-radius:6px;margin-bottom:10px}
+.sheet-explanation{font-size:14px;line-height:1.65;margin-bottom:10px}
+.sheet-source{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.sheet-clarify-question{font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic}
+.sheet-switch-row{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--line)}
+.sheet-switch-label{font-size:13px;font-weight:600}
+.switch{width:44px;height:24px;background:var(--line);border-radius:12px;position:relative;cursor:pointer;border:none;flex:none}
+.switch::after{content:"";width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;left:2px;top:2px;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:left .15s}
+.switch[aria-checked="true"]{background:var(--accent)}.switch[aria-checked="true"]::after{left:22px}
+/* 5 Podcast 播放器細條 */
+.podcast-player-bar{position:fixed;left:0;right:0;margin:0 auto;bottom:calc(58px + env(safe-area-inset-bottom));width:100%;max-width:var(--col);height:70px;background:var(--player);border-top:1px solid var(--line);z-index:70;padding:6px 14px 4px;display:flex;flex-direction:column;justify-content:space-between}
+.player-row-top{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);line-height:1;gap:8px}
+.player-row-top .stub{font-size:10px}
+.player-controls-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0}
+.pctl{display:flex;align-items:center;gap:8px}
+.btn-player-skip{width:26px;height:26px;border-radius:50%;background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.btn-player-play-main{width:30px;height:30px;border-radius:8px;background:var(--accent);border:none;color:var(--on-accent);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(180,83,31,.25)}
+.player-speed-select{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-size:11px;font-weight:700;color:var(--fg)}
+.progress-bar-wrap{flex:1;min-width:0;display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);padding:0 4px;font-variant-numeric:tabular-nums}
+.seek{flex:1;min-width:0;height:2.5px;-webkit-appearance:none;appearance:none;background:linear-gradient(var(--accent),var(--accent)) 0/var(--p,0%) 100% no-repeat,var(--line);border-radius:2px;outline-offset:4px}
+.seek::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.player-bottom-follow{display:flex;align-items:center;gap:8px;font-size:10.5px;min-width:0}
+.btn-follow{color:var(--accent);font-weight:700;background:none;border:none;font-size:10.5px;cursor:pointer;flex:none}
+.btn-follow[aria-pressed="false"]{color:var(--muted)}
+.btn-back{background:var(--accent);color:var(--on-accent);border:none;border-radius:999px;font-size:10px;padding:1px 8px;cursor:pointer;flex:none}
+.current-track-name{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+/* 6 底部分頁列 */
+.bottom-nav-bar{position:fixed;left:0;right:0;margin:0 auto;bottom:0;width:100%;max-width:var(--col);height:calc(58px + env(safe-area-inset-bottom));padding:0 4px env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);box-shadow:0 -2px 10px rgba(0,0,0,.03);z-index:90;display:flex;align-items:center;justify-content:space-around}
+.nav-tab-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:var(--muted);width:58px}
+.nav-tab-icon{font-size:20px;line-height:1.1;margin-bottom:2px;height:22px;display:flex;align-items:center;justify-content:center}
+.nav-tab-text{font-size:11px;line-height:1;font-weight:500}
+.nav-tab-item.active .nav-tab-text,.nav-tab-item.subscribe-tab .nav-tab-text{color:var(--accent);font-weight:700}
+.three-dots-icon{display:flex;align-items:center;gap:3px;height:22px;margin-bottom:2px}
+.more-dot{width:4px;height:4px;border-radius:50%;background:var(--more-dot)}
+.subscribe-badge-icon{background:var(--chip);border:1px solid var(--line);border-radius:9999px;padding:2px 7px;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
+.toast{position:fixed;left:0;right:0;margin:0 auto;width:max-content;bottom:140px;background:var(--fg);color:var(--bg);font-size:12px;padding:6px 12px;border-radius:8px;z-index:95;max-width:90%}
+@media (prefers-reduced-motion:reduce){.extension-icon.wiggle{animation:none}.blk,.rail-step,.switch::after{transition:none}}
+/* 診斷開關（頁面最底部，一般排版、不固定）：#norail #nofixed #nojs 或面板勾選（存在 localStorage 'ms.diag'） */
+.diag-nofixed .podcast-player-bar,.diag-nofixed .bottom-nav-bar{position:static;margin:0 auto}
+.diag-nofixed .app-screen{padding-bottom:24px}
+.diag{margin:8px 16px 12px 18px;font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.diag>summary{cursor:pointer;list-style:none;font-size:11px;display:inline-block;padding:4px 0}
+.diag>summary::-webkit-details-marker{display:none}
+.diag-row{margin:6px 0;line-height:1.5}
+.diag label{display:flex;align-items:center;gap:8px;margin:8px 0;color:var(--fg);font-size:13px}
+.diag input{width:18px;height:18px;accent-color:var(--accent)}
+.diag button{margin-top:6px;background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px;color:var(--fg);cursor:pointer}
+.diag-note{font-size:11px}
+/* 桌機：尚未設計，只保證不壞（置中單欄） */
+@media (min-width:768px){body{background:var(--chip)}.app-screen{box-shadow:0 0 0 1px var(--line)}}
+
+</style>
+</head>
+<body>
+<div class="app-screen">
+  <header class="top-bar">
+    <a class="top-left" href="#home" data-nav="home" aria-label="Mirakee Signal 首頁">
+      <div class="brand-logo-box" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.2" fill="#ffffff"/><path d="M4.5 4.5C6.433 2.567 9.567 2.567 11.5 4.5" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/><path d="M2.5 2.5C5.538 -0.538 10.462 -0.538 13.5 2.5" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+      <div class="brand-text-group"><span class="brand-name">Mirakee Signal</span><span class="brand-sub">AI 前沿情報站</span></div>
+    </a>
+    <div class="top-right">
+      <a class="btn-sub-pill" href="#subscribe" data-nav="subscribe">📬 免費訂閱</a>
+      <button class="btn-avatar-icon" type="button" aria-label="登入" data-nav="login">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="scroll-guide-track" id="rail" role="group" aria-label="關鍵路徑進度（左緣圈圈：實心＝已讀到）"></div>
+    <main class="main-body">
+      <section class="article-header">
+        <div class="kicker" id="kicker">MIRAKEE SIGNAL ・ AI 生活應用 ・ 2026-10-27</div>
+        <div class="title-row">
+          <h1 class="article-title">感動顧客心 不賣東西賣體驗</h1>
+          <span class="tag-sample">範例文字</span>
+        </div>
+        <div class="meta-group">
+          <div class="meta-line"><strong>出自</strong>測試範例（未正式刊出）</div>
+          <div class="meta-line"><strong>原始發布</strong>2014-04-15・天下雜誌・文／莊素玉</div>
+        </div>
+        <div class="summary-quote">「物品的價格與機能，不再是消費者唯一的評判標準。建立店家與消費者之間的感人體驗，才是王道。」</div>
+      </section>
+
+      <div class="goal-banner"><span class="goal-badge">目標：能用｜</span>讀完你能用「賣體驗」的角度，重新看自己的一項產品或服務。</div>
+
+      <section class="path-card" id="keyPath" aria-label="核心關鍵路徑">
+        <div class="path-header" id="pathHeader">
+          <span class="path-title">核心關鍵路徑</span>
+          <div class="path-head-right">
+            <div class="pfs-toggle" role="group" aria-label="關鍵路徑字級">
+              <button type="button" class="pfs-btn" data-pfs="normal" aria-pressed="true" aria-label="標準字級" title="標準字級">A</button>
+              <button type="button" class="pfs-btn" data-pfs="large" aria-pressed="false" aria-label="放大字級" title="放大字級">A+</button>
+            </div>
+          </div>
+        </div>
+        <div class="step-item" id="s1" data-step="1">
+          <a class="rail-step" href="#s1" aria-label="第 1 步：先分清楚：賣「商品」還是賣「體驗」"></a>
+          <button type="button" class="step-toggle" aria-expanded="true" aria-controls="s1-body"><span>① 先分清楚：賣「商品」還是賣「體驗」</span><span aria-hidden="true">▾</span></button>
+          <div class="step-body" id="s1-body">
+            <div class="step-title"><span class="step-title-text">① 先分清楚：賣「商品」還是賣「體驗」</span><span class="step-tag"></span></div>
+            <div class="blk" id="s1-b1"><p class="step-quote">「一直以來，照相館都在賣「照片」，兒童照相館賣的卻是「回憶」。」</p></div>
+<div class="blk" id="s1-b2"><p class="paragraph-text">我們先從這一點開始：同樣是拍照，一邊賣的是成品，一邊賣的是過程留下的感受。</p></div>
+            <p class="step-feedback">很好，你已經抓到最關鍵的差別了。</p>
+            <div class="try-now-box"><strong>現在試試：</strong>寫下你的產品，顧客真正記得的是什麼。</div>
+          </div>
+        </div>
+        <div class="step-item" id="s2" data-step="2">
+          <a class="rail-step" href="#s2" aria-label="第 2 步：感受比技術更重要"></a>
+          <button type="button" class="step-toggle" aria-expanded="true" aria-controls="s2-body"><span>② 感受比技術更重要</span><span aria-hidden="true">▾</span></button>
+          <div class="step-body" id="s2-body">
+            <div class="step-title"><span class="step-title-text">② 感受比技術更重要</span><span class="step-tag"></span></div>
+            <div class="blk has-ext" id="s2-b1"><p class="paragraph-text">原文說，兒童照相館的拍照技術，或許比經驗豐富的個人照相館差；但重點在於取悅小孩，讓他們開懷大笑。</p><button type="button" class="extension-icon" aria-label="這段有延伸內容，打開相關閱讀"></button></div>
+<div class="blk" id="s2-b2"><p class="paragraph-text">所以許多店員曾經當過幼稚園老師或擁有育嬰證照，拍照的過程本身就成了美好的回憶。這正是<button type="button" class="clickable-term" data-term="體驗行銷" aria-haspopup="dialog">體驗行銷<span class="clickable-term-icon" aria-hidden="true">↗</span></button>的核心。</p></div>
+            <p class="step-feedback">這一步常卡在「技術不如人就沒機會」，其實顧客記得的是感受。</p>
+            <div class="try-now-box"><strong>現在試試：</strong>想一個讓顧客在過程中開心的小改變。</div>
+          </div>
+        </div>
+        <div class="step-item collapsed" id="s3" data-step="3">
+          <a class="rail-step" href="#s3" aria-label="第 3 步：把特別的日子變成回憶"></a>
+          <button type="button" class="step-toggle" aria-expanded="false" aria-controls="s3-body"><span>③ 把特別的日子變成回憶</span><span aria-hidden="true">▾</span></button>
+          <div class="step-body" id="s3-body">
+            <div class="step-title"><span class="step-title-text">③ 把特別的日子變成回憶</span><span class="step-tag"></span></div>
+            <div class="blk" id="s3-b1"><p class="step-quote">「兒童照相館在生日、入園典禮、開學典禮等特別的日子裡，提高了回憶的珍貴價值。因為他們不是賣東西，而是賣「體驗」。」</p></div>
+<div class="blk" id="s3-b2"><p class="paragraph-text">接下來想一想：你的顧客有哪些特別的日子，會想找你一起留下紀念？</p></div>
+            <p class="step-feedback">很好，特別的日子就是最好的體驗入口。</p>
+            <div class="try-now-box"><strong>現在試試：</strong>列出顧客一年中的一個特別日子，以及你能為它做的一件事。</div>
+          </div>
+        </div>
+        <div class="step-item collapsed" id="s4" data-step="4">
+          <a class="rail-step" href="#s4" aria-label="第 4 步：建立「關聯性」，讓顧客記得你"></a>
+          <button type="button" class="step-toggle" aria-expanded="false" aria-controls="s4-body"><span>④ 建立「關聯性」，讓顧客記得你</span><span aria-hidden="true">▾</span></button>
+          <div class="step-body" id="s4-body">
+            <div class="step-title"><span class="step-title-text">④ 建立「關聯性」，讓顧客記得你</span><span class="step-tag"></span></div>
+            <div class="blk" id="s4-b1"><p class="step-quote">「賣體驗，能增加與顧客之間的關係。而當各種事件產生時，就容易產生關聯性。」</p></div>
+<div class="blk" id="s4-b2"><p class="paragraph-text">最後把前面串起來：體驗讓顧客和你之間有了<button type="button" class="clickable-term" data-term="關聯性" aria-haspopup="dialog">關聯性<span class="clickable-term-icon" aria-hidden="true">↗</span></button>，下次有事情發生時，他會先想到你。</p></div>
+            <p class="step-feedback">你已經走完整條路徑了。</p>
+            <div class="try-now-box"><strong>現在試試：</strong>回想一位老顧客：他是因為哪一次體驗，才一直記得你？</div>
+          </div>
+        </div>
+      </section>
+
+      <details class="related-section" id="related">
+        <summary><span>相關閱讀（2）</span><span class="arrow" aria-hidden="true">▼</span></summary>
+        <ul class="related-list">
+          <li><a href="https://www.cw.com.tw/article/5057484" target="_blank" rel="noopener noreferrer">原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）</a><span class="note">本篇依據的原始文章</span></li>
+          <li>書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月<span class="note">原文為此書書摘</span></li>
+        </ul>
+      </details>
+
+      <div class="source-block">來源：<a href="https://www.cw.com.tw/article/5057484" class="source-link" target="_blank" rel="noopener noreferrer">天下雜誌 cw.com.tw/article/5057484</a></div>
+
+      <div class="bottom-sub-card">
+        <span class="bottom-sub-text">📬 免費訂閱晨報</span>
+        <a class="btn-sub-pill" style="font-size:13px;padding:7px 16px" href="#subscribe" data-nav="subscribe">免費訂閱</a>
+      </div>
+    </main>
+  </div>
+
+  <details class="diag" id="diag">
+    <summary>診斷</summary>
+    <div class="diag-row">JS 執行中：<b id="dgJs">否</b><noscript>（這個檢視器沒有執行網頁程式，下面的開關無法使用）</noscript></div>
+    <div class="diag-row">localStorage：<b id="dgLs">無法檢查（程式沒有執行）</b></div>
+    <div class="diag-row" id="dgErr" hidden></div>
+    <label><input type="checkbox" id="dgRail" checked> 左緣進度程式（圈圈填色）</label>
+    <label><input type="checkbox" id="dgFixed" checked> 固定的播放器和分頁列</label>
+    <label><input type="checkbox" id="dgJsAll" checked> 全部網頁程式</label>
+    <button type="button" id="dgApply">套用並重新整理</button>
+    <div class="diag-note">勾掉一項、按「套用」後再滑看看，就知道是哪一項造成抖動。也可以在網址最後加 #norail、#nofixed 或 #nojs（只影響這一次）。</div>
+  </details>
+
+  <div class="bottom-sheet-overlay" id="sheetOverlay" hidden></div>
+  <aside class="bottom-sheet-card" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+    <div class="sheet-handle-bar" aria-hidden="true"></div>
+    <div class="sheet-header">
+      <h3 class="sheet-title" id="sheetTitle"></h3>
+      <button class="sheet-close-btn" id="sheetClose" type="button" aria-label="關閉">✕</button>
+    </div>
+    <div class="sheet-status-badge" id="sheetStatus" hidden></div>
+    <p class="sheet-explanation" id="sheetText"></p>
+    <div class="sheet-source">來源：<a id="sheetSrc" target="_blank" rel="noopener noreferrer"></a></div>
+    <div class="sheet-clarify-question" id="sheetAsk" hidden>這樣有比較清楚嗎？</div>
+    <div class="sheet-switch-row">
+      <span class="sheet-switch-label" id="acLabel">念完自動關閉</span>
+      <button class="switch" id="autoClose" type="button" role="switch" aria-checked="false" aria-labelledby="acLabel"></button>
+    </div>
+  </aside>
+
+  <div class="podcast-player-bar" role="region" aria-label="語音播放器">
+    <div class="player-row-top">
+      <span>🎧 今日雙主持 Podcast <span id="durLabel">0:58</span><span class="stub">（測試：無音檔，模擬播放）</span></span>
+      <span>🔁 循環播放</span>
+    </div>
+    
+    <div class="player-controls-row">
+      <div class="pctl">
+        <button class="btn-player-skip" id="rw" type="button" aria-label="倒轉 15 秒">⟲15</button>
+        <button class="btn-player-play-main" id="pp" type="button" aria-label="播放">▶</button>
+        <button class="btn-player-skip" id="ff" type="button" aria-label="快轉 15 秒">15⟳</button>
+      </div>
+      <div class="progress-bar-wrap">
+        <span id="cur">0:00</span>
+        <input class="seek" id="seek" type="range" min="0" max="58" step="1" value="0" aria-label="播放進度">
+        <span id="dur">0:58</span>
+      </div>
+      <select class="player-speed-select" id="spd" aria-label="播放速度">
+        <option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option>
+      </select>
+    </div>
+    <div class="player-bottom-follow">
+      <button class="btn-follow" id="follow" type="button" aria-pressed="true">📍 自動跟隨：開</button>
+      <button class="btn-back" id="back" type="button" hidden>↧ 回到播放位置</button>
+      <span class="current-track-name" id="segname">① 先分清楚：賣「商品」還是賣「體驗」</span>
+    </div>
+  </div>
+
+  <nav class="bottom-nav-bar" aria-label="主要分頁">
+    <a href="#home" class="nav-tab-item" data-nav="home"><div class="nav-tab-icon" aria-hidden="true">🏠</div><span class="nav-tab-text">首頁</span></a>
+    <a href="#today" class="nav-tab-item active" data-nav="today" aria-current="page"><div class="nav-tab-icon" aria-hidden="true">📰</div><span class="nav-tab-text">今日</span></a>
+    <a href="#resume" class="nav-tab-item" data-nav="resume"><div class="nav-tab-icon" aria-hidden="true">🎧</div><span class="nav-tab-text">續聽</span></a>
+    <a href="#archive" class="nav-tab-item" data-nav="archive"><div class="nav-tab-icon" aria-hidden="true">📚</div><span class="nav-tab-text">往期</span></a>
+    <a href="#more" class="nav-tab-item" data-nav="more"><div class="three-dots-icon" aria-hidden="true"><span class="more-dot"></span><span class="more-dot"></span><span class="more-dot"></span></div><span class="nav-tab-text">更多</span></a>
+    <a href="#subscribe" class="nav-tab-item subscribe-tab" data-nav="subscribe"><div class="subscribe-badge-icon" aria-hidden="true">📬</div><span class="nav-tab-text">訂閱</span></a>
+  </nav>
+</div>
+<script id="mk-data" type="application/json">{"terms":{"體驗行銷":{"explanation":"不從提供「商品」的觀點出發，而是從「體驗」的觀點看待生意。重點不只是東西的價格與機能，而是店家與顧客之間的感人體驗。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉（《不賣東西 賣體驗》書摘）","source_url":"https://www.cw.com.tw/article/5057484","sample":true},"關聯性":{"explanation":"顧客和你之間的連結。原文的說法是：賣體驗能增加與顧客之間的關係，當各種事件發生時，就容易產生關聯性。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉","source_url":"https://www.cw.com.tw/article/5057484","sample":true}},"duration_s":58.0,"cues":[{"anchor":"s1-b1","start":0.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s1-b2","start":7.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s2-b1","start":14.0,"label":"② 感受比技術更重要"},{"anchor":"s2-b2","start":22.0,"label":"② 感受比技術更重要"},{"anchor":"s3-b1","start":30.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s3-b2","start":38.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s4-b1","start":44.0,"label":"④ 建立「關聯性」，讓顧客記得你"},{"anchor":"s4-b2","start":51.0,"label":"④ 建立「關聯性」，讓顧客記得你"}]}</script>
+<script>
+(()=>{'use strict';
+/* 2026-10-27 19:4x：每個功能各自 try/catch（safe），一個功能出錯不會拖垮其他功能；錯誤列在頁底「診斷」面板。
+   診斷旗標 window.__MS_DIAG 由 <head> 小程式設定：nojs＝整個主程式不跑；norail＝不跑左緣圈圈填色。 */
+const DG=window.__MS_DIAG||{};const ERR=window.__MS_ERR=[];
+if(DG.nojs)return;
+const safe=(name,fn)=>{try{return fn()}catch(e){ERR.push(name+'：'+(e&&e.message||e));try{console.error(e)}catch(_){}}};
+let D={cues:[],terms:{},duration_s:60};safe('資料',()=>{D=JSON.parse(document.getElementById('mk-data').textContent)});
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)');
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+let toastT=0;const toast=m=>{let t=$('.toast');if(!t){t=document.createElement('div');t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)};
+const fmt=s=>{if(!isFinite(s))return'--:--';s=Math.floor(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+
+/* ---------- 播放器：有音檔用 <audio>；沒有音檔用模擬時鐘（測試用） ---------- */
+let P={real:false,t:0,dur:60,paused:true,play(){},pause(){},on(){}};
+safe('播放器',()=>{
+const audio=$('#aud');
+P=(()=>{
+  if(audio){audio.loop=true;return{real:true,get t(){return audio.currentTime},set t(v){audio.currentTime=v},get dur(){return audio.duration||D.duration_s},get paused(){return audio.paused},
+    play(){return audio.play().catch(()=>toast('無法播放音檔'))},pause(){audio.pause()},set rate(r){audio.playbackRate=r},on(ev,f){audio.addEventListener(ev,f)}}}
+  const L={};let t=0,paused=true,rate=1,iv=0,last=0;const emit=e=>(L[e]||[]).forEach(f=>f());
+  const tick=()=>{const now=performance.now();t+=(now-last)/1000*rate;last=now;if(t>=D.duration_s){t=t%D.duration_s;} /* 循環播放 */ emit('timeupdate')};
+  return{real:false,get t(){return t},set t(v){t=Math.max(0,Math.min(D.duration_s-0.01,v));emit('timeupdate');emit('seeked')},get dur(){return D.duration_s},get paused(){return paused},
+    play(){if(!paused)return;paused=false;last=performance.now();iv=setInterval(tick,200);emit('play')},pause(){if(paused)return;tick();paused=true;clearInterval(iv);emit('pause')},
+    set rate(r){rate=r},on(e,f){(L[e]=L[e]||[]).push(f)}};
+})();
+const pp=$('#pp'),seek=$('#seek'),cur=$('#cur'),spd=$('#spd');
+const ui=()=>{pp.textContent=P.paused?'▶':'❚❚';pp.setAttribute('aria-label',P.paused?'播放':'暫停')};
+pp.onclick=()=>P.paused?P.play():P.pause();
+$('#rw').onclick=()=>{P.t=Math.max(0,P.t-15)};
+$('#ff').onclick=()=>{P.t=Math.min(P.dur-0.01,P.t+15)};
+spd.onchange=()=>{P.rate=+spd.value;LS.set('afd-rate',spd.value)};
+{const r=LS.get('afd-rate',null);if(r&&[...spd.options].some(o=>o.value===r)){spd.value=r;P.rate=+r}}
+let dragging=false;
+seek.addEventListener('input',()=>{dragging=true;cur.textContent=fmt(+seek.value);seek.style.setProperty('--p',(seek.value/seek.max*100)+'%')});
+seek.addEventListener('change',()=>{dragging=false;P.t=+seek.value});
+P.on('timeupdate',()=>{if(!dragging){seek.value=P.t;seek.style.setProperty('--p',(P.t/P.dur*100)+'%')}cur.textContent=fmt(P.t)});
+P.on('play',ui);P.on('pause',ui);ui();
+if(!P.real){pp.title='測試：沒有音檔，▶ 會用模擬時間軸示範自動跟隨';}
+});
+
+/* ---------- 步驟展開／進度（左緣圈圈） ----------
+   2026-10-27 19:4x 防抖動原則（沒有語音時，捲動中「含文字的元素」完全不被改動）：
+   1) 圈圈寫在 HTML 裡、用 CSS 定位（沒有 JS 也看得到）；JS 只切換圈圈本身的 class（圈圈不含文字，只改底色／光暈）。
+   2) 捲動時只讀 scrollY 和事先量好的位置，用 requestAnimationFrame 合併，步驟改變時才動 class。
+   3) 版面位置只在載入、視窗尺寸改變、展開步驟、換字級時「讀」一次，不寫任何樣式。
+   4) 「已完成」標籤和回應句不再跟著捲動切換（回應句一直顯示）；「朗讀中」標籤只在播放語音時出現。 */
+const steps=$$('.step-item'),card=$('#keyPath');
+let narrStep=-1,curStep=-99 /* -99＝尚未套用（-1 是合法值：還沒讀到第 1 步） */,follow=LS.get('mk-follow','1')!=='0',userHeld=false;
+let G={tops:[],cardBottom:0,rl:0},circles=[];
+let measure=()=>{},apply=()=>{},update=()=>{};
+const expand=st=>{if(st.classList.contains('collapsed')){st.classList.remove('collapsed');const t=st.querySelector('.step-toggle');if(t)t.setAttribute('aria-expanded','true')}};
+const setNarrTag=()=>safe('朗讀標籤',()=>{steps.forEach((st,k)=>{const tag=st.querySelector('.step-tag');if(!tag)return;const want=(k===narrStep&&!P.paused)?'朗讀中':'';
+  if(tag.textContent!==want){tag.textContent=want;tag.className='step-tag'+(want?' now':'')}})});
+safe('步驟展開',()=>{steps.forEach(st=>{const b=st.querySelector('.step-toggle');if(b)b.addEventListener('click',()=>{expand(st);measure()})})});
+if(!DG.norail)safe('左緣圈圈',()=>{
+  circles=steps.map(st=>st.querySelector(':scope > .rail-step'));
+  const docTop=el=>el.getBoundingClientRect().top+scrollY;
+  measure=()=>{G.tops=steps.map(st=>docTop(st));G.cardBottom=docTop(card)+card.offsetHeight;G.rl=innerHeight*0.35;curStep=-99;apply()};
+  const computeStep=()=>{
+    /* 語音播放且自動跟隨中：跟著朗讀的步驟；否則跟著視窗位置（閱讀線＝視窗 35% 高） */
+    if(!P.paused&&narrStep>=0&&follow&&!userHeld)return narrStep;
+    const line=scrollY+G.rl;
+    if(G.cardBottom<=line+4)return steps.length; /* 已捲過整個關鍵路徑：全部填滿 */
+    let i=-1;G.tops.forEach((t,k)=>{if(t<=line)i=k});return i};
+  apply=()=>{const i=computeStep();if(i===curStep)return;curStep=i;
+    circles.forEach((c,k)=>{if(!c)return;c.classList.toggle('filled',k<i);c.classList.toggle('current',k===i);
+      if(k===i){if(c.getAttribute('aria-current')!=='step')c.setAttribute('aria-current','step')}else if(c.hasAttribute('aria-current'))c.removeAttribute('aria-current')})};
+  update=()=>{curStep=-99;apply()};
+  circles.forEach((c,k)=>{if(c)c.addEventListener('click',e=>{e.preventDefault();expand(steps[k]);measure();steps[k].scrollIntoView({block:'start',behavior:RM.matches?'auto':'smooth'})})});
+  let rafPending=false;
+  addEventListener('scroll',()=>{if(rafPending)return;rafPending=true;requestAnimationFrame(()=>{rafPending=false;apply()})},{passive:true});
+  let rzT=0;addEventListener('resize',()=>{cancelAnimationFrame(rzT);rzT=requestAnimationFrame(measure)},{passive:true});
+  if('ResizeObserver' in window){let roT=0,first=true;new ResizeObserver(()=>{if(first){first=false;return}cancelAnimationFrame(roT);roT=requestAnimationFrame(measure)}).observe(card)}
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
+});
+/* ---------- 關鍵路徑字級（個人設定：全站共用 localStorage 'ms.pathFontSize'，跨文章、跨工作階段） ---------- */
+let setPfs=()=>{};
+safe('字級切換',()=>{
+const PFS_KEY='ms.pathFontSize',pfsBtns=$$('.pfs-btn');
+function pfsUI(){const v=document.documentElement.getAttribute('data-ms-pfs')==='large'?'large':'normal';pfsBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.pfs===v)))}
+setPfs=function(v){
+  /* 換字級時讓閱讀線上的段落停在原位，不會跳走 */
+  const rl=innerHeight*0.35;let anc=null;for(const b of $$('#keyPath .blk')){const r=b.getBoundingClientRect();if(r.height&&r.bottom>rl){anc=b;break}}
+  const before=anc?anc.getBoundingClientRect().top:0,inCard=card.getBoundingClientRect().top<rl&&card.getBoundingClientRect().bottom>rl;
+  if(v==='large')document.documentElement.setAttribute('data-ms-pfs','large');else document.documentElement.removeAttribute('data-ms-pfs');
+  try{localStorage.setItem(PFS_KEY,v)}catch(e){}
+  if(anc&&inCard){const d=anc.getBoundingClientRect().top-before;if(Math.abs(d)>1)scrollBy(0,d)}
+  pfsUI();measure()}
+pfsBtns.forEach(b=>b.addEventListener('click',()=>setPfs(b.dataset.pfs)));
+pfsUI();
+});
+
+/* ---------- 自動捲動＋螢光筆（依 cues） ---------- */
+let fbUI=()=>{};
+safe('自動跟隨',()=>{
+const CUES=D.cues,fb=$('#follow'),bk=$('#back'),sn=$('#segname');
+let cue=null;
+const segAt=t=>{for(let i=CUES.length-1;i>=0;i--)if(t>=CUES[i].start-0.05)return CUES[i];return CUES[0]};
+const elOf=c=>document.getElementById(c.anchor);
+const go=c=>{const el=elOf(c);if(!el)return;const st=el.closest('.step-item');if(st&&st.classList.contains('collapsed')){expand(st);measure()}el.scrollIntoView({block:'center',behavior:RM.matches?'auto':'smooth'})};
+const backUI=()=>{const want=!(cue&&!P.paused&&follow&&userHeld);if(bk.hidden!==want)bk.hidden=want};
+fbUI=()=>{fb.setAttribute('aria-pressed',follow);fb.textContent=follow?'📍 自動跟隨：開':'📍 自動跟隨：關'};
+let started=false;P.on('play',()=>{started=true});P.on('seeked',()=>{started=true});
+function sync(force){
+  if(!started){apply();return}
+  const c=segAt(P.t);
+  if(!cue||c.anchor!==cue.anchor){$$('.blk.now').forEach(e=>e.classList.remove('now'));const el=elOf(c);if(el){el.classList.add('now');const st=el.closest('.step-item');narrStep=steps.indexOf(st);if(st&&st.classList.contains('collapsed')){expand(st);measure()}}cue=c;force=true}
+  if(sn.textContent!==c.label)sn.textContent=c.label;
+  if(force&&follow&&!P.paused&&!userHeld)go(c);
+  if(force)update();else apply();setNarrTag();backUI()}
+P.on('timeupdate',()=>sync(false));P.on('seeked',()=>sync(true));
+P.on('play',()=>{if(cue&&follow&&!userHeld)go(cue);sync(true)});P.on('pause',()=>{update();setNarrTag();backUI()});
+/* 讀者自己滑動（手指、滾輪、鍵盤）→ 自動跟隨暫停，直到按「↧ 回到播放位置」或重新開啟自動跟隨 */
+const hold=e=>{if(e.target.closest&&e.target.closest('.podcast-player-bar,.bottom-sheet-card,.bottom-nav-bar'))return;if(!userHeld){userHeld=true;backUI();update()}};
+['wheel','touchstart'].forEach(ev=>addEventListener(ev,hold,{passive:true}));
+addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(e.key)&&!e.target.closest('button,select,input'))hold(e)});
+fb.onclick=()=>{follow=!follow;LS.set('mk-follow',follow?'1':'0');fbUI();userHeld=false;backUI();if(follow&&cue&&!P.paused)go(cue);update()};
+bk.onclick=()=>{userHeld=false;if(cue)go(cue);backUI();update()};
+fbUI();
+});
+
+/* ---------- 名詞解釋卡片＋瀏覽器朗讀 ---------- */
+let openTerm=()=>{},closeSheet=()=>{},autoClose=false;
+safe('名詞卡',()=>{
+const sheet=$('#sheet'),ov=$('#sheetOverlay'),stat=$('#sheetStatus'),ask=$('#sheetAsk'),ac=$('#autoClose');
+autoClose=LS.get('mk-term-autoclose','0')==='1';let opener=null,resumeAfter=false,warnedNoVoice=false,openId=0;
+const acUI=()=>ac.setAttribute('aria-checked',autoClose);acUI();
+ac.onclick=()=>{autoClose=!autoClose;LS.set('mk-term-autoclose',autoClose?'1':'0');acUI()};
+const zhVoice=()=>{if(!('speechSynthesis' in window))return null;return speechSynthesis.getVoices().find(v=>/^zh[-_]TW/i.test(v.lang))||null};
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+function finished(id){if(id!==openId||sheet.hidden)return;
+  if(autoClose){closeSheet();return}
+  stat.textContent='✅ 解釋念完了';ask.hidden=false}
+openTerm=function(btn){
+  const term=btn.dataset.term,T=D.terms[term];if(!T)return;
+  opener=btn;const id=++openId;
+  $('#sheetTitle').textContent=term;$('#sheetText').textContent=T.explanation;
+  const a=$('#sheetSrc');a.textContent=T.source_label;if(T.source_url)a.href=T.source_url;else a.removeAttribute('href');
+  ask.hidden=true;ov.hidden=false;sheet.hidden=false;sheet.dataset.term=term;
+  const voiceMode=!P.paused;resumeAfter=voiceMode;
+  if(voiceMode){P.pause();
+    const v=zhVoice();
+    if(v){stat.hidden=false;stat.textContent='⏸️ 原語音已暫停，正在朗讀解釋…';
+      const u=new SpeechSynthesisUtterance(T.explanation);u.voice=v;u.lang=v.lang;u.rate=+spd.value||1;
+      u.onend=()=>finished(id);u.onerror=()=>{if(id!==openId||sheet.hidden)return;stat.textContent='⏸️ 原語音已暫停（無法朗讀，只顯示文字）';sheet.dataset.tts='error';ask.hidden=false};speechSynthesis.cancel();sheet.dataset.tts='speaking';speechSynthesis.speak(u)}
+    else{stat.hidden=false;stat.textContent='⏸️ 原語音已暫停（這個瀏覽器沒有台灣中文語音，只顯示文字）';sheet.dataset.tts='unavailable';
+      if(!warnedNoVoice){warnedNoVoice=true;toast('這個瀏覽器沒有台灣中文語音，名詞解釋只顯示文字')}
+      ask.hidden=false}  /* 沒有朗讀：不自動關閉，直接顯示確認提問 */
+  }else{stat.hidden=true;sheet.dataset.tts='off';ask.hidden=false}
+  $('#sheetClose').focus({preventScroll:true})}
+closeSheet=function(){
+  if(sheet.hidden)return;openId++;
+  if('speechSynthesis' in window)speechSynthesis.cancel();
+  sheet.hidden=true;ov.hidden=true;delete sheet.dataset.term;
+  if(resumeAfter){resumeAfter=false;P.play()}  /* 念解釋前在播放 → 從暫停處續播；原本就暫停 → 維持暫停 */
+  if(opener)opener.focus({preventScroll:true})}
+$$('.clickable-term').forEach(b=>b.onclick=()=>openTerm(b));
+$('#sheetClose').onclick=closeSheet;ov.onclick=closeSheet;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden){e.preventDefault();closeSheet()}
+  if(e.key==='Tab'&&!sheet.hidden){const f=[...sheet.querySelectorAll('button,a[href]')];const i=f.indexOf(document.activeElement);
+    if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&i===f.length-1){e.preventDefault();f[0].focus()}}});
+});
+
+/* ---------- 延伸內容圖示：進入畫面時動一次；點了打開相關閱讀 ---------- */
+safe('延伸圖示',()=>{
+$$('.extension-icon').forEach(b=>{b.onclick=()=>{const r=$('#related');r.open=true;r.scrollIntoView({block:'center',behavior:RM.matches?'auto':'smooth'})}});
+if('IntersectionObserver' in window&&!RM.matches){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('wiggle');io.unobserve(e.target)}}),{threshold:1});$$('.extension-icon').forEach(b=>io.observe(b))}
+});
+
+/* ---------- 分頁與其他連結（測試版未接） ---------- */
+safe('分頁列',()=>{
+$$('[data-nav]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const k=a.dataset.nav;
+  toast(k==='more'?'更多：分享、安裝到桌面、用瀏覽器開啟（測試版尚未接上）':'測試版：「'+(a.textContent.trim().replace(/\s+/g,' ')||k)+'」尚未接上')}));
+});
+
+safe('初次量測',()=>measure());
+window.__mk={P,update,measure,setPfs,get userHeld(){return userHeld},openTerm,closeSheet,get curStep(){return curStep},get autoClose(){return autoClose},setFollow(v){follow=v;fbUI()}};
+})();
+
+</script>
+<script>/* 診斷面板：獨立的小程式，主程式關掉或出錯時也能用 */
+(function(){try{var f=window.__MS_DIAG||{},g=function(i){return document.getElementById(i)};
+g("dgJs").textContent=f.nojs?"是（但主程式已被診斷開關關掉）":"是";
+var ok=false;try{localStorage.setItem("ms.diag.t","1");ok=localStorage.getItem("ms.diag.t")==="1";localStorage.removeItem("ms.diag.t")}catch(e){}
+g("dgLs").textContent=ok?"可用":"不可用（設定不會被記住）";
+var er=window.__MS_ERR||[];if(er.length){g("dgErr").hidden=false;g("dgErr").textContent="主程式錯誤："+er.join("；")}
+g("dgRail").checked=!f.norail;g("dgFixed").checked=!f.nofixed;g("dgJsAll").checked=!f.nojs;
+if(f.norail||f.nofixed||f.nojs)g("diag").open=true;
+g("dgApply").onclick=function(){var n=[];if(!g("dgRail").checked)n.push("norail");if(!g("dgFixed").checked)n.push("nofixed");if(!g("dgJsAll").checked)n.push("nojs");
+  var o={};n.forEach(function(k){o[k]=true});var saved=false;try{localStorage.setItem("ms.diag",JSON.stringify(o));saved=localStorage.getItem("ms.diag")===JSON.stringify(o)}catch(e){}
+  var base=location.href.split("#")[0];location.replace(base+(saved||!n.length?"#diag":"#"+n.join(",")));location.reload()}}catch(e){}})();
+</script>
+</body>
+</html>
