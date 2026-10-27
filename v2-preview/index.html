@@ -46,18 +46,22 @@ a{color:var(--accent)}
 .top-right{display:flex;align-items:center;gap:10px}
 .btn-sub-pill{background:var(--accent);color:var(--on-accent);border:none;border-radius:9999px;padding:5px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;cursor:pointer;text-decoration:none}
 .btn-avatar-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--muted);background:none;border:none}
-/* 左緣進度軌（2026-10-27 19:21 使用者決定）：每個關鍵路徑步驟一個圈，對齊該步驟；依視窗位置填滿。只改顏色／陰影，不改版面 */
+/* 小節指示點（使用者 2026-10-27 20:59；取代 19:21 的「每步一個、沿著左緣線排列」的圈圈與左緣線）
+   像照片輪播下方的小點，改成直排、固定在畫面左緣正中間。一個小節（關鍵路徑步驟）一顆，讀到的那顆填滿，其他空心。
+   定位：position:fixed＋top 用 svh（小視窗高度，網址列伸縮時不會變）減去自身高度一半——不用 transform、不用 bottom，
+   所以 Android 網址列伸縮時點點不跟著跳；整個元件高度固定（--n×24px），JS 只切換 class，不改位置大小。
+   左右：寬 ≤480 時貼左緣 0（可見圈在 x=0–12、中心壓在左緣線 x=6 上，文字從 x=18 開始，不重疊）；桌機置中單欄時對齊單欄左緣。 */
 .content-wrapper{position:relative;padding-left:12px}
+/* 左緣線（沿用 19:21 版，跟著頁面捲動；線中心 x=6）。小節點固定在畫面正中、壓在這條線上 */
 .scroll-guide-track{position:absolute;left:5px;top:16px;bottom:24px;width:2px;background:var(--rail-line);border-radius:1px}
-/* 圈圈寫在 HTML 裡（render.py），每步一個，純 CSS 定位在該步標題左邊、壓在左緣線上：沒有 JS 也看得到（空心）。
-   x：step-item 左緣距 content-wrapper 38px（12＋6＋卡片左框 4＋內距 16），線中心在 6px → 圈圈左緣 -38px。
-   y：圈圈字級＝步驟標題字級，標題行高 1.45 → 第一行中心 .725em。JS 只切換顏色（filled／current），不改位置大小。 */
-.rail-step{position:absolute;left:-38px;top:calc(.725em - 6px);font-size:calc(17px*var(--pfs));width:12px;height:12px;border-radius:50%;border:2px solid var(--rail-ring);background:var(--bg);padding:0;cursor:pointer;transition:background-color .2s,box-shadow .2s}
-.js .step-item.collapsed>.rail-step{top:calc(10px + .725em - 6px);font-size:calc(16px*var(--pfs))}
-.rail-step::after{content:"";position:absolute;left:-4px;right:-6px;top:-10px;bottom:-10px}
-.rail-step.filled{background:var(--rail-ring)}
-.rail-step.current{background:var(--rail-ring);box-shadow:0 0 0 3px var(--rail-halo)}
-.rail-step:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sec-dots{--n:4;position:fixed;z-index:60;left:max(0px,calc(50% - var(--col)/2));top:calc(50vh - var(--n)*12px);top:calc(50svh - var(--n)*12px);
+width:24px;height:calc(var(--n)*24px);display:flex;flex-direction:column;contain:layout paint style}
+/* 每顆點擊區 24×24（可見圈 12px，x=0–12） */
+.sec-dot{position:relative;display:block;width:24px;height:24px;flex:none;cursor:pointer;text-decoration:none}
+/* 圈圈與 19:21 版完全相同：12px、2px 環、中心 x=6（壓在左緣線上）；目前小節＝實心＋光暈（同舊版「目前」） */
+.sec-dot-ring{position:absolute;left:0;top:6px;width:12px;height:12px;border-radius:50%;border:2px solid var(--rail-ring);background:var(--bg);transition:background-color .2s,box-shadow .2s}
+.sec-dot.on .sec-dot-ring{background:var(--rail-ring);box-shadow:0 0 0 3px var(--rail-halo)}
+.sec-dot:focus-visible{outline:none}.sec-dot:focus-visible .sec-dot-ring{outline:2px solid var(--accent);outline-offset:2px}
 .main-body{padding:16px 16px 24px 6px}
 /* 2 頁頭 */
 .article-header{margin-bottom:20px}
@@ -173,7 +177,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
 .more-dot{width:4px;height:4px;border-radius:50%;background:var(--more-dot)}
 .subscribe-badge-icon{background:var(--chip);border:1px solid var(--line);border-radius:9999px;padding:2px 7px;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
 .toast{position:fixed;left:0;right:0;margin:0 auto;width:max-content;bottom:140px;background:var(--fg);color:var(--bg);font-size:12px;padding:6px 12px;border-radius:8px;z-index:95;max-width:90%}
-@media (prefers-reduced-motion:reduce){.extension-icon.wiggle{animation:none}.blk,.rail-step,.switch::after{transition:none}}
+@media (prefers-reduced-motion:reduce){.extension-icon.wiggle{animation:none}.blk,.sec-dot-ring,.switch::after{transition:none}}
 /* 診斷開關（頁面最底部，一般排版、不固定）：#norail #nofixed #nojs 或面板勾選（存在 localStorage 'ms.diag'） */
 .diag-nofixed .podcast-player-bar,.diag-nofixed .bottom-nav-bar{position:static;margin:0 auto}
 .diag-nofixed .app-screen{padding-bottom:24px}
@@ -207,8 +211,11 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
     </div>
   </header>
 
+  <!-- 小節指示點（使用者 20:59）：像照片輪播下方的小點，但直排、固定在畫面左緣正中間；一個小節（關鍵路徑步驟）一顆，讀到哪節就填滿哪顆。寫在 HTML 裡，沒有 JS 也看得到空心點 -->
+  <nav class="sec-dots" id="secDots" aria-label="文章小節（實心＝目前讀到的小節）" style="--n:4"><a class="sec-dot" href="#s1" data-i="0" aria-label="第 1 節：先分清楚：賣「商品」還是賣「體驗」"><span class="sec-dot-ring" aria-hidden="true"></span></a><a class="sec-dot" href="#s2" data-i="1" aria-label="第 2 節：感受比技術更重要"><span class="sec-dot-ring" aria-hidden="true"></span></a><a class="sec-dot" href="#s3" data-i="2" aria-label="第 3 節：把特別的日子變成回憶"><span class="sec-dot-ring" aria-hidden="true"></span></a><a class="sec-dot" href="#s4" data-i="3" aria-label="第 4 節：建立「關聯性」，讓顧客記得你"><span class="sec-dot-ring" aria-hidden="true"></span></a></nav>
+
   <div class="content-wrapper">
-    <div class="scroll-guide-track" id="rail" role="group" aria-label="關鍵路徑進度（左緣圈圈：實心＝已讀到）"></div>
+    <div class="scroll-guide-track" id="rail" aria-hidden="true"></div>
     <main class="main-body">
       <section class="article-header">
         <div class="kicker" id="kicker">MIRAKEE SIGNAL ・ AI 生活應用 ・ 2026-10-27</div>
@@ -236,7 +243,6 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           </div>
         </div>
         <div class="step-item" id="s1" data-step="1">
-          <a class="rail-step" href="#s1" aria-label="第 1 步：先分清楚：賣「商品」還是賣「體驗」"></a>
           <button type="button" class="step-toggle" aria-expanded="true" aria-controls="s1-body"><span>① 先分清楚：賣「商品」還是賣「體驗」</span><span aria-hidden="true">▾</span></button>
           <div class="step-body" id="s1-body">
             <div class="step-title"><span class="step-title-text">① 先分清楚：賣「商品」還是賣「體驗」</span><span class="step-tag"></span></div>
@@ -247,7 +253,6 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           </div>
         </div>
         <div class="step-item" id="s2" data-step="2">
-          <a class="rail-step" href="#s2" aria-label="第 2 步：感受比技術更重要"></a>
           <button type="button" class="step-toggle" aria-expanded="true" aria-controls="s2-body"><span>② 感受比技術更重要</span><span aria-hidden="true">▾</span></button>
           <div class="step-body" id="s2-body">
             <div class="step-title"><span class="step-title-text">② 感受比技術更重要</span><span class="step-tag"></span></div>
@@ -258,7 +263,6 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           </div>
         </div>
         <div class="step-item collapsed" id="s3" data-step="3">
-          <a class="rail-step" href="#s3" aria-label="第 3 步：把特別的日子變成回憶"></a>
           <button type="button" class="step-toggle" aria-expanded="false" aria-controls="s3-body"><span>③ 把特別的日子變成回憶</span><span aria-hidden="true">▾</span></button>
           <div class="step-body" id="s3-body">
             <div class="step-title"><span class="step-title-text">③ 把特別的日子變成回憶</span><span class="step-tag"></span></div>
@@ -269,7 +273,6 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           </div>
         </div>
         <div class="step-item collapsed" id="s4" data-step="4">
-          <a class="rail-step" href="#s4" aria-label="第 4 步：建立「關聯性」，讓顧客記得你"></a>
           <button type="button" class="step-toggle" aria-expanded="false" aria-controls="s4-body"><span>④ 建立「關聯性」，讓顧客記得你</span><span aria-hidden="true">▾</span></button>
           <div class="step-body" id="s4-body">
             <div class="step-title"><span class="step-title-text">④ 建立「關聯性」，讓顧客記得你</span><span class="step-tag"></span></div>
@@ -303,7 +306,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
     <div class="diag-row">JS 執行中：<b id="dgJs">否</b><noscript>（這個檢視器沒有執行網頁程式，下面的開關無法使用）</noscript></div>
     <div class="diag-row">localStorage：<b id="dgLs">無法檢查（程式沒有執行）</b></div>
     <div class="diag-row" id="dgErr" hidden></div>
-    <label><input type="checkbox" id="dgRail" checked> 左緣進度程式（圈圈填色）</label>
+    <label><input type="checkbox" id="dgRail" checked> 左緣小節點程式（目前小節填色）</label>
     <label><input type="checkbox" id="dgFixed" checked> 固定的播放器和分頁列</label>
     <label><input type="checkbox" id="dgJsAll" checked> 全部網頁程式</label>
     <button type="button" id="dgApply">套用並重新整理</button>
@@ -421,21 +424,27 @@ const expand=st=>{if(st.classList.contains('collapsed')){st.classList.remove('co
 const setNarrTag=()=>safe('朗讀標籤',()=>{steps.forEach((st,k)=>{const tag=st.querySelector('.step-tag');if(!tag)return;const want=(k===narrStep&&!P.paused)?'朗讀中':'';
   if(tag.textContent!==want){tag.textContent=want;tag.className='step-tag'+(want?' now':'')}})});
 safe('步驟展開',()=>{steps.forEach(st=>{const b=st.querySelector('.step-toggle');if(b)b.addEventListener('click',()=>{expand(st);measure()})})});
-if(!DG.norail)safe('左緣圈圈',()=>{
-  circles=steps.map(st=>st.querySelector(':scope > .rail-step'));
+/* 小節指示點（2026-10-27 20:59）：固定在左緣正中間的直排小點，一個小節一顆；只有「目前小節」那顆填滿（像照片輪播的小點）。
+   目前小節＝畫面 38% 高度的閱讀線所在的步驟；還沒讀到第 1 節或已讀過整張關鍵路徑卡＝都不填。播放並自動跟隨時跟著朗讀的步驟。
+   點小點直接（不平滑）捲到那一節，收合的會先展開。捲動時只切換小點的 class／aria-current（小點內沒有文字）。 */
+const dotEls=$$('#secDots .sec-dot');
+safe('小節點擊',()=>{dotEls.forEach((c,k)=>c.addEventListener('click',e=>{e.preventDefault();const st=steps[k];if(!st)return;expand(st);measure();st.scrollIntoView({block:'start',behavior:'auto'});update()}))});
+if(!DG.norail)safe('左緣小節點',()=>{
+  circles=dotEls;
   const docTop=el=>el.getBoundingClientRect().top+scrollY;
-  measure=()=>{G.tops=steps.map(st=>docTop(st));G.cardBottom=docTop(card)+card.offsetHeight;G.rl=innerHeight*0.35;curStep=-99;apply()};
+  /* 閱讀線用「同一寬度下見過最高的視窗高度」×38%：Android 網址列伸縮（只改高度）時閱讀線不跟著動，避免點點在交界處來回閃 */
+  let rlW=0,rlH=0;
+  measure=()=>{if(innerWidth!==rlW){rlW=innerWidth;rlH=0}rlH=Math.max(rlH,innerHeight);
+    G.tops=steps.map(st=>docTop(st));G.cardBottom=docTop(card)+card.offsetHeight;G.rl=rlH*0.38;curStep=-99;apply()};
   const computeStep=()=>{
-    /* 語音播放且自動跟隨中：跟著朗讀的步驟；否則跟著視窗位置（閱讀線＝視窗 35% 高） */
     if(!P.paused&&narrStep>=0&&follow&&!userHeld)return narrStep;
     const line=scrollY+G.rl;
-    if(G.cardBottom<=line+4)return steps.length; /* 已捲過整個關鍵路徑：全部填滿 */
+    if(G.cardBottom<=line)return -1; /* 已讀過整張關鍵路徑卡（相關閱讀、來源…）：不屬於任何小節 */
     let i=-1;G.tops.forEach((t,k)=>{if(t<=line)i=k});return i};
   apply=()=>{const i=computeStep();if(i===curStep)return;curStep=i;
-    circles.forEach((c,k)=>{if(!c)return;c.classList.toggle('filled',k<i);c.classList.toggle('current',k===i);
-      if(k===i){if(c.getAttribute('aria-current')!=='step')c.setAttribute('aria-current','step')}else if(c.hasAttribute('aria-current'))c.removeAttribute('aria-current')})};
+    circles.forEach((c,k)=>{const on=k===i;if(c.classList.contains('on')!==on)c.classList.toggle('on',on);
+      if(on){if(c.getAttribute('aria-current')!=='step')c.setAttribute('aria-current','step')}else if(c.hasAttribute('aria-current'))c.removeAttribute('aria-current')})};
   update=()=>{curStep=-99;apply()};
-  circles.forEach((c,k)=>{if(c)c.addEventListener('click',e=>{e.preventDefault();expand(steps[k]);measure();steps[k].scrollIntoView({block:'start',behavior:RM.matches?'auto':'smooth'})})});
   let rafPending=false;
   addEventListener('scroll',()=>{if(rafPending)return;rafPending=true;requestAnimationFrame(()=>{rafPending=false;apply()})},{passive:true});
   let rzT=0;addEventListener('resize',()=>{cancelAnimationFrame(rzT);rzT=requestAnimationFrame(measure)},{passive:true});
