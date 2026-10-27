@@ -109,13 +109,14 @@ html[data-ms-pfs="large"] .path-card{--pfs:1.15}
 .paragraph-text{font-size:calc(18px*var(--pfs));line-height:1.8;margin-bottom:10px}
 .blk{position:relative;border-left:3px solid transparent;border-radius:0 10px 10px 0;padding:4px 6px 4px 9px;margin-left:-12px;scroll-margin-top:60px;transition:background-color .3s}
 .blk.now{background:var(--kp-now);border-left-color:var(--accent)}
-.blk.has-ext{padding-right:34px}
-.extension-icon{position:absolute;right:4px;top:50%;margin-top:-14px;width:28px;height:28px;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;background:none;border:none;cursor:pointer}
-.extension-icon::before{content:"📖"} /* 圖示用 CSS 產生：按鈕本身不含文字 */
-.extension-icon.wiggle{animation:wig .9s ease-in-out 1}
-@keyframes wig{0%,100%{transform:none}25%{transform:translateY(-3px) rotate(-8deg)}50%{transform:translateY(0) rotate(6deg)}75%{transform:translateY(-1px)}}
-.clickable-term{color:var(--fg);font-weight:700;border:none;border-bottom:1.5px dashed var(--accent);background:none;display:inline;cursor:pointer;font-size:inherit;line-height:inherit;padding:0}
-.clickable-term-icon{font-size:calc(10px*var(--pfs));color:var(--accent-ink);vertical-align:super;margin-left:1px}
+/* 2026-10-27 21:56 可點的東西同一套樣子：accent-ink 字＋accent 線＋📖（＝打開解釋卡片）。沒有動畫。 */
+.clickable-term{color:var(--accent-ink);font-weight:700;border:none;border-bottom:1.5px dashed var(--accent);background:none;display:inline;cursor:pointer;font-size:inherit;line-height:inherit;padding:0}
+.clickable-term-icon{font-size:.72em;margin-left:2px;vertical-align:baseline}
+.ext-chip{position:relative;display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 13px 0 10px;margin:0 0 10px;border:1.5px solid var(--accent);border-radius:16px;background:transparent;color:var(--accent-ink);font:inherit;font-size:calc(14px*var(--pfs));font-weight:700;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ext-chip::after{content:"";position:absolute;left:-5px;right:-5px;top:-8px;bottom:-8px} /* 點擊區：外框 32px＋上下各 6.5px＝45px 高 */
+.ext-chip-icon{font-size:15px;line-height:1}
+.ext-chip:active{background:var(--kp-now)}
+.ext-chip:focus-visible,.clickable-term:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .try-now-box{background:var(--kp-try);outline:1px dashed var(--kp-try-line);outline-offset:-1px;border-radius:8px;padding:8px 12px;font-size:calc(13px*var(--pfs));line-height:1.5;margin-top:6px}
 .try-now-box strong{color:var(--accent-ink);font-weight:700}
 /* 收合只在 JS 有跑時才生效（html.js 由 <head> 的小程式加上）；沒有 JS 的檢視器全部展開、不顯示收合鈕 */
@@ -148,11 +149,20 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
 .sheet-explanation{font-size:14px;line-height:1.65;margin-bottom:10px}
 .sheet-source{font-size:11.5px;color:var(--muted);margin-bottom:8px}
 .sheet-clarify-question{font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic}
-.sheet-switch-row{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--line)}
+.sheet-switches{border-top:1px solid var(--line);padding-top:4px}
+.sheet-switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.sheet-switch-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .sheet-switch-label{font-size:13px;font-weight:600}
-.switch{width:44px;height:24px;background:var(--line);border-radius:12px;position:relative;cursor:pointer;border:none;flex:none}
-.switch::after{content:"";width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;left:2px;top:2px;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:left .15s}
-.switch[aria-checked="true"]{background:var(--accent)}.switch[aria-checked="true"]::after{left:22px}
+.sheet-switch-desc{font-size:11.5px;color:var(--muted);line-height:1.35}
+.sheet-links{list-style:none;padding:0;margin:0 0 10px;font-size:13.5px;line-height:1.55}
+.sheet-links li{padding:6px 0;border-top:1px dashed var(--line)}
+.sheet-links a{color:var(--accent-ink);font-weight:600}
+.sheet-links .note{display:block;font-size:11.5px;color:var(--muted)}
+.switch{width:44px;height:24px;background:transparent;box-shadow:inset 0 0 0 2px var(--muted);border-radius:12px;position:relative;cursor:pointer;border:none;flex:none;padding:0}
+.switch::after{content:"";width:16px;height:16px;background:var(--muted);border-radius:50%;position:absolute;left:4px;top:4px;transition:left .15s}
+.switch::before{content:"";position:absolute;left:0;right:0;top:-10px;bottom:-10px} /* 點擊區 44×44 */
+.switch[aria-checked="true"]{background:var(--accent);box-shadow:none}.switch[aria-checked="true"]::after{left:24px;background:var(--card)}
+.switch:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* 5 Podcast 播放器細條 */
 .podcast-player-bar{position:fixed;left:0;right:0;margin:0 auto;bottom:calc(58px + env(safe-area-inset-bottom));width:100%;max-width:var(--col);height:70px;background:var(--player);border-top:1px solid var(--line);z-index:70;padding:6px 14px 4px;display:flex;flex-direction:column;justify-content:space-between}
 .player-row-top{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);line-height:1;gap:8px}
@@ -180,7 +190,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
 .more-dot{width:4px;height:4px;border-radius:50%;background:var(--more-dot)}
 .subscribe-badge-icon{background:var(--chip);border:1px solid var(--line);border-radius:9999px;padding:2px 7px;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
 .toast{position:fixed;left:0;right:0;margin:0 auto;width:max-content;bottom:140px;background:var(--fg);color:var(--bg);font-size:12px;padding:6px 12px;border-radius:8px;z-index:95;max-width:90%}
-@media (prefers-reduced-motion:reduce){.extension-icon.wiggle{animation:none}.blk,.sec-dot-ring,.switch::after{transition:none}}
+@media (prefers-reduced-motion:reduce){.blk,.sec-dot-ring,.switch::after{transition:none}}
 /* 診斷開關（頁面最底部，一般排版、不固定）：#norail #nofixed #nojs 或面板勾選（存在 localStorage 'ms.diag'） */
 .diag-nofixed .podcast-player-bar,.diag-nofixed .bottom-nav-bar{position:static;margin:0 auto}
 .diag-nofixed .app-screen{padding-bottom:24px}
@@ -259,8 +269,8 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           <button type="button" class="step-toggle" aria-expanded="true" aria-controls="s2-body"><span>② 感受比技術更重要</span><span aria-hidden="true">▾</span></button>
           <div class="step-body" id="s2-body">
             <div class="step-title"><span class="step-title-text">② 感受比技術更重要</span><span class="step-tag"></span></div>
-            <div class="blk has-ext" id="s2-b1"><p class="paragraph-text">原文說，兒童照相館的拍照技術，或許比經驗豐富的個人照相館差；但重點在於取悅小孩，讓他們開懷大笑。</p><button type="button" class="extension-icon" aria-label="這段有延伸內容，打開相關閱讀"></button></div>
-<div class="blk" id="s2-b2"><p class="paragraph-text">所以許多店員曾經當過幼稚園老師或擁有育嬰證照，拍照的過程本身就成了美好的回憶。這正是<button type="button" class="clickable-term" data-term="體驗行銷" aria-haspopup="dialog">體驗行銷<span class="clickable-term-icon" aria-hidden="true">↗</span></button>的核心。</p></div>
+            <div class="blk has-ext" id="s2-b1"><p class="paragraph-text">原文說，兒童照相館的拍照技術，或許比經驗豐富的個人照相館差；但重點在於取悅小孩，讓他們開懷大笑。</p><button type="button" class="extension-icon ext-chip" data-ext="related" aria-haspopup="dialog"><span class="ext-chip-icon" aria-hidden="true">📖</span>延伸閱讀</button></div>
+<div class="blk" id="s2-b2"><p class="paragraph-text">所以許多店員曾經當過幼稚園老師或擁有育嬰證照，拍照的過程本身就成了美好的回憶。這正是<button type="button" class="clickable-term" data-term="體驗行銷" aria-haspopup="dialog">體驗行銷<span class="clickable-term-icon" aria-hidden="true">📖</span></button>的核心。</p></div>
             <p class="step-feedback">這一步常卡在「技術不如人就沒機會」，其實顧客記得的是感受。</p>
             <div class="try-now-box"><strong>現在試試：</strong>想一個讓顧客在過程中開心的小改變。</div>
           </div>
@@ -280,7 +290,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
           <div class="step-body" id="s4-body">
             <div class="step-title"><span class="step-title-text">④ 建立「關聯性」，讓顧客記得你</span><span class="step-tag"></span></div>
             <div class="blk" id="s4-b1"><p class="step-quote">「賣體驗，能增加與顧客之間的關係。而當各種事件產生時，就容易產生關聯性。」</p></div>
-<div class="blk" id="s4-b2"><p class="paragraph-text">最後把前面串起來：體驗讓顧客和你之間有了<button type="button" class="clickable-term" data-term="關聯性" aria-haspopup="dialog">關聯性<span class="clickable-term-icon" aria-hidden="true">↗</span></button>，下次有事情發生時，他會先想到你。</p></div>
+<div class="blk" id="s4-b2"><p class="paragraph-text">最後把前面串起來：體驗讓顧客和你之間有了<button type="button" class="clickable-term" data-term="關聯性" aria-haspopup="dialog">關聯性<span class="clickable-term-icon" aria-hidden="true">📖</span></button>，下次有事情發生時，他會先想到你。</p></div>
             <p class="step-feedback">你已經走完整條路徑了。</p>
             <div class="try-now-box"><strong>現在試試：</strong>回想一位老顧客：他是因為哪一次體驗，才一直記得你？</div>
           </div>
@@ -325,11 +335,14 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
     </div>
     <div class="sheet-status-badge" id="sheetStatus" hidden></div>
     <p class="sheet-explanation" id="sheetText"></p>
-    <div class="sheet-source">來源：<a id="sheetSrc" target="_blank" rel="noopener noreferrer"></a></div>
+    <ul class="sheet-links" id="sheetLinks" hidden></ul>
+    <div class="sheet-source" id="sheetSrcRow">來源：<a id="sheetSrc" target="_blank" rel="noopener noreferrer"></a></div>
     <div class="sheet-clarify-question" id="sheetAsk" hidden>這樣有比較清楚嗎？</div>
-    <div class="sheet-switch-row">
-      <span class="sheet-switch-label" id="acLabel">念完自動關閉</span>
-      <button class="switch" id="autoClose" type="button" role="switch" aria-checked="false" aria-labelledby="acLabel"></button>
+    <div class="sheet-switches" role="group" aria-label="解釋卡片設定">
+      <div class="sheet-switch-row">
+        <span class="sheet-switch-text"><span class="sheet-switch-label" id="acLabel">自動關閉</span><span class="sheet-switch-desc" id="acDesc">解釋念完後自動關閉這張卡片</span></span>
+        <button class="switch" id="autoClose" type="button" role="switch" aria-checked="false" aria-labelledby="acLabel" aria-describedby="acDesc"></button>
+      </div>
     </div>
   </aside>
 
@@ -370,7 +383,7 @@ details.related-section[open]>summary .arrow{transform:rotate(180deg)}
     <a href="#subscribe" class="nav-tab-item subscribe-tab" data-nav="subscribe"><div class="subscribe-badge-icon" aria-hidden="true">📬</div><span class="nav-tab-text">訂閱</span></a>
   </nav>
 </div>
-<script id="mk-data" type="application/json">{"terms":{"體驗行銷":{"explanation":"不從提供「商品」的觀點出發，而是從「體驗」的觀點看待生意。重點不只是東西的價格與機能，而是店家與顧客之間的感人體驗。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉（《不賣東西 賣體驗》書摘）","source_url":"https://www.cw.com.tw/article/5057484","sample":true},"關聯性":{"explanation":"顧客和你之間的連結。原文的說法是：賣體驗能增加與顧客之間的關係，當各種事件發生時，就容易產生關聯性。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉","source_url":"https://www.cw.com.tw/article/5057484","sample":true}},"duration_s":58.0,"cues":[{"anchor":"s1-b1","start":0.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s1-b2","start":7.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s2-b1","start":14.0,"label":"② 感受比技術更重要"},{"anchor":"s2-b2","start":22.0,"label":"② 感受比技術更重要"},{"anchor":"s3-b1","start":30.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s3-b2","start":38.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s4-b1","start":44.0,"label":"④ 建立「關聯性」，讓顧客記得你"},{"anchor":"s4-b2","start":51.0,"label":"④ 建立「關聯性」，讓顧客記得你"}]}</script>
+<script id="mk-data" type="application/json">{"terms":{"體驗行銷":{"explanation":"不從提供「商品」的觀點出發，而是從「體驗」的觀點看待生意。重點不只是東西的價格與機能，而是店家與顧客之間的感人體驗。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉（《不賣東西 賣體驗》書摘）","source_url":"https://www.cw.com.tw/article/5057484","sample":true},"關聯性":{"explanation":"顧客和你之間的連結。原文的說法是：賣體驗能增加與顧客之間的關係，當各種事件發生時，就容易產生關聯性。","source_label":"天下雜誌〈感動顧客心 不賣東西賣體驗〉","source_url":"https://www.cw.com.tw/article/5057484","sample":true}},"related":[{"title":"原文：感動顧客心 不賣東西賣體驗（天下雜誌，2014-04-15）","url":"https://www.cw.com.tw/article/5057484","note":"本篇依據的原始文章"},{"title":"書籍：《不賣東西 賣體驗》，藤村正宏著，天下雜誌出版，2014 年 4 月","url":null,"note":"原文為此書書摘"}],"duration_s":58.0,"cues":[{"anchor":"s1-b1","start":0.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s1-b2","start":7.0,"label":"① 先分清楚：賣「商品」還是賣「體驗」"},{"anchor":"s2-b1","start":14.0,"label":"② 感受比技術更重要"},{"anchor":"s2-b2","start":22.0,"label":"② 感受比技術更重要"},{"anchor":"s3-b1","start":30.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s3-b2","start":38.0,"label":"③ 把特別的日子變成回憶"},{"anchor":"s4-b1","start":44.0,"label":"④ 建立「關聯性」，讓顧客記得你"},{"anchor":"s4-b2","start":51.0,"label":"④ 建立「關聯性」，讓顧客記得你"}]}</script>
 <script>
 (()=>{'use strict';
 /* 2026-10-27 19:4x：每個功能各自 try/catch（safe），一個功能出錯不會拖垮其他功能；錯誤列在頁底「診斷」面板。
@@ -495,7 +508,7 @@ P.on('timeupdate',()=>sync(false));P.on('seeked',()=>sync(true));
    用 document 的捕獲階段監聽，確保在播放器自己的處理（會觸發 play／seeked→sync）之前執行。「自動跟隨：關」是讀者明確的設定，不會被打開。 */
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#pp,#rw,#ff'))userHeld=false},true);
 document.addEventListener('change',e=>{if(e.target.id==='seek')userHeld=false},true);
-P.on('play',()=>{userHeld=false;sync(true)});P.on('pause',()=>{update();setNarrTag();backUI()});
+P.on('play',()=>{if(P.resumeQuiet){P.resumeQuiet=false;sync(false);return}userHeld=false;sync(true)}); /* 關閉解釋卡片後的續播（SPEC-GUI-009）不捲動，維持原本的跟隨狀態 */P.on('pause',()=>{update();setNarrTag();backUI()});
 /* 讀者自己滑動（手指、滾輪、鍵盤）→ 自動跟隨暫停，直到按「↧ 回到播放位置」或重新開啟自動跟隨 */
 const hold=e=>{if(e.target.closest&&e.target.closest('.podcast-player-bar,.bottom-sheet-card,.bottom-nav-bar'))return;if(!userHeld){userHeld=true;backUI();update()}};
 ['wheel','touchstart'].forEach(ev=>addEventListener(ev,hold,{passive:true}));
@@ -505,52 +518,64 @@ bk.onclick=()=>{userHeld=false;if(cue)go(cue);backUI();update()};
 fbUI();
 });
 
-/* ---------- 名詞解釋卡片＋瀏覽器朗讀 ---------- */
-let openTerm=()=>{},closeSheet=()=>{},autoClose=false;
-safe('名詞卡',()=>{
-const sheet=$('#sheet'),ov=$('#sheetOverlay'),stat=$('#sheetStatus'),ask=$('#sheetAsk'),ac=$('#autoClose');
-autoClose=LS.get('mk-term-autoclose','0')==='1';let opener=null,resumeAfter=false,warnedNoVoice=false,openId=0;
+/* ---------- 解釋卡片（名詞＋延伸閱讀）＋瀏覽器朗讀 ----------
+   規格（使用者 2026-10-27 22:05 語音）：
+   SPEC-GUI-002 點標記跳出解釋卡片，文章捲動位置不動（不捲動、焦點移到關閉鈕時 preventScroll）。
+   SPEC-GUI-003／006 預設不自動關閉；念完也不關（除非 007 開）。
+   SPEC-GUI-004 打開時文章語音沒在播 → 不自動朗讀。
+   SPEC-GUI-005 打開時文章語音在播 → 先暫停文章語音，再用瀏覽器語音（zh-TW）念出卡片上的解釋文字。
+   SPEC-GUI-007 卡片內一個「自動關閉」開關，預設關；開＝念完後自動關閉。
+   SPEC-GUI-008 開關記在 localStorage（同網域的每一期都適用，重新整理、登出再登入都保留；存不了就只在這次有效）。
+   SPEC-GUI-009 卡片關閉後才續播文章語音，從暫停處接著播。 */
+let openTerm=()=>{},openExt=()=>{},closeSheet=()=>{},autoClose=false;
+safe('解釋卡片',()=>{
+const sheet=$('#sheet'),ov=$('#sheetOverlay'),stat=$('#sheetStatus'),ask=$('#sheetAsk'),ac=$('#autoClose'),links=$('#sheetLinks'),srcRow=$('#sheetSrcRow');
+autoClose=LS.get('mk-term-autoclose','0')==='1';
+let opener=null,resumeAfter=false,warnedNoVoice=false,readId=0;
 const acUI=()=>ac.setAttribute('aria-checked',autoClose);acUI();
 ac.onclick=()=>{autoClose=!autoClose;LS.set('mk-term-autoclose',autoClose?'1':'0');acUI()};
 const zhVoice=()=>{if(!('speechSynthesis' in window))return null;return speechSynthesis.getVoices().find(v=>/^zh[-_]TW/i.test(v.lang))||null};
 if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
-function finished(id){if(id!==openId||sheet.hidden)return;
+const stopTTS=()=>{readId++;if('speechSynthesis' in window)speechSynthesis.cancel()};
+function finished(id){if(id!==readId||sheet.hidden)return;
   if(autoClose){closeSheet();return}
   stat.textContent='✅ 解釋念完了';ask.hidden=false}
-openTerm=function(btn){
-  const term=btn.dataset.term,T=D.terms[term];if(!T)return;
-  opener=btn;const id=++openId;
-  $('#sheetTitle').textContent=term;$('#sheetText').textContent=T.explanation;
-  const a=$('#sheetSrc');a.textContent=T.source_label;if(T.source_url)a.href=T.source_url;else a.removeAttribute('href');
-  ask.hidden=true;ov.hidden=false;sheet.hidden=false;sheet.dataset.term=term;
+function open(btn,o){
+  opener=btn;stopTTS();const id=readId;
+  $('#sheetTitle').textContent=o.title;$('#sheetText').textContent=o.text;
+  links.textContent='';links.hidden=!o.links;
+  (o.links||[]).forEach(r=>{const li=document.createElement('li');const t=r.url?document.createElement('a'):document.createElement('span');t.textContent=r.title;
+    if(r.url){t.href=r.url;t.target='_blank';t.rel='noopener noreferrer'}li.appendChild(t);if(r.note){const n=document.createElement('span');n.className='note';n.textContent=r.note;li.appendChild(n)}links.appendChild(li)});
+  const a=$('#sheetSrc');srcRow.hidden=!o.src;if(o.src){a.textContent=o.src.label;if(o.src.url)a.href=o.src.url;else a.removeAttribute('href')}
+  ask.hidden=true;ov.hidden=false;sheet.hidden=false;sheet.dataset.term=o.title;
   const voiceMode=!P.paused;resumeAfter=voiceMode;
   if(voiceMode){P.pause();
     const v=zhVoice();
     if(v){stat.hidden=false;stat.textContent='⏸️ 原語音已暫停，正在朗讀解釋…';
-      const u=new SpeechSynthesisUtterance(T.explanation);u.voice=v;u.lang=v.lang;u.rate=+spd.value||1;
-      u.onend=()=>finished(id);u.onerror=()=>{if(id!==openId||sheet.hidden)return;stat.textContent='⏸️ 原語音已暫停（無法朗讀，只顯示文字）';sheet.dataset.tts='error';ask.hidden=false};speechSynthesis.cancel();sheet.dataset.tts='speaking';speechSynthesis.speak(u)}
+      const u=new SpeechSynthesisUtterance(o.tts);try{u.voice=v}catch(e){}u.lang=v.lang||'zh-TW';u.rate=+(($('#spd')||{}).value)||1;
+      u.onend=()=>finished(id);u.onerror=()=>{if(id!==readId||sheet.hidden)return;stat.textContent='⏸️ 原語音已暫停（無法朗讀，只顯示文字）';sheet.dataset.tts='error';ask.hidden=false};
+      sheet.dataset.tts='speaking';speechSynthesis.speak(u)}
     else{stat.hidden=false;stat.textContent='⏸️ 原語音已暫停（這個瀏覽器沒有台灣中文語音，只顯示文字）';sheet.dataset.tts='unavailable';
-      if(!warnedNoVoice){warnedNoVoice=true;toast('這個瀏覽器沒有台灣中文語音，名詞解釋只顯示文字')}
+      if(!warnedNoVoice){warnedNoVoice=true;toast('這個瀏覽器沒有台灣中文語音，解釋只顯示文字')}
       ask.hidden=false}  /* 沒有朗讀：不自動關閉，直接顯示確認提問 */
   }else{stat.hidden=true;sheet.dataset.tts='off';ask.hidden=false}
   $('#sheetClose').focus({preventScroll:true})}
+/* 卡片上念的就是畫面上的解釋文字 */
+openTerm=function(btn){const term=btn.dataset.term,T=D.terms[term];if(!T)return;
+  open(btn,{title:term,text:T.explanation,tts:T.explanation,src:{label:T.source_label,url:T.source_url}})};
+openExt=function(btn){const R=D.related||[];const text='這段內容的出處和可以再讀的資料：';
+  open(btn,{title:'延伸閱讀',text,links:R,tts:text+R.map(r=>r.title+(r.note?'，'+r.note:'')).join('。')})};
 closeSheet=function(){
-  if(sheet.hidden)return;openId++;
-  if('speechSynthesis' in window)speechSynthesis.cancel();
+  if(sheet.hidden)return;stopTTS();
   sheet.hidden=true;ov.hidden=true;delete sheet.dataset.term;
-  if(resumeAfter){resumeAfter=false;P.play()}  /* 念解釋前在播放 → 從暫停處續播；原本就暫停 → 維持暫停 */
-  if(opener)opener.focus({preventScroll:true})}
+  if(resumeAfter){resumeAfter=false;P.resumeQuiet=true;P.play()}  /* 打開前在播放 → 關閉後從暫停處續播（不另外捲動）；原本就暫停 → 維持暫停 */
+  if(opener)opener.focus({preventScroll:true})};
 $$('.clickable-term').forEach(b=>b.onclick=()=>openTerm(b));
+$$('.ext-chip').forEach(b=>b.onclick=()=>openExt(b));
 $('#sheetClose').onclick=closeSheet;ov.onclick=closeSheet;
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden){e.preventDefault();closeSheet()}
-  if(e.key==='Tab'&&!sheet.hidden){const f=[...sheet.querySelectorAll('button,a[href]')];const i=f.indexOf(document.activeElement);
+  if(e.key==='Tab'&&!sheet.hidden){const f=[...sheet.querySelectorAll('button,a[href]')].filter(x=>x.offsetParent!==null);const i=f.indexOf(document.activeElement);
     if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&i===f.length-1){e.preventDefault();f[0].focus()}}});
-});
-
-/* ---------- 延伸內容圖示：進入畫面時動一次；點了打開相關閱讀 ---------- */
-safe('延伸圖示',()=>{
-$$('.extension-icon').forEach(b=>{b.onclick=()=>{const r=$('#related');r.open=true;r.scrollIntoView({block:'center',behavior:'auto'})}});
-if('IntersectionObserver' in window&&!RM.matches){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('wiggle');io.unobserve(e.target)}}),{threshold:1});$$('.extension-icon').forEach(b=>io.observe(b))}
 });
 
 /* ---------- 分頁與其他連結（測試版未接） ---------- */
@@ -560,7 +585,7 @@ $$('[data-nav]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();co
 });
 
 safe('初次量測',()=>measure());
-window.__mk={P,update,measure,setPfs,get userHeld(){return userHeld},openTerm,closeSheet,get curStep(){return curStep},get autoClose(){return autoClose},setFollow(v){follow=v;fbUI()}};
+window.__mk={P,update,measure,setPfs,get userHeld(){return userHeld},openTerm,openExt,closeSheet,get curStep(){return curStep},get autoClose(){return autoClose},setFollow(v){follow=v;fbUI()}};
 })();
 
 </script>
