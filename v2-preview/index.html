@@ -476,7 +476,12 @@ if(!DG.norail)safe('左緣小節點',()=>{
     const line=scrollY+G.rl;
     if(G.cardBottom<=line)return -1; /* 已讀過整張關鍵路徑卡（相關閱讀、來源…）：不屬於任何小節 */
     let i=-1;G.tops.forEach((t,k)=>{if(t<=line)i=k});return i};
-  apply=()=>{const i=computeStep();if(i===curStep)return;curStep=i;
+  /* 2026-10-28 00:4x SPEC-KP-001（t538u、t539u，手機＋電腦共用）：第 N 步成為目前小節（＝小點 N 填滿）時，第 N+1 步若收合就自動展開。
+     只展開不收合；每步每次載入只觸發一次（之後使用者自己收合就不再打開）；展開的內容在目前步驟下方，不移動畫面上的內容；量位置延到下一個影格。 */
+  const autoDone=new Set();
+  const autoNext=i=>{if(i<0)return;const n=i+1,nx=steps[n];if(!nx||autoDone.has(n))return;autoDone.add(n);
+    if(nx.classList.contains('collapsed')){expand(nx);requestAnimationFrame(measure)}};
+  apply=()=>{const i=computeStep();if(i===curStep)return;curStep=i;safe('自動展開下一步',()=>autoNext(i));
     circles.forEach((c,k)=>{const on=k===i;if(c.classList.contains('on')!==on)c.classList.toggle('on',on);
       if(on){if(c.getAttribute('aria-current')!=='step')c.setAttribute('aria-current','step')}else if(c.hasAttribute('aria-current'))c.removeAttribute('aria-current')})};
   update=()=>{curStep=-99;apply()};
