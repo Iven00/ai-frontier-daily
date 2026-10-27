@@ -18,6 +18,8 @@ try{if(!f.nojs&&localStorage.getItem("ms.pathFontSize")==="large")d.setAttribute
 /* 配色 v2（2026-10-27 19:2x）：淺色深色同一套邏輯——中性偏暖的抬升表面＋accent 邊框／左側色條表達層級（關鍵路徑 > 目標 > 相關閱讀） */
 --accent-ink:#a64a19;
 --kp-bg:#fff4ea;--kp-border:#e3b493;--kp-bar:#b4531f;--kp-chip:#f4ece2;
+/* 2026-10-27 21:3x（使用者 21:28：朗讀中段落和「現在試試」底色一樣會混淆）：朗讀中段落＝accent 12% 暖色底＋左色條；現在試試＝比卡片更亮的底＋虛線框 */
+--kp-now:#f6e1d2;--kp-try:#ffffff;--kp-try-line:#cf8f63;
 --goal-bg:#fff9f3;--goal-border:#ecd5c3;--goal-bar:#d9a07c;
 --rel-bg:#fcfaf6;--rel-border:#e6e2d9;
 --rail-line:#d8d2c6;--rail-ring:#b4531f;--rail-halo:rgba(180,83,31,.22)}
@@ -25,6 +27,7 @@ try{if(!f.nojs&&localStorage.getItem("ms.pathFontSize")==="large")d.setAttribute
 --brand-name:#F5EEE4;--brand-sub:#7CC4BA;--more-dot:#a3a9b2;--scrim:rgba(0,0,0,.55);--on-accent:#14161a;
 --accent-ink:#f08a4b;
 --kp-bg:#24272d;--kp-border:#7a4a2e;--kp-bar:#f08a4b;--kp-chip:#30343c;
+--kp-now:#413531;--kp-try:#1a1c21;--kp-try-line:#9a5a33;
 --goal-bg:#1d2025;--goal-border:#4a3426;--goal-bar:#a8653c;
 --rel-bg:#181a1e;--rel-border:#2c3038;
 --rail-line:#3a3f49;--rail-ring:#f08a4b;--rail-halo:rgba(240,138,75,.28)}}
@@ -105,7 +108,7 @@ html[data-ms-pfs="large"] .path-card{--pfs:1.15}
 .step-quote{font-size:calc(14px*var(--pfs));color:var(--muted);line-height:1.6;margin-bottom:6px;padding-left:4px}
 .paragraph-text{font-size:calc(18px*var(--pfs));line-height:1.8;margin-bottom:10px}
 .blk{position:relative;border-left:3px solid transparent;border-radius:0 10px 10px 0;padding:4px 6px 4px 9px;margin-left:-12px;scroll-margin-top:60px;transition:background-color .3s}
-.blk.now{background:var(--chip);border-left-color:var(--accent)}
+.blk.now{background:var(--kp-now);border-left-color:var(--accent)}
 .blk.has-ext{padding-right:34px}
 .extension-icon{position:absolute;right:4px;top:50%;margin-top:-14px;width:28px;height:28px;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;background:none;border:none;cursor:pointer}
 .extension-icon::before{content:"📖"} /* 圖示用 CSS 產生：按鈕本身不含文字 */
@@ -113,7 +116,7 @@ html[data-ms-pfs="large"] .path-card{--pfs:1.15}
 @keyframes wig{0%,100%{transform:none}25%{transform:translateY(-3px) rotate(-8deg)}50%{transform:translateY(0) rotate(6deg)}75%{transform:translateY(-1px)}}
 .clickable-term{color:var(--fg);font-weight:700;border:none;border-bottom:1.5px dashed var(--accent);background:none;display:inline;cursor:pointer;font-size:inherit;line-height:inherit;padding:0}
 .clickable-term-icon{font-size:calc(10px*var(--pfs));color:var(--accent-ink);vertical-align:super;margin-left:1px}
-.try-now-box{background:var(--chip);border-radius:8px;padding:8px 12px;font-size:calc(13px*var(--pfs));line-height:1.5;margin-top:6px}
+.try-now-box{background:var(--kp-try);outline:1px dashed var(--kp-try-line);outline-offset:-1px;border-radius:8px;padding:8px 12px;font-size:calc(13px*var(--pfs));line-height:1.5;margin-top:6px}
 .try-now-box strong{color:var(--accent-ink);font-weight:700}
 /* 收合只在 JS 有跑時才生效（html.js 由 <head> 的小程式加上）；沒有 JS 的檢視器全部展開、不顯示收合鈕 */
 .js .step-item.collapsed{border-top:1px solid var(--line);margin:0;padding-top:0}
@@ -475,7 +478,7 @@ const CUES=D.cues,fb=$('#follow'),bk=$('#back'),sn=$('#segname');
 let cue=null;
 const segAt=t=>{for(let i=CUES.length-1;i>=0;i--)if(t>=CUES[i].start-0.05)return CUES[i];return CUES[0]};
 const elOf=c=>document.getElementById(c.anchor);
-const go=c=>{const el=elOf(c);if(!el)return;const st=el.closest('.step-item');if(st&&st.classList.contains('collapsed')){expand(st);measure()}el.scrollIntoView({block:'center',behavior:RM.matches?'auto':'smooth'})};
+const go=c=>{const el=elOf(c);if(!el)return;const st=el.closest('.step-item');if(st&&st.classList.contains('collapsed')){expand(st);measure()}el.scrollIntoView({block:'center',behavior:'auto'})}; /* 不用平滑捲動（防抖動） */
 const backUI=()=>{const want=!(cue&&!P.paused&&follow&&userHeld);if(bk.hidden!==want)bk.hidden=want};
 fbUI=()=>{fb.setAttribute('aria-pressed',follow);fb.textContent=follow?'📍 自動跟隨：開':'📍 自動跟隨：關'};
 let started=false;P.on('play',()=>{started=true});P.on('seeked',()=>{started=true});
@@ -487,7 +490,12 @@ function sync(force){
   if(force&&follow&&!P.paused&&!userHeld)go(c);
   if(force)update();else apply();setNarrTag();backUI()}
 P.on('timeupdate',()=>sync(false));P.on('seeked',()=>sync(true));
-P.on('play',()=>{if(cue&&follow&&!userHeld)go(cue);sync(true)});P.on('pause',()=>{update();setNarrTag();backUI()});
+/* 2026-10-27 21:3x（使用者 21:30）：讀者先滑到底（手指一碰就讓 userHeld＝true）再按 ▶，原本 userHeld 不會被清掉，sync 看到 userHeld 就不捲，所以畫面停在底部。
+   修正：在播放器上按 ▶／⟲15／15⟳／拖進度條＝讀者主動要聽，先清掉「暫停跟隨」，再由 sync(true) 立即捲到朗讀中的段落。
+   用 document 的捕獲階段監聽，確保在播放器自己的處理（會觸發 play／seeked→sync）之前執行。「自動跟隨：關」是讀者明確的設定，不會被打開。 */
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#pp,#rw,#ff'))userHeld=false},true);
+document.addEventListener('change',e=>{if(e.target.id==='seek')userHeld=false},true);
+P.on('play',()=>{userHeld=false;sync(true)});P.on('pause',()=>{update();setNarrTag();backUI()});
 /* 讀者自己滑動（手指、滾輪、鍵盤）→ 自動跟隨暫停，直到按「↧ 回到播放位置」或重新開啟自動跟隨 */
 const hold=e=>{if(e.target.closest&&e.target.closest('.podcast-player-bar,.bottom-sheet-card,.bottom-nav-bar'))return;if(!userHeld){userHeld=true;backUI();update()}};
 ['wheel','touchstart'].forEach(ev=>addEventListener(ev,hold,{passive:true}));
@@ -541,7 +549,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden){e.preventDefa
 
 /* ---------- 延伸內容圖示：進入畫面時動一次；點了打開相關閱讀 ---------- */
 safe('延伸圖示',()=>{
-$$('.extension-icon').forEach(b=>{b.onclick=()=>{const r=$('#related');r.open=true;r.scrollIntoView({block:'center',behavior:RM.matches?'auto':'smooth'})}});
+$$('.extension-icon').forEach(b=>{b.onclick=()=>{const r=$('#related');r.open=true;r.scrollIntoView({block:'center',behavior:'auto'})}});
 if('IntersectionObserver' in window&&!RM.matches){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('wiggle');io.unobserve(e.target)}}),{threshold:1});$$('.extension-icon').forEach(b=>io.observe(b))}
 });
 
