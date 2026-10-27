@@ -224,6 +224,122 @@ a.related-item{cursor:pointer}
 /* 桌機：尚未設計，只保證不壞（置中單欄） */
 @media (min-width:768px){body{background:var(--chip)}.app-screen{box-shadow:0 0 0 1px var(--line)}}
 
+/* Mirakee Signal v2 文章頁｜電腦版（測試實作，wip）
+   2026-10-27 23:29 使用者 t525u「你直接做一版電腦版 預覽頁讓我看」。所有規則都在 min-width:1024px 以內，
+   1023px 以下（手機、平板）完全不受影響（已驗收的手機版版面不變）。標「暫定」的都是待使用者確認的預設值，清單見 /workspace/stitch_desktop/checklist.md。
+   顏色只用 article.css 已有的 token（淺色／深色自動切換），不新增顏色。 */
+@media (min-width:1024px){
+  /* D-01 暫定：1024–1279 單欄，容器 800px；≥1280 兩欄（見下方） */
+  :root{--col:800px;--dk-ph:72px}
+  body{background:var(--bg)}
+  .app-screen{box-shadow:none;padding-bottom:calc(var(--dk-ph) + 48px)}
+  /* 頂部列：56px（同現站桌機 --navh），不固定（沿用手機 19:21「標題列不固定」的精神，暫定） */
+  .top-bar{height:56px;padding:0 20px;gap:20px}
+  .brand-logo-box{width:32px;height:32px;border-radius:8px}
+  .brand-logo-box svg{width:20px;height:20px}
+  .brand-name{font-size:16px}
+  .brand-sub{font-size:11px;letter-spacing:.12em}
+  /* 六個分頁（R-37：首頁、今日、續聽、往期、更多、訂閱）在電腦版改成頂部橫向選單；底部分頁列只在手機。
+     article.desktop.js 會把它移進頂部列（鍵盤 Tab 順序跟畫面一致）；沒有 JS 時用絕對定位疊在頂部列同一位置。 */
+  .bottom-nav-bar{position:absolute;top:0;left:240px;right:64px;bottom:auto;width:auto;max-width:none;height:56px;margin:0;padding:0;background:none;border:0;box-shadow:none;z-index:5;display:flex;align-items:center;justify-content:flex-start;gap:2px}
+  .top-bar .bottom-nav-bar{position:static;flex:1;min-width:0;height:auto;align-self:stretch}
+  .nav-tab-item{flex-direction:row;width:auto;gap:6px;padding:7px 12px;border-radius:999px;color:var(--fg)}
+  .nav-tab-icon,.three-dots-icon{display:none}
+  .nav-tab-text{font-size:15px;line-height:1.2;font-weight:500;color:var(--fg)}
+  .nav-tab-item.active{background:var(--chip)}
+  .nav-tab-item.active .nav-tab-text{color:var(--accent-ink);font-weight:700}
+  .nav-tab-item.subscribe-tab{margin-left:auto;background:var(--accent);padding:7px 16px}
+  .nav-tab-item.subscribe-tab .nav-tab-text{color:var(--on-accent);font-weight:700}
+  .subscribe-badge-icon{background:none;border:0;padding:0;margin:0;font-size:14px}
+  .nav-tab-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* 訂閱已在選單裡（「訂閱」分頁），頂部列右側的「📬 免費訂閱」在電腦版隱藏，避免同一列兩個訂閱鈕（暫定） */
+  .top-right .btn-sub-pill{display:none}
+  .btn-avatar-icon{width:36px;height:36px;border-radius:50%}
+  /* 文章區 */
+  .main-body{padding:32px 28px 32px 10px}
+  .kicker{font-size:12px;margin-bottom:8px}
+  .article-title{font-size:34px;line-height:1.3}
+  .tag-sample{font-size:12px}
+  .meta-group{font-size:14px;margin-bottom:18px}
+  .summary-quote{font-size:16px;padding:10px 16px}
+  .article-header{margin-bottom:24px}
+  .goal-banner{font-size:15px;padding:12px 18px;margin-bottom:20px}
+  .path-card{padding:20px 24px;margin-bottom:28px}
+  .path-header{margin:-20px -24px 18px -24px;padding:10px 24px 8px}
+  .path-title{font-size:17px}
+  .step-title{font-size:calc(19px*var(--pfs))}
+  .step-toggle{font-size:calc(17px*var(--pfs))}
+  .step-quote{font-size:calc(15px*var(--pfs))}
+  .step-feedback{font-size:calc(13px*var(--pfs))}
+  .try-now-box{font-size:calc(14px*var(--pfs));padding:10px 14px}
+  /* 相關閱讀：只顯示標題、一則一行、超過一行用「…」（t523u、t524u；手機版同規則由另一項工作實作，這裡只補電腦版字級） */
+  /* 相關閱讀的樣式全部沿用 article.css（SPEC-ART-001，由另一項工作維護），電腦版不另外覆寫 */
+  .source-block{font-size:13px}
+  .bottom-sub-text{font-size:15px}
+  .diag{margin-left:18px}
+  /* 播放器：固定在畫面底部（電腦版沒有底部分頁列），寬度＝容器；兩行：標題列／控制＋自動跟隨（暫定） */
+  .podcast-player-bar{bottom:0;max-width:var(--col);height:var(--dk-ph);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto);grid-template-rows:auto 1fr;column-gap:20px;row-gap:4px;align-items:center;padding:8px 20px;border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+  .player-row-top{grid-column:1/-1;font-size:12px}
+  .player-row-top .stub{font-size:11px}
+  .player-controls-row{grid-column:1;grid-row:2;margin:0;gap:14px}
+  .player-bottom-follow{grid-column:2;grid-row:2;font-size:12px;max-width:340px}
+  .btn-follow{font-size:12px}
+  .btn-back{font-size:12px;padding:3px 10px}
+  .btn-player-skip{width:34px;height:34px;font-size:12px}
+  .btn-player-play-main{width:40px;height:36px;font-size:14px}
+  .progress-bar-wrap{font-size:12px;gap:10px}
+  .seek{height:4px}
+  .seek::-webkit-slider-thumb{width:12px;height:12px}
+  .player-speed-select{font-size:13px;padding:4px 8px;cursor:pointer}
+  .toast{bottom:calc(var(--dk-ph) + 20px)}
+  /* 延伸說明（名詞解釋與延伸閱讀）：電腦版改成右側面板，文章位置不動（SPEC-GUI-002）；行為與手機完全相同（暫定外觀） */
+  .bottom-sheet-card{left:auto;right:max(16px,calc(50% - var(--col)/2 + 16px));margin:0;top:16px;bottom:auto;width:420px;max-width:calc(100vw - 32px);max-height:calc(100vh - var(--dk-ph) - 32px);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.22);padding:20px 24px}
+  .sheet-handle-bar{display:none}
+  .sheet-title{font-size:20px}
+  .sheet-close-btn{width:32px;height:32px;font-size:15px}
+  .sheet-status-badge{font-size:12px}
+  .sheet-explanation{font-size:16px;line-height:1.75}
+  .sheet-links{font-size:15px}
+  .sheet-links .note,.sheet-switch-desc{font-size:12.5px}
+  .sheet-source{font-size:13px}
+  .sheet-clarify-question{font-size:13px}
+  .sheet-switch-label{font-size:14px}
+}
+/* 滑鼠移上去的回饋（只在有滑鼠的裝置；暫定） */
+@media (min-width:1024px) and (hover:hover){
+  .nav-tab-item:not(.subscribe-tab):hover{background:var(--chip)}
+  .nav-tab-item.subscribe-tab:hover{filter:brightness(1.08)}
+  .clickable-term:hover,.ext-chip:hover{background:var(--kp-now)}
+  .clickable-term:hover{border-bottom-style:solid}
+  .sec-dot:hover .sec-dot-ring{box-shadow:0 0 0 3px var(--rail-halo)}
+  .step-toggle:hover span:first-child{text-decoration:underline;text-underline-offset:3px}
+  .btn-player-skip:hover,.player-speed-select:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-follow:hover,.btn-back:hover{text-decoration:underline}
+  .pfs-btn:not([aria-pressed="true"]):hover{color:var(--accent)}
+  .sheet-close-btn:hover{color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
+  .source-link:hover,.sheet-links a:hover{text-decoration:underline}
+  .dk-toc a:hover{background:var(--chip)}
+}
+/* ≥1280：兩欄＝左文章（740px 內）＋右側欄 300px（同現站 ≥1180 的「本頁捷徑」位置；本期目錄在右，記憶 2026-10-25）。
+   左緣小節點仍在文章欄左緣、畫面正中（容器左緣＝小節點位置，與手機同一套對齊）。 */
+@media (min-width:1280px){
+  :root{--col:1120px}
+  .content-wrapper{display:grid;grid-template-columns:minmax(0,760px) 300px;column-gap:48px;align-items:start}
+  .main-body{grid-column:1;min-width:0}
+  .dk-side{grid-column:2;grid-row:1;align-self:stretch;padding-top:32px}
+  .dk-side-in{position:sticky;top:16px;display:flex;flex-direction:column;gap:14px}
+  .dk-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14px}
+  .dk-box h2{margin:0 0 8px;font-size:12px;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .dk-toc{list-style:none;margin:0;padding:0}
+  .dk-toc a{display:flex;gap:8px;align-items:flex-start;padding:6px 8px;border-radius:8px;color:var(--fg);text-decoration:none;line-height:1.45}
+  .dk-toc a[aria-current="step"]{background:var(--kp-now);color:var(--accent-ink);font-weight:700}
+  .dk-toc a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .dk-toc .n{flex:none;color:var(--accent-ink);font-weight:700}
+  .dk-sub p{margin:0 0 10px;color:var(--muted);line-height:1.55}
+  .dk-sub a{display:flex;justify-content:center;background:var(--accent);color:var(--on-accent);border-radius:999px;padding:8px 14px;font-weight:700;text-decoration:none}
+  .dk-sub a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+}
+
 </style>
 </head>
 <body>
@@ -630,6 +746,45 @@ $$('[data-nav]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();co
 safe('初次量測',()=>measure());
 window.__mk={P,D,update,measure,setPfs,get userHeld(){return userHeld},openTerm,openExt,closeSheet,get curStep(){return curStep},get autoClose(){return autoClose},setFollow(v){follow=v;fbUI()}};
 })();
+
+</script><script>
+/* Mirakee Signal v2 文章頁｜電腦版小程式（wip）。只在畫面寬 ≥1024px 時動作；寬度 <1024 時把一切還原，手機版 DOM 完全不變。
+   1) ≥1024：把六個分頁（底部分頁列）移進頂部列，讓鍵盤 Tab 順序＝畫面順序（logo → 分頁 → 登入 → 文章）。
+   2) ≥1280：建立右側欄「本篇關鍵路徑」（跟左緣小節點同步，點了等於點那顆小節點）＋訂閱。 */
+(()=>{'use strict';try{
+const DG=window.__MS_DIAG||{};if(DG.nojs)return;
+const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
+const nav=q('.bottom-nav-bar'),top=q('.top-bar'),topRight=q('.top-right'),wrap=q('.content-wrapper');
+if(!nav||!top||!wrap)return;
+const home={parent:nav.parentNode,next:nav.nextSibling};
+const mqNav=matchMedia('(min-width:1024px)'),mqSide=matchMedia('(min-width:1280px)');
+const placeNav=()=>{if(mqNav.matches){if(nav.parentNode!==top)top.insertBefore(nav,topRight)}else if(nav.parentNode!==home.parent)home.parent.insertBefore(nav,home.next)};
+let side=null,obs=null;
+const dots=qa('#secDots .sec-dot');
+const syncToc=()=>{if(!side)return;const links=[...side.querySelectorAll('.dk-toc a')];dots.forEach((d,i)=>{const on=d.classList.contains('on');const a=links[i];if(!a)return;if(on){if(a.getAttribute('aria-current')!=='step')a.setAttribute('aria-current','step')}else if(a.hasAttribute('aria-current'))a.removeAttribute('aria-current')})};
+const buildSide=()=>{
+  side=document.createElement('aside');side.className='dk-side';side.setAttribute('aria-label','本頁捷徑');
+  const inner=document.createElement('div');inner.className='dk-side-in';
+  const box=document.createElement('nav');box.className='dk-box';box.setAttribute('aria-label','本篇關鍵路徑');
+  const h=document.createElement('h2');h.textContent='本篇關鍵路徑';box.appendChild(h);
+  const ol=document.createElement('ol');ol.className='dk-toc';
+  qa('#keyPath .step-item').forEach((st,i)=>{const t=st.querySelector('.step-title-text');const li=document.createElement('li');const a=document.createElement('a');
+    a.href='#'+st.id;const txt=(t?t.textContent:'').trim();const n=txt.charAt(0);
+    const sn=document.createElement('span');sn.className='n';sn.setAttribute('aria-hidden','true');sn.textContent=n;const st2=document.createElement('span');st2.textContent=txt.slice(1).trim();
+    a.append(sn,st2);a.setAttribute('aria-label','第 '+(i+1)+' 節：'+st2.textContent);
+    a.addEventListener('click',e=>{e.preventDefault();const d=dots[i];if(d)d.click();else st.scrollIntoView({block:'start'})});li.appendChild(a);ol.appendChild(li)});
+  box.appendChild(ol);
+  const sub=document.createElement('section');sub.className='dk-box dk-sub';sub.setAttribute('aria-label','訂閱');
+  const h2=document.createElement('h2');h2.textContent='📬 免費訂閱';const p=document.createElement('p');p.textContent='每天 6:00（台北時間）寄到信箱。';
+  const src=q('.bottom-sub-card .btn-sub-pill');const a2=document.createElement('a');a2.href='#subscribe';a2.textContent='免費訂閱';
+  a2.addEventListener('click',e=>{e.preventDefault();if(src)src.click()});sub.append(h2,p,a2);
+  inner.append(box,sub);side.appendChild(inner);
+  obs=new MutationObserver(syncToc);dots.forEach(d=>obs.observe(d,{attributes:true,attributeFilter:['class']}));};
+const placeSide=()=>{if(mqSide.matches){if(!side)buildSide();if(side.parentNode!==wrap)wrap.appendChild(side);syncToc()}else if(side&&side.parentNode)side.parentNode.removeChild(side)};
+const apply=()=>{placeNav();placeSide()};
+apply();
+const on=(m,f)=>m.addEventListener?m.addEventListener('change',f):m.addListener(f);on(mqNav,apply);on(mqSide,apply);
+}catch(e){try{(window.__MS_ERR=window.__MS_ERR||[]).push('電腦版：'+(e&&e.message||e))}catch(_){}}})();
 
 </script>
 <script>/* 診斷面板：獨立的小程式，主程式關掉或出錯時也能用 */
