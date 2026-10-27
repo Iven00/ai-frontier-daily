@@ -1,8 +1,18 @@
 {
  "v": 1,
- "generated_at": "2026-10-27T09:26:29+08:00",
- "latest": "2026-10-27",
+ "generated_at": "2026-10-28T03:32:28+08:00",
+ "latest": "2026-10-28",
  "issues": [
+  {
+   "key": "2026-10-28",
+   "kind": "daily",
+   "date": "2026-10-28",
+   "no": 5,
+   "label": "第 5 期・10/28（週三）",
+   "subject": "Mirakee Signal｜AI 前沿情報站 2026-10-28",
+   "headline": "AI 證明進入「公開檢驗」階段",
+   "path": "email/2026-10-28.json"
+  },
   {
    "key": "2026-10-27",
    "kind": "daily",

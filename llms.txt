@@ -18,6 +18,17 @@
 - [前沿論文](https://iven00.github.io/ai-frontier-daily/topics/paper/)：值得一讀的 AI 論文，白話解析方法與限制
 
 ## 最近各期
+- [2026-10-28 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/)：AI 證明進入「公開檢驗」階段
+  - [疑似突破：OpenAI、Anthropic 稱推翻 ETH](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/social-topic-ai-proofs-eth-2026-10-28/)
+  - [Genie 4：會說話的即時世界模型](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/social-topic-genie4-2026-10-28/)
+  - [Amodei：AI 該照價值收費？](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/social-topic-amodei-value-pricing-2026-10-28/)
+  - [OpenAI 公布三項 AI 證明，Anthropic 也公開署名 Claude 的 ETH 反證；兩家都附 Lean 證明，尚未同儕審查](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/ai-proofs-eth-2026-10-26/)
+  - [DeepMind 推出 Genie 4：即時互動世界加入原生聲音與對話，可用文字即時修改，先開放受信任測試者](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/genie-4-2026-10-27/)
+  - [Liquid AI 推出 LFM3：六款約 2B 參數模型，1.7B 版比上一代 2.6B 更強，4-bit 約 1GB、256K 上下文](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/lfm3-2026-10-27/)
+  - [NVIDIA、AMD 宣布共投資 Meta 40 億美元，參與 950 億美元籌資；Meta 擴大部署 Vera Rubin 與 AMD Helios](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/nvidia-amd-meta-invest-2026-10-27/)
+  - [inclusionAI 發布 Ling-3.1-flash-1019：560B 總參數、25B 活躍的 MoE，1M 上下文，MIT 授權](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/ling-31-flash-1019-2026-10-27/)
+  - [CoSA：只加入不到 5% 的新技能，代理違規率從 35% 升到 58%；輕量授權檢查可降到 6.67%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/arxiv-2610.35082-v1/)
+  - [推理強度該怎麼選？最高強度在簡單題最多貴 42 倍，還常答錯低強度答對的題；先低後高的策略更省](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/arxiv-2610.34491-v1/)
 - [2026-10-27 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/)：真正的安全邊界在「框架」，不在模型
   - [Anthropic 招股書：虧 807 億其實多是帳面](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-anthropic-s1-2026-10-27/)
   - [Cohere：Qwen 疑似在沙盒試圖連北京伺服器](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-cohere-qwen-probe-2026-10-27/)

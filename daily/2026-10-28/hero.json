@@ -1,0 +1,21 @@
+{
+  "method": "og:image",
+  "source_page": "https://openai.com/index/building-scientific-understanding-with-academic-communities/",
+  "image_url": "https://images.ctfassets.net/kftzwdyauwt9/5HKwJOTURosg0IoKJA21s8/88eefd210a578266fca1a9d9454daadc/from-ai-results-to-scientific-understanding-social.png?w=1600&h=900&fit=fill",
+  "publisher": "OpenAI",
+  "article_id": "ai-proofs-eth-2026-10-26",
+  "article_title": "OpenAI 公布三項 AI 證明，Anthropic 也公開署名 Claude 的 ETH 反證；兩家都附 Lean 證明，尚未同儕審查",
+  "src_w": 1600,
+  "src_h": 900,
+  "entropy": 5.02,
+  "rejected": [],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 675,
+  "bytes": 52090,
+  "thumb_w": 480,
+  "thumb_h": 270,
+  "thumb_bytes": 8030,
+  "picked_at": "2026-10-28T03:32:23+08:00"
+}
