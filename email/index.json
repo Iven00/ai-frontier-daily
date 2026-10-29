@@ -1,8 +1,18 @@
 {
  "v": 1,
- "generated_at": "2026-10-29T06:00:44+08:00",
- "latest": "2026-10-29",
+ "generated_at": "2026-10-30T03:32:57+08:00",
+ "latest": "2026-10-30",
  "issues": [
+  {
+   "key": "2026-10-30",
+   "kind": "daily",
+   "date": "2026-10-30",
+   "no": 7,
+   "label": "第 7 期・10/30（週五）",
+   "subject": "Mirakee Signal｜AI 前沿情報站 2026-10-30",
+   "headline": "開放權重再升溫：歐洲兆級模型、Qwen4 預告、影片模型也開放",
+   "path": "email/2026-10-30.json"
+  },
   {
    "key": "2026-10-29",
    "kind": "daily",

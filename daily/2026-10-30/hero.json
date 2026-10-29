@@ -1,0 +1,21 @@
+{
+  "method": "og:image",
+  "source_page": "https://mistral.ai/news/mistral-large-4-oss/",
+  "image_url": "https://mistral.ai/cms-media/api/media/file/cover-mistral-sovereign%20copie.webp",
+  "publisher": "Mistral",
+  "article_id": "social-topic-mistral-large-4-open-2026-10-30",
+  "article_title": "Mistral 放出 1 兆參數權重，但家裡跑不動",
+  "src_w": 1200,
+  "src_h": 630,
+  "entropy": 4.41,
+  "rejected": [],
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 630,
+  "bytes": 37763,
+  "thumb_w": 480,
+  "thumb_h": 252,
+  "thumb_bytes": 4386,
+  "picked_at": "2026-10-30T03:32:27+08:00"
+}

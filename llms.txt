@@ -18,6 +18,28 @@
 - [前沿論文](https://iven00.github.io/ai-frontier-daily/topics/paper/)：值得一讀的 AI 論文，白話解析方法與限制
 
 ## 最近各期
+- [2026-10-30 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/)：開放權重再升溫：歐洲兆級模型、Qwen4 預告、影片模型也開放
+  - [Mistral 放出 1 兆參數權重，但家裡跑不動](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/social-topic-mistral-large-4-open-2026-10-30/)
+  - [OpenAI 改寫 Model Spec：從規則改成五個價值](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/social-topic-openai-model-spec-2026-10-30/)
+  - [疑似：Qwen4 下週發表](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/social-topic-qwen4-coming-2026-10-30/)
+  - [Mistral 釋出 Mistral Large 4 權重：約 1 兆參數、100 萬上下文，非中國開放模型第一；MaaS 業者需另取商業授權](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/mistral-large-4-oss-2026-10-29/)
+  - [OpenAI 更新 Model Spec：改以五個核心價值組織、助理改稱 GPT、新增情境與代理行為指引，多數風格規則退場](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/openai-model-spec-2026-10-29/)
+  - [Pika 推出 H3 Flex：以 MiniMax H3 後訓練、15 秒片段最快 7 秒生成、可輸出 5 軌音訊，並釋出開放權重](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/pika-h3-flex-2026-10-29/)
+  - [OpenAI 與 ServiceNow 擴大合作：ChatGPT 外掛可直接操作企業的 ServiceNow 工作流程，ServiceNow 全員導入 ChatGPT Work 與 Codex](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/openai-servicenow-2026-10-28/)
+  - [Heads of Security：在注意力頭加上學習式閘門分開指令與資料，黑箱攻擊成功率從 97% 降到 10%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/arxiv-2610.37657-v1/)
+  - [FeatureArc：寫程式代理第一階段成功 62.7%，整個功能做完只剩 28.5%；前面留下的錯誤約 95% 沒被發現](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/arxiv-2610.37434-v1/)
+  - [工具代理的縮放定律：849 個模型、45.9 萬個合成任務顯示，資料量變大時，增加工具與資料庫多樣性比增加任務數更有效](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/arxiv-2610.37648-v1/)
+- [2026-10-29 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/)：排行榜的意義正在被重新討論
+  - [Gemini 4 Carbon 登頂，多數人卻用不到](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/social-topic-gemini-4-carbon-2026-10-29/)
+  - [評測榜與用量榜，兩張榜單說法相反](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/social-topic-aa-v5-openrouter-2026-10-29/)
+  - [疑似：OpenAI 計畫購買 Google TPU](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/social-topic-openai-google-tpu-2026-10-29/)
+  - [Google 發表 Gemini 4 Carbon：AA 指數 v5 第一、資安評測領先，先開放給資安防禦者，定價與 Argon 相同](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/gemini-4-carbon-2026-10-28/)
+  - [NVIDIA 推出開放權重語音模型 Nemotron 3.5 Transcribe：40 種語言轉寫、13 種語言分辨說話者，並公開 Granary v2 資料流程](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/nemotron-35-transcribe-2026-10-28/)
+  - [Oracle 與 Google 宣布 2027 年起在 OCI 提供 Google TPU，是 Google 以外第一家；同日報導稱 OpenAI 計畫購買 TPU](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/oracle-google-tpu-oci-2026-10-27/)
+  - [Anthropic 公布與六家藥物開發機構的合作初步成果：Claude 一個月產出約 3.5 萬個抗體設計，並啟動自有藥物研究](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/anthropic-drug-development-2026-10-27/)
+  - [GitHub Universe：推出多模型調度的 Copilot Fusion；Octoverse 報告說九月已有超過四成 PR 由代理起草](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/github-copilot-fusion-2026-10-28/)
+  - [kw-bench：同一個 DeepSeek 模型跑五年加值稅重建，兩個獨立框架拿 0.54 分，兩家實驗室的框架卻是 0 分](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/arxiv-2610.36405-v1/)
+  - [工具輸出在送進模型前就被截斷：720 次執行中三分之一的工具結果被切掉，工具呼叫多了 43%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-29/arxiv-2610.36114-v1/)
 - [2026-10-28 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/)：AI 證明進入「公開檢驗」階段
   - [疑似突破：OpenAI、Anthropic 稱推翻 ETH](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/social-topic-ai-proofs-eth-2026-10-28/)
   - [Genie 4：會說話的即時世界模型](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/social-topic-genie4-2026-10-28/)
@@ -27,7 +49,7 @@
   - [Liquid AI 推出 LFM3：六款約 2B 參數模型，1.7B 版比上一代 2.6B 更強，4-bit 約 1GB、256K 上下文](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/lfm3-2026-10-27/)
   - [NVIDIA、AMD 宣布共投資 Meta 40 億美元，參與 950 億美元籌資；Meta 擴大部署 Vera Rubin 與 AMD Helios](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/nvidia-amd-meta-invest-2026-10-27/)
   - [inclusionAI 發布 Ling-3.1-flash-1019：560B 總參數、25B 活躍的 MoE，1M 上下文，MIT 授權](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/ling-31-flash-1019-2026-10-27/)
-  - [CoSA：只加入不到 5% 的新技能，代理違規率從 35% 升到 58%；輕量授權檢查可降到 6.67%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/arxiv-2610.35082-v1/)
+  - [代理框架的驗證怎麼設計？比較 17 種做法：獨立審查者以 1.0～1.25 倍成本，讓 Terminal-Bench 正確率提高 5.9～9.5 個百分點](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/arxiv-2610.34577-v1/)
   - [推理強度該怎麼選？最高強度在簡單題最多貴 42 倍，還常答錯低強度答對的題；先低後高的策略更省](https://iven00.github.io/ai-frontier-daily/daily/2026-10-28/arxiv-2610.34491-v1/)
 - [2026-10-27 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/)：真正的安全邊界在「框架」，不在模型
   - [Anthropic 招股書：虧 807 億其實多是帳面](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-anthropic-s1-2026-10-27/)
@@ -35,10 +57,10 @@
   - [GPT-6.1 Terra 首小時：價格說法打架](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/social-topic-gpt61-terra-2026-10-27/)
   - [OpenAI 推出 GPT-6.1 Terra：主打電腦操作，官方稱每任務成本約為 Opus 5.5 的九分之一](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/gpt-61-terra-2026-10-26/)
   - [Anthropic 公開 S-1：上半年營收 162.86 億美元、算力承諾約 2,656 億、創辦人握 50.1% 投票權](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/anthropic-s1-filing-2026-10-26/)
-  - [Mirendil 發表 Fern 0.1：從頭預訓練、最多 1,000 萬 token 上下文的程式模型](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/mirendil-fern-01-2026-10-26/)
   - [Meta 宣布股票籌資：先承銷約 350 億美元，另規劃約 600 億美元市價發行，支撐 AI 與資料中心](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/meta-95b-equity-offering-2026-10-26/)
-  - [SWE-Shift：任務進行中程式碼或需求改變時，17 個寫程式代理全部退步，GPT-6 Astra 從 67% 掉到 25%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32196-v1/)
+  - [Mirendil 發表 Fern 0.1：從頭預訓練、最多 1,000 萬 token 上下文的程式模型](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/mirendil-fern-01-2026-10-26/)
   - [代理失敗該怪誰？4 種框架×4 個模型、5.2 萬條軌跡：框架排名隨模型與任務改變](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32483-v1/)
+  - [SWE-Shift：任務進行中程式碼或需求改變時，17 個寫程式代理全部退步，GPT-6 Astra 從 67% 掉到 25%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32196-v1/)
   - [誰來驗證工具？工具輸出漏寫搜尋上限等資訊，驗證模型 90 次全部接受錯誤答案；補上措辭後 90 次全部拒絕](https://iven00.github.io/ai-frontier-daily/daily/2026-10-27/arxiv-2610.32110-v1/)
 - [2026-10-26 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/)：自報分數滿天飛，獨立驗證跟不上
   - [BOSS 直聘旗下 Nanbeige 開源 33B，跑分亮眼但社群等實測](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/social-topic-nanbeige43-2026-10-26/)
@@ -47,10 +69,10 @@
   - [Nanbeige4.3-33B 開放權重：33B 稠密教師模型，自報代理寫程式分數領先同級](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/nanbeige43-33b-2026-10-25/)
   - [皮膚科醫師實測：訓練 20 分鐘的小型 CNN，皮膚病灶診斷正確率勝過 GPT-6 Astra 與 Claude Fable 5.1](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/lynchlab-skin-cancer-cnn-vs-llm-2026-10-25/)
   - [賓州簽署 AI 欺騙性廣告法：造成誤認的 AI 生成或大幅修改廣告必須明確標示](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/pennsylvania-ai-ad-label-law-2026-10-22/)
-  - [SCOPE：把自然語言政策編譯成「神經謂詞程式」，讓小模型也能穩定審查代理行為](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31062-v1/)
   - [IQuest-Q1：320B 總參數、15B 啟用的開源 MoE 模型，專攻命令列代理](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.30949-v1/)
+  - [SCOPE：把自然語言政策編譯成「神經謂詞程式」，讓小模型也能穩定審查代理行為](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31062-v1/)
+  - [推理模型愛說「Wait」不是強化學習發明的，而是從訓練資料繼承的](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.30882-v1/)
   - [TTR-Compressor：把序列壓縮看成即時回歸問題，少用 55.6% 視覺 token 仍維持效果](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31574-v1/)
-  - [RIDAR：自動研究代理 99.7% 的執行軌跡都有研究誠信問題，即時介入可減少 36.8%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-26/arxiv-2610.31372-v1/)
 - [2026-10-25 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/)：長期記憶回歸「保留原始證據」
   - [Raw-RAG：只對原始對話做檢索＋重排序，竟勝過多數代理式記憶系統](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/arxiv-2610.30755-v1/)
   - [Anthropic × Theorem：Claude 在 123 個開源函式庫的機器碼層級產生可檢查的形式化證明](https://iven00.github.io/ai-frontier-daily/daily/2026-10-25/anthropic-formal-verification-2026-10-22/)
