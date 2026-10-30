@@ -18,6 +18,17 @@
 - [前沿論文](https://iven00.github.io/ai-frontier-daily/topics/paper/)：值得一讀的 AI 論文，白話解析方法與限制
 
 ## 最近各期
+- [2026-10-31 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/)：安全監控從規則轉向「用模型看模型」
+  - [OpenAI 公開四層監控，社群問夠不夠快](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/social-topic-openai-misalignment-monitor-2026-10-31/)
+  - [疑似：中國實驗室改蒸餾 GPT-6 Astra](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/social-topic-astra-distillation-2026-10-31/)
+  - [前 Claude Code 成員：代理讓人很忙卻沒進展](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/social-topic-agent-mania-2026-10-31/)
+  - [OpenAI 公開失準監控系統：四層篩選涵蓋 Astra 等級模型的訓練、評測與內部 Codex；重播 Hugging Face 事件約 30 分鐘示警](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/openai-misalignment-monitoring-2026-10-29/)
+  - [Anthropic 公開「自我評估」：Claude 每次回答後自評對話安全，1% 誤報下抓到提示型分類器 94% 的高優先案例，額外運算不到 2%](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/anthropic-self-assessment-2026-10-29/)
+  - [OpenAI 推出 Private Intelligence：整合零資料保留、Private Inference 預覽與代理權限控管，讓企業把前沿模型用在敏感工作](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/openai-private-intelligence-2026-10-30/)
+  - [Claude 方案改名：Max 20x 改為 Ultra（每月 200 美元），驗證帳號取消 5 小時用量限制；週限制不變](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/claude-max-ultra-2026-10-30/)
+  - [超越捏造：AI 研究代理寫的論文中，約五分之四沒有根據的數字其實來自錯的實驗、指標或執行](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/arxiv-2610.38691-v1/)
+  - [協調稅與異質紅利：規劃者-寫碼者-審查者流程成本 3.22 倍、時間 3.24 倍，卻沒多解出任何題目](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/arxiv-2610.37700-v1/)
+  - [遮蔽侵蝕：自我改進代理的驗收關卡只看任務分數，重疊的安全防護被逐一刪除卻看不出傷害](https://iven00.github.io/ai-frontier-daily/daily/2026-10-31/arxiv-2610.38392-v1/)
 - [2026-10-30 日刊](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/)：開放權重再升溫：歐洲兆級模型、Qwen4 預告、影片模型也開放
   - [Mistral 放出 1 兆參數權重，但家裡跑不動](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/social-topic-mistral-large-4-open-2026-10-30/)
   - [OpenAI 改寫 Model Spec：從規則改成五個價值](https://iven00.github.io/ai-frontier-daily/daily/2026-10-30/social-topic-openai-model-spec-2026-10-30/)

@@ -1,0 +1,63 @@
+{
+  "rejected": [
+    {
+      "page": "https://openai.com/index/how-we-detect-frontier-model-misalignment/",
+      "reason": "page fetch blocked (HTTP 403)"
+    },
+    {
+      "page": "https://x.com/OpenAI/status/2115896329645723836",
+      "reason": "robots.txt disallows"
+    },
+    {
+      "page": "https://safeguards.anthropic.com/2026/self-assessment/",
+      "image": "https://safeguards.anthropic.com/2026/self-assessment/social-card.png",
+      "reason": "logo-only / very low entropy (entropy 1.70 bits, 373 colours, flat 79%)"
+    },
+    {
+      "page": "https://x.com/AnthropicAI/status/2115871889549865429",
+      "reason": "robots.txt disallows"
+    },
+    {
+      "page": "https://arxiv.org/abs/2610.37679",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png",
+      "reason": "logo-like image URL"
+    },
+    {
+      "page": "https://arxiv.org/abs/2610.37679",
+      "image": "https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png",
+      "reason": "logo-like image URL"
+    },
+    {
+      "page": "https://github.com/rishabhsinha17/latent-state-auditing",
+      "image": "https://opengraph.githubassets.com/24302d55890ac6baca6c6af8d2b2f6b195b1daa3c84a35f534b6510d2c70a0f8/rishabhsinha17/latent-state-auditing",
+      "reason": "logo-only / very low entropy (entropy 1.90 bits, 554 colours, flat 81%)"
+    },
+    {
+      "page": "https://arxiv.org/abs/2610.39377",
+      "image": "https://arxiv.org/static/browse/0.3.4/images/arxiv-logo-fb.png",
+      "reason": "logo-like image URL"
+    },
+    {
+      "page": "https://arxiv.org/abs/2610.39377",
+      "image": "https://static.arxiv.org/icons/twitter/arxiv-logo-twitter-square.png",
+      "reason": "logo-like image URL"
+    },
+    {
+      "page": "https://www.theinformation.com/articles/openais-astra-model-becomes-top-distillation-target-chinas-ai-labs",
+      "reason": "robots.txt disallows"
+    }
+  ],
+  "method": "fallback",
+  "publisher": "",
+  "source_page": "",
+  "image_url": "",
+  "file": "hero.jpg",
+  "thumb": "hero-thumb.webp",
+  "w": 1200,
+  "h": 630,
+  "bytes": 56881,
+  "thumb_w": 480,
+  "thumb_h": 252,
+  "thumb_bytes": 9660,
+  "picked_at": "2026-10-31T03:35:18+08:00"
+}

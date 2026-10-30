@@ -1,8 +1,18 @@
 {
  "v": 1,
- "generated_at": "2026-10-30T03:32:57+08:00",
- "latest": "2026-10-30",
+ "generated_at": "2026-10-31T03:35:23+08:00",
+ "latest": "2026-10-31",
  "issues": [
+  {
+   "key": "2026-10-31",
+   "kind": "daily",
+   "date": "2026-10-31",
+   "no": 8,
+   "label": "第 8 期・10/31（週六）",
+   "subject": "Mirakee Signal｜AI 前沿情報站 2026-10-31",
+   "headline": "安全監控從規則轉向「用模型看模型」",
+   "path": "email/2026-10-31.json"
+  },
   {
    "key": "2026-10-30",
    "kind": "daily",
